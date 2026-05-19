@@ -1,5 +1,5 @@
 ﻿/* REAL WEB3 IDENTITY BRIDGE - LEANETH VENTURES
-   Real MetaMask EIP-1193 connection + CoinGecko live prices */
+   Multi-wallet EIP-1193 support + CoinGecko live prices */
 
 import { playClickSound } from './router.js';
 
@@ -12,6 +12,15 @@ const CHAIN_NAMES = {
     '0xa': 'Optimism Mainnet',
     '0xa4b1': 'Arbitrum One',
     '0x38': 'BNB Smart Chain',
+};
+
+const WALLET_DETECT = {
+    metamask:  () => window.ethereum?.isMetaMask,
+    trust:     () => window.ethereum?.isTrust,
+    coinbase:  () => window.ethereum?.isCoinbaseWallet,
+    brave:     () => window.ethereum?.isBraveWallet,
+    rabby:     () => window.ethereum?.isRabby,
+    rainbow:   () => window.ethereum?.isRainbow,
 };
 
 class Web3IdentityBridge {
@@ -46,11 +55,11 @@ class Web3IdentityBridge {
         this.txDoneBtn = document.getElementById('tx-modal-done-btn');
         this.txLogList = document.getElementById('tx-log-list');
         this.txLogStatus = document.getElementById('tx-log-status');
-        this.mmStatus = document.getElementById('mm-status');
         this.soundSuccess = document.getElementById('sound-success');
         this.connected = false;
         this.account = null;
         this.provider = null;
+        this.providerName = '';
         this.ethPriceUsd = 3420.25;
         this.btcPriceUsd = 68540.80;
         this.solPriceUsd = 172.30;
@@ -60,7 +69,7 @@ class Web3IdentityBridge {
 
     init() {
         if (!this.connectBtn) return;
-        this.detectMetaMask();
+        this.detectAllWallets();
         this.fetchLivePrices();
         setInterval(() => this.fetchLivePrices(), 30000);
 
@@ -68,9 +77,8 @@ class Web3IdentityBridge {
             playClickSound();
             if (this.connected) {
                 this.disconnectWallet();
-            } else if (window.ethereum && window.ethereum.isMetaMask) {
-                this.connectRealMetaMask();
             } else {
+                this.detectAllWallets();
                 this.connectModal.classList.remove('hidden');
             }
         });
@@ -84,11 +92,7 @@ class Web3IdentityBridge {
             opt.addEventListener('click', () => {
                 const wallet = opt.getAttribute('data-wallet');
                 this.connectModal.classList.add('hidden');
-                if (wallet === 'metamask' && window.ethereum) {
-                    this.connectRealMetaMask();
-                } else {
-                    this.simulateConnection(wallet);
-                }
+                this.connectWallet(wallet);
             });
         });
 
@@ -117,33 +121,62 @@ class Web3IdentityBridge {
             });
         }
 
-        this.addTxLog('info', 'Web3 bridge initialized. Click Connect Wallet.');
+        this.addTxLog('info', 'Web3 bridge initialized. Connect a wallet.');
     }
 
-    detectMetaMask() {
-        if (!this.mmStatus) return;
-        if (window.ethereum && window.ethereum.isMetaMask) {
-            this.mmStatus.textContent = 'Installed';
-            this.mmStatus.style.color = 'var(--accent-cyan)';
-        } else {
-            this.mmStatus.textContent = 'Not Found';
-            this.mmStatus.style.color = 'var(--error)';
+    detectAllWallets() {
+        const hasEth = !!window.ethereum;
+        Object.entries(WALLET_DETECT).forEach(([name, detect]) => {
+            const el = document.getElementById(`${name}-status`);
+            if (!el) return;
+            const installed = hasEth && detect();
+            el.textContent = installed ? 'Installed' : 'Not Found';
+            el.style.color = installed ? 'var(--accent-cyan)' : 'var(--error)';
+        });
+        if (hasEth && !Object.values(WALLET_DETECT).some(d => d())) {
+            const el = document.getElementById('metamask-status');
+            if (el) {
+                el.textContent = 'Detected';
+                el.style.color = 'var(--accent-cyan)';
+            }
         }
     }
 
-    async connectRealMetaMask() {
-        this.showTxModal('Connecting MetaMask', 'Requesting account access...');
+    connectWallet(wallet) {
+        const walletMap = {
+            metamask:  { name: 'MetaMask',           real: () => window.ethereum?.isMetaMask || !!window.ethereum },
+            trust:     { name: 'Trust Wallet',        real: () => window.ethereum?.isTrust || !!window.ethereum },
+            coinbase:  { name: 'Coinbase Wallet',     real: () => window.ethereum?.isCoinbaseWallet || !!window.ethereum },
+            brave:     { name: 'Brave Wallet',        real: () => window.ethereum?.isBraveWallet || !!window.ethereum },
+            rabby:     { name: 'Rabby Wallet',        real: () => window.ethereum?.isRabby || !!window.ethereum },
+            walletconnect: { name: 'WalletConnect',   real: false },
+            ledger:    { name: 'Ledger Hardware',     real: false },
+        };
+
+        const entry = walletMap[wallet];
+        if (!entry) return this.simulateConnection(wallet);
+
+        if (entry.real && entry.real() && window.ethereum) {
+            this.connectRealProvider(entry.name);
+        } else {
+            this.simulateConnection(wallet, entry.name);
+        }
+    }
+
+    async connectRealProvider(name) {
+        this.showTxModal(`Connecting ${name}`, 'Requesting account access...');
         try {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             this.account = accounts[0];
             this.provider = window.ethereum;
+            this.providerName = name;
             await this.fetchChainInfo();
             await this.fetchBalance();
             this.connected = true;
             this.playSuccessChime();
             this.txModal.classList.add('hidden');
-            this.updateConnectedUI('MetaMask Extension (EIP-1193)');
-            this.addTxLog('success', `Connected: ${this.account.slice(0,6)}...${this.account.slice(-4)}`);
+            this.updateConnectedUI(`${name} (EIP-1193)`);
+            this.addTxLog('success', `Connected ${name}: ${this.account.slice(0,6)}...${this.account.slice(-4)}`);
         } catch (err) {
             this.txStatus.textContent = 'Connection rejected: ' + err.message;
             this.txSpinner.classList.add('hidden');
@@ -263,8 +296,9 @@ class Web3IdentityBridge {
         }, 1500);
     }
 
-    simulateConnection(walletName) {
-        this.showTxModal(`Connecting ${walletName}`, `Opening session bridge...`);
+    simulateConnection(wallet, name) {
+        const displayName = name || wallet;
+        this.showTxModal(`Connecting ${displayName}`, `Opening session bridge...`);
         setTimeout(() => {
             this.txStatus.textContent = 'Awaiting cryptographic handshake...';
             setTimeout(() => {
@@ -276,8 +310,9 @@ class Web3IdentityBridge {
                     coinbase: { name: 'Coinbase Wallet SDK', addr: '0x2F71c765Ecab88b098d5f751B7401B5f6d8976B2', bal: '1.042 ETH', chain: '0x1' },
                     ledger: { name: 'Ledger Nano Hardware', addr: '0x88fA765EC7ab88b098defB751B7401B5f6d89700', bal: '42.080 ETH', chain: '0x1' }
                 };
-                const data = walletsMap[walletName] || walletsMap.walletconnect;
+                const data = walletsMap[wallet] || walletsMap.walletconnect;
                 this.account = data.addr;
+                this.providerName = data.name;
                 this.networkVal.textContent = CHAIN_NAMES[data.chain] || 'Ethereum Mainnet';
                 this.chainVal.textContent = `${data.chain} (1)`;
                 this.balanceVal.textContent = data.bal;
@@ -345,6 +380,7 @@ class Web3IdentityBridge {
         this.connected = false;
         this.account = null;
         this.provider = null;
+        this.providerName = '';
         this.connectBtn.textContent = 'Connect Wallet';
         this.connectBtn.classList.remove('btn-secondary');
         this.connectBtn.classList.add('btn-glow');
