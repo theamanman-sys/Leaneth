@@ -104,8 +104,6 @@ class StreamEngine {
                 rel: 0,
                 modestbranding: 1,
                 autoplay: 1,
-                enablejsapi: 1,
-                origin: window.location.origin,
             },
             events: {
                 onReady: () => {
@@ -117,6 +115,7 @@ class StreamEngine {
                 },
                 onError: (e) => {
                     console.warn('YouTube player error:', e.data);
+                    this.fallbackIframe(pendingVideoId || '');
                 },
             },
         });

@@ -107,8 +107,9 @@
 
 /* Sidebar Catalog List */
 #stream .catalog-pane {
-    max-height: none;
+    max-height: calc(100vh - 280px);
     overflow: hidden;
+    height: auto;
 }
 
 .video-list-scrollable {
