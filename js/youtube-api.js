@@ -5,32 +5,28 @@ import { playClickSound } from './router.js';
 const PIPED_API = 'https://pipedapi.com';
 
 const NEWS_CHANNELS = [
-    { id: "BMXlH2T6XqY", title: "CNN Live", channel: "CNN", description: "24/7 live news coverage from CNN.", thumb: "https://logo.clearbit.com/cnn.com", views: "" },
-    { id: "w_Ma8oQLmXM", title: "ABC News Live", channel: "ABC News", description: "Live breaking news, politics, and world events.", thumb: "https://logo.clearbit.com/abcnews.go.com", views: "" },
-    { id: "4lV8jIqDl0s", title: "Al Jazeera Live", channel: "Al Jazeera", description: "Global news and current affairs from Al Jazeera.", thumb: "https://logo.clearbit.com/aljazeera.com", views: "" },
-    { id: "16oZ5mcr1v0", title: "BBC News Live", channel: "BBC News", description: "Breaking news, analysis, and world reports.", thumb: "https://logo.clearbit.com/bbc.com", views: "" },
-    { id: "SMJgM3qLQm0", title: "Fox News Live", channel: "Fox News", description: "US news, politics, and live events.", thumb: "https://logo.clearbit.com/foxnews.com", views: "" },
-    { id: "9Auq9mYxFEE", title: "Sky News Live", channel: "Sky News", description: "UK and international breaking news.", thumb: "https://logo.clearbit.com/sky.com", views: "" },
-    { id: "QKi4Q6qQ1aY", title: "MSNBC Live", channel: "MSNBC", description: "US politics, news analysis, and live coverage.", thumb: "https://logo.clearbit.com/msnbc.com", views: "" },
-    { id: "lQnJ3sY5VhA", title: "Bloomberg Live", channel: "Bloomberg", description: "Financial markets, business news, and analysis.", thumb: "https://logo.clearbit.com/bloomberg.com", views: "" },
-    { id: "py3Y6tQ5vZk", title: "NBC News Live", channel: "NBC News", description: "US and world news coverage.", thumb: "https://logo.clearbit.com/nbcnews.com", views: "" },
-    { id: "7j5Q0H3mXzQ", title: "France 24 Live", channel: "France 24", description: "International news 24/7 in English.", thumb: "https://logo.clearbit.com/france24.com", views: "" },
-    { id: "LgSqN9PQkQg", title: "DW News Live", channel: "DW News", description: "German and international news coverage.", thumb: "https://logo.clearbit.com/dw.com", views: "" },
-    { id: "Gz7WFPfHnHk", title: "Reuters Live", channel: "Reuters", description: "Global news and financial reporting.", thumb: "https://logo.clearbit.com/reuters.com", views: "" },
-    { id: "YJ0FY3oJ0cI", title: "Associated Press Live", channel: "AP News", description: "Breaking news from around the globe.", thumb: "https://logo.clearbit.com/apnews.com", views: "" },
-    { id: "d8VdcMpI0lM", title: "CBS News Live", channel: "CBS News", description: "Live news, politics, and investigations.", thumb: "https://logo.clearbit.com/cbsnews.com", views: "" },
+    { id: "BMXlH2T6XqY", title: "CNN Live", channel: "CNN", description: "24/7 live news coverage from CNN.", thumb: "https://logo.clearbit.com/cnn.com" },
+    { id: "w_Ma8oQLmXM", title: "ABC News Live", channel: "ABC News", description: "Live breaking news, politics, and world events.", thumb: "https://logo.clearbit.com/abcnews.go.com" },
+    { id: "4lV8jIqDl0s", title: "Al Jazeera Live", channel: "Al Jazeera", description: "Global news and current affairs from Al Jazeera.", thumb: "https://logo.clearbit.com/aljazeera.com" },
+    { id: "16oZ5mcr1v0", title: "BBC News Live", channel: "BBC News", description: "Breaking news, analysis, and world reports.", thumb: "https://logo.clearbit.com/bbc.com" },
+    { id: "SMJgM3qLQm0", title: "Fox News Live", channel: "Fox News", description: "US news, politics, and live events.", thumb: "https://logo.clearbit.com/foxnews.com" },
+    { id: "9Auq9mYxFEE", title: "Sky News Live", channel: "Sky News", description: "UK and international breaking news.", thumb: "https://logo.clearbit.com/sky.com" },
+    { id: "QKi4Q6qQ1aY", title: "MSNBC Live", channel: "MSNBC", description: "US politics, news analysis, and live coverage.", thumb: "https://logo.clearbit.com/msnbc.com" },
+    { id: "lQnJ3sY5VhA", title: "Bloomberg Live", channel: "Bloomberg", description: "Financial markets, business news, and analysis.", thumb: "https://logo.clearbit.com/bloomberg.com" },
+    { id: "py3Y6tQ5vZk", title: "NBC News Live", channel: "NBC News", description: "US and world news coverage.", thumb: "https://logo.clearbit.com/nbcnews.com" },
+    { id: "7j5Q0H3mXzQ", title: "France 24 Live", channel: "France 24", description: "International news 24/7 in English.", thumb: "https://logo.clearbit.com/france24.com" },
+    { id: "LgSqN9PQkQg", title: "DW News Live", channel: "DW News", description: "German and international news coverage.", thumb: "https://logo.clearbit.com/dw.com" },
+    { id: "Gz7WFPfHnHk", title: "Reuters Live", channel: "Reuters", description: "Global news and financial reporting.", thumb: "https://logo.clearbit.com/reuters.com" },
+    { id: "YJ0FY3oJ0cI", title: "Associated Press Live", channel: "AP News", description: "Breaking news from around the globe.", thumb: "https://logo.clearbit.com/apnews.com" },
+    { id: "d8VdcMpI0lM", title: "CBS News Live", channel: "CBS News", description: "Live news, politics, and investigations.", thumb: "https://logo.clearbit.com/cbsnews.com" },
 ];
 
 const FALLBACK_VIDEOS = [
-    { id: "erEgovG9WBs", title: "APIs Explained in 100 Seconds", channel: "Fireship", description: "What is an API? RESTful endpoints, GraphQL, and WebSockets explained.", thumb: "https://img.youtube.com/vi/erEgovG9WBs/mqdefault.jpg", views: "1.2M views" },
-    { id: "Sxxw3qtb3_g", title: "React in 100 Seconds", channel: "Fireship", description: "React component lifecycle, hooks, virtual DOM, and modern frontend.", thumb: "https://img.youtube.com/vi/Sxxw3qtb3_g/mqdefault.jpg", views: "890K views" },
-    { id: "4r6GrXk1ZcA", title: "Web3 Explained | Solidity, Ethereum", channel: "Fireship", description: "Smart contracts, EVM bytecode, RPC providers, and wallet bridges.", thumb: "https://img.youtube.com/vi/4r6GrXk1ZcA/mqdefault.jpg", views: "740K views" },
-    { id: "WXsD0ZgxjRw", title: "REST APIs & HTTP Crash Course", channel: "Traversy Media", description: "HTTP methods, headers, status codes, authentication, and API design.", thumb: "https://img.youtube.com/vi/WXsD0ZgxjRw/mqdefault.jpg", views: "1.5M views" },
+    { id: "erEgovG9WBs", title: "APIs Explained in 100 Seconds", channel: "Fireship", description: "What is an API?", thumb: "https://img.youtube.com/vi/erEgovG9WBs/mqdefault.jpg", views: "1.2M views" },
+    { id: "Sxxw3qtb3_g", title: "React in 100 Seconds", channel: "Fireship", description: "React component lifecycle.", thumb: "https://img.youtube.com/vi/Sxxw3qtb3_g/mqdefault.jpg", views: "890K views" },
+    { id: "4r6GrXk1ZcA", title: "Web3 Explained", channel: "Fireship", description: "Smart contracts and EVM.", thumb: "https://img.youtube.com/vi/4r6GrXk1ZcA/mqdefault.jpg", views: "740K views" },
+    { id: "WXsD0ZgxjRw", title: "REST APIs & HTTP", channel: "Traversy Media", description: "HTTP methods and API design.", thumb: "https://img.youtube.com/vi/WXsD0ZgxjRw/mqdefault.jpg", views: "1.5M views" },
 ];
-
-let player = null;
-let playerReady = false;
-let pendingVideoId = null;
 
 class StreamEngine {
     constructor() {
@@ -43,9 +39,8 @@ class StreamEngine {
         this.searchBtn = document.getElementById('yt-search-btn');
         this.apiStatus = document.getElementById('yt-api-status');
         this.latencyMetric = document.getElementById('yt-metric-latency');
-        this.quotaMetric = document.getElementById('yt-metric-quota');
-        this.tabBtns = document.querySelectorAll('.stream-tab');
         this.paneTitle = document.getElementById('stream-pane-title');
+        this.tabBtns = document.querySelectorAll('.stream-tab');
 
         this.searchCache = {};
         this.offlineMode = false;
@@ -56,8 +51,6 @@ class StreamEngine {
 
     init() {
         if (!this.videoList) return;
-
-        this.loadYouTubeAPI();
 
         this.searchBtn.addEventListener('click', () => this.handleSearch());
         this.searchInput.addEventListener('keypress', (e) => {
@@ -78,52 +71,13 @@ class StreamEngine {
             });
         });
 
-        window.addEventListener('viewChanged', (e) => {
-            if (e.detail.view === 'stream' && player && playerReady) {
-                this.playerContainer.classList.remove('hidden');
-            }
-        });
-
         this.renderNewsChannels();
         this.apiStatus.textContent = 'Live News';
     }
 
-    loadYouTubeAPI() {
-        if (window.YT) { this.onAPIReady(); return; }
-        const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
-        const first = document.getElementsByTagName('script')[0];
-        first.parentNode.insertBefore(tag, first);
-        window.onYouTubeIframeAPIReady = () => this.onAPIReady();
-    }
-
-    onAPIReady() {
-        player = new YT.Player('yt-player', {
-            height: '100%', width: '100%',
-            playerVars: {
-                rel: 0,
-                modestbranding: 1,
-                autoplay: 1,
-            },
-            events: {
-                onReady: () => {
-                    playerReady = true;
-                    if (pendingVideoId) {
-                        this.playVideo(pendingVideoId);
-                        pendingVideoId = null;
-                    }
-                },
-                onError: (e) => {
-                    console.warn('YouTube player error:', e.data);
-                    this.fallbackIframe(pendingVideoId || '');
-                },
-            },
-        });
-    }
-
     renderNewsChannels() {
         this.videoList.innerHTML = '';
-        NEWS_CHANNELS.forEach((ch, i) => {
+        NEWS_CHANNELS.forEach((ch) => {
             const card = document.createElement('div');
             card.className = 'yt-video-card';
             card.innerHTML = `
@@ -143,7 +97,6 @@ class StreamEngine {
 
     async handleSearch() {
         const query = this.searchInput.value.trim();
-
         this.tabBtns.forEach(b => b.classList.remove('active'));
 
         if (!query) {
@@ -240,12 +193,7 @@ class StreamEngine {
         if (cardEl) cardEl.classList.add('active');
 
         this.playerPlaceholder.classList.add('hidden');
-
-        if (player && playerReady) {
-            this.playVideo(video.id);
-        } else {
-            pendingVideoId = video.id;
-        }
+        this.embedVideo(video.id);
 
         this.titleEl.textContent = video.title;
         const desc = video.description || (video.channel ? `Live stream from ${video.channel}.` : 'No description available.');
@@ -256,17 +204,7 @@ class StreamEngine {
         setTimeout(() => { this.latencyMetric.style.animation = ''; }, 500);
     }
 
-    playVideo(videoId) {
-        if (player && playerReady) {
-            try {
-                player.loadVideoById(videoId);
-            } catch (e) {
-                this.fallbackIframe(videoId);
-            }
-        }
-    }
-
-    fallbackIframe(videoId) {
+    embedVideo(videoId) {
         const iframe = document.createElement('iframe');
         iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
         iframe.style.position = 'absolute';
