@@ -1,0 +1,311 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeanEth Ventures | High-Performance API Portfolio</title>
+    <meta name="description" content="LeanEth Ventures - live streaming, cinematic hub, decentralized identity, NASA cosmos feed, weather intelligence, and developer console.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/hero.css">
+    <link rel="stylesheet" href="css/router.css">
+    <link rel="stylesheet" href="css/dashboards.css">
+    <link rel="stylesheet" href="css/api-panels.css">
+</head>
+<body>
+    <audio id="sound-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav" preload="auto"></audio>
+    <audio id="sound-success" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav" preload="auto"></audio>
+    <div id="transition-curtain">
+        <div class="curtain-line"></div>
+        <div class="curtain-logo">LeanEth</div>
+    </div>
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo" id="logo-nav">
+                <span class="logo-text">LeanEth</span><span class="logo-sub">.API</span>
+                <span class="logo-pulse"></span>
+            </a>
+            <nav class="nav-links">
+                <a href="#home" class="nav-link active" data-link="home">Home</a>
+                <a href="#stream" class="nav-link" data-link="stream">Stream Engine</a>
+                <a href="#cinema" class="nav-link" data-link="cinema">Cinematic Hub</a>
+                <a href="#identity" class="nav-link" data-link="identity">ID Bridge</a>
+                <a href="#cosmos" class="nav-link" data-link="cosmos">Cosmos Feed</a>
+                <a href="#weather" class="nav-link" data-link="weather">Weather Oracle</a>
+                <a href="#sandbox" class="nav-link" data-link="sandbox">Dev Console</a>
+            </nav>
+            <div class="nav-controls">
+                <button class="sound-toggle" id="btn-sound" title="Toggle Interface Sounds">
+                    <svg class="sound-icon-on" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                    <svg class="sound-icon-off hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+                </button>
+                <div class="api-status">
+                    <span class="status-pulse"></span>
+                    <span class="status-text">API Live: <span id="ping-ms">14ms</span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="main-content">
+        <!-- HOME -->
+        <section id="home" class="view-panel active">
+            <div class="parallax-container">
+                <div class="parallax-layer layer-bg" style="background-image: url('assets/bg-nebula.png');"></div>
+                <div class="parallax-layer layer-grid"></div>
+                <div class="parallax-layer layer-shape-1"><img src="assets/shape3d-1.png" alt="3D Crystal" class="shape-3d float-anim-1"></div>
+                <div class="parallax-layer layer-text">
+                    <h1 class="hero-title"><span class="text-glow">LEANETH</span><span class="text-gradient">VENTURES</span></h1>
+                    <p class="hero-subtitle">High-Performance API Architectures &amp; Seamless Digital Products</p>
+                    <div class="hero-actions">
+                        <a href="#stream" class="btn btn-primary btn-magnetic">Explore Portals</a>
+                        <a href="#sandbox" class="btn btn-secondary btn-magnetic">Developer Console</a>
+                    </div>
+                </div>
+                <div class="parallax-layer layer-shape-2"><img src="assets/shape3d-2.png" alt="3D Sphere" class="shape-3d float-anim-2"></div>
+                <div class="scroll-indicator"><span class="mouse-icon"><span class="mouse-wheel"></span></span><span class="scroll-label">Scroll to Discover APIs</span></div>
+            </div>
+            <div class="home-features">
+                <div class="features-header">
+                    <h2>Advanced API Integration Services</h2>
+                    <p>Engineered for high throughput, seamless modularity, and immersive front-ends.</p>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-card" onclick="navigateTo('stream')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></div><h3>Stream Engine</h3><p>Live asynchronous media fetching, real-time search queries, and embedded playback with analytics.</p></div>
+                    <div class="feature-card" onclick="navigateTo('cinema')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line></svg></div><h3>Cinematic Hub</h3><p>Netflix-style movie carousels, genre intelligence filters, and live backdrop detail panels.</p></div>
+                    <div class="feature-card" onclick="navigateTo('identity')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div><h3>ID Bridge</h3><p>Real EIP-1193 wallet connectivity, live market feeds, and on-chain transaction broadcasting.</p></div>
+                    <div class="feature-card" onclick="navigateTo('cosmos')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div><h3>Cosmos Feed</h3><p>Live NASA APOD imagery, ISS telemetry, and space intelligence mission data streams.</p></div>
+                    <div class="feature-card" onclick="navigateTo('weather')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg></div><h3>Weather Oracle</h3><p>Real-time weather intelligence via geolocation detection and atmospheric condition APIs.</p></div>
+                    <div class="feature-card" onclick="navigateTo('sandbox')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div><h3>Dev Console</h3><p>Interactive API compiler with live HTTP responses, rate-limit testing, and terminal logs.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STREAM ENGINE -->
+        <section id="stream" class="view-panel">
+            <div class="dashboard-wrapper">
+                <div class="dashboard-header"><div><span class="badge badge-purple">YouTube Data API v3</span><h1>Stream Engine</h1><p>Asynchronous media discovery, live search queries, and real-time embedded playback interface.</p></div><div class="dashboard-actions"><input type="text" id="yt-api-key" placeholder="YouTube Data API Key..." class="key-input" style="width:220px;font-size:0.75rem;"><button id="yt-set-key" class="btn btn-tiny">Set Key</button><input type="text" id="yt-search-input" placeholder="Search YouTube..." class="search-input"><button id="yt-search-btn" class="btn btn-primary">Search</button></div></div>
+                <div class="dashboard-grid">
+                    <div class="grid-card main-pane"><div class="player-container"><div class="player-aspect"><div id="yt-player-placeholder" class="player-placeholder"><svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg><p>Select a stream from the catalog to begin high-definition projection.</p></div><div id="yt-player"></div></div></div><div class="video-meta"><h2 id="yt-video-title">Select a Stream</h2><p id="yt-video-desc">Click any entry from the catalog or execute a search query to display the live feed and API metrics.</p></div></div>
+                    <div class="grid-card catalog-pane"><div class="pane-header"><h3>YouTube Catalog</h3><span class="api-ping-indicator" id="yt-api-status">Ready</span></div><div class="video-list-scrollable" id="yt-video-list"></div></div>
+                    <div class="grid-card full-width metrics-pane"><div class="metrics-grid"><div class="metric-box"><span class="metric-label">Stream Latency</span><span class="metric-val text-cyan" id="yt-metric-latency">--</span></div><div class="metric-box"><span class="metric-label">Cache Status</span><span class="metric-val text-purple">HIT (Varnish)</span></div><div class="metric-box"><span class="metric-label">API Quota</span><span class="metric-val" id="yt-metric-quota">10,000 / 10K</span></div><div class="metric-box"><span class="metric-label">Stream Resolution</span><span class="metric-val text-glow">Auto</span></div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CINEMATIC HUB -->
+        <section id="cinema" class="view-panel">
+            <div class="dashboard-wrapper">
+                <div class="dashboard-header"><div><span class="badge badge-cyan">GraphQL REST Media Intelligence</span><h1>Cinematic Hub</h1><p>Horizontal backdrop sliders, dynamic genre intelligence, and live detail panels.</p></div><div class="api-key-injector glass-panel"><input type="password" id="tmdb-key-input" placeholder="Cinematic API Read Token (Optional)..." class="key-input"><button id="tmdb-connect-btn" class="btn btn-tiny">Connect Key</button></div></div>
+                <div class="genre-pill-slider">
+                    <button class="genre-pill active" data-genre="all">All Genres</button>
+                    <button class="genre-pill" data-genre="28">Action</button><button class="genre-pill" data-genre="878">Sci-Fi</button><button class="genre-pill" data-genre="12">Adventure</button><button class="genre-pill" data-genre="27">Horror</button><button class="genre-pill" data-genre="35">Comedy</button><button class="genre-pill" data-genre="18">Drama</button><button class="genre-pill" data-genre="16">Animation</button>
+                </div>
+                <div class="movie-carousel-container">
+                    <button class="carousel-nav nav-left" id="carousel-left"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+                    <div class="movie-carousel" id="movie-cards-container"></div>
+                    <button class="carousel-nav nav-right" id="carousel-right"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                </div>
+                <div class="grid-card focus-movie-card hidden" id="movie-focus-panel"><button class="focus-close-btn" id="movie-focus-close">&times;</button><div class="focus-backdrop-bg" id="movie-focus-backdrop"></div><div class="focus-content"><img src="" id="movie-focus-poster" class="focus-poster" alt="Poster"><div class="focus-details"><span class="focus-badge" id="movie-focus-year">2026</span><h2 id="movie-focus-title">Title</h2><p class="focus-tagline" id="movie-focus-tagline"></p><p class="focus-overview" id="movie-focus-overview"></p><div class="focus-metadata"><div><strong>Rating:</strong> <span id="movie-focus-rating" class="text-glow">-</span></div><div><strong>Popularity:</strong> <span id="movie-focus-pop">-</span></div></div></div></div></div>
+            </div>
+        </section>
+
+        <!-- IDENTITY BRIDGE -->
+        <section id="identity" class="view-panel">
+            <div class="dashboard-wrapper">
+                <div class="dashboard-header"><div><span class="badge badge-purple">Web3 EIP-1193 JSON-RPC</span><h1>Decentralized Identity Bridge</h1><p>Real EVM wallet connections, live CoinGecko feeds, and on-chain transaction broadcasting.</p></div><button id="web3-connect-btn" class="btn btn-primary btn-glow">Connect Wallet</button></div>
+                <div class="web3-grid">
+                    <div class="grid-card wallet-status-card">
+                        <div class="card-header-accent font-space"><h3>WALLET IDENTITY</h3><span class="wallet-badge" id="wallet-connected-badge">DISCONNECTED</span></div>
+                        <div class="wallet-body">
+                            <div class="wallet-stat-row"><span class="label">Provider</span><span class="val text-muted" id="wallet-provider-val">-</span></div>
+                            <div class="wallet-stat-row"><span class="label">Address</span><span class="val font-mono" id="wallet-address-val">0x0000...0000</span></div>
+                            <div class="wallet-stat-row"><span class="label">Balance</span><span class="val text-glow" id="wallet-balance-val">0.00 ETH</span></div>
+                            <div class="wallet-stat-row"><span class="label">Network</span><span class="val text-cyan" id="wallet-network-val">Not Connected</span></div>
+                            <div class="wallet-stat-row"><span class="label">Chain ID</span><span class="val font-mono" id="wallet-chain-val">-</span></div>
+                            <div class="wallet-actions hidden" id="wallet-actions-section">
+                                <button class="btn btn-secondary btn-full" id="web3-sign-btn">Sign Auth Message</button>
+                                <button class="btn btn-primary btn-full btn-glow" id="web3-send-btn">Send Test Tx</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-card live-market-card">
+                        <div class="card-header-accent font-space"><h3>LIVE CRYPTO MARKETS - COINGECKO</h3><span class="ticker-update-time" id="market-update-time">Updating...</span></div>
+                        <div class="market-chart-container">
+                            <div class="market-prices" id="crypto-prices-grid">
+                                <div class="price-pill"><span class="coin-symbol">ETH</span><span class="coin-price" id="ticker-eth-price">,420.25</span><span class="coin-change text-success" id="ticker-eth-change">+2.4%</span></div>
+                                <div class="price-pill"><span class="coin-symbol">BTC</span><span class="coin-price" id="ticker-btc-price">,540.80</span><span class="coin-change text-success" id="ticker-btc-change">+1.8%</span></div>
+                                <div class="price-pill"><span class="coin-symbol">SOL</span><span class="coin-price" id="ticker-sol-price">.30</span><span class="coin-change text-success" id="ticker-sol-change">+3.1%</span></div>
+                                <div class="price-pill"><span class="coin-symbol">MATIC</span><span class="coin-price" id="ticker-matic-price">.89</span><span class="coin-change text-error" id="ticker-matic-change">-0.7%</span></div>
+                            </div>
+                            <div class="svg-chart-wrapper">
+                                <svg class="crypto-chart-svg" viewBox="0 0 500 150">
+                                    <defs><linearGradient id="chart-gradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent-purple)" stop-opacity="0.4"/><stop offset="100%" stop-color="var(--accent-purple)" stop-opacity="0.0"/></linearGradient></defs>
+                                    <line x1="0" y1="30" x2="500" y2="30" stroke="rgba(255,255,255,0.05)" stroke-dasharray="5,5" /><line x1="0" y1="75" x2="500" y2="75" stroke="rgba(255,255,255,0.05)" stroke-dasharray="5,5" /><line x1="0" y1="120" x2="500" y2="120" stroke="rgba(255,255,255,0.05)" stroke-dasharray="5,5" />
+                                    <path id="chart-glow-path" d="M 0 110 Q 100 80 200 95 T 400 45 T 500 25" fill="none" stroke="var(--accent-cyan)" stroke-width="3" filter="drop-shadow(0px 0px 5px var(--accent-cyan))" />
+                                    <path id="chart-area-path" d="M 0 110 Q 100 80 200 95 T 400 45 T 500 25 L 500 150 L 0 150 Z" fill="url(#chart-gradient)" />
+                                </svg>
+                                <div class="chart-tooltip" id="chart-tooltip">Live market data via CoinGecko API</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-card tx-log-card">
+                        <div class="card-header-accent font-space"><h3>TRANSACTION FEED</h3><span class="api-ping-indicator" id="tx-log-status">Idle</span></div>
+                        <div class="tx-log-list font-mono" id="tx-log-list"><div class="tx-log-item text-muted">// Connect a wallet to view live transaction feed...</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="web3-modal-overlay hidden" id="web3-modal">
+                <div class="web3-modal-card glass-panel">
+                    <div class="modal-header"><h3>Connect Identity Wallet</h3><button class="modal-close" id="web3-modal-close">&times;</button></div>
+                    <p class="modal-subtitle">Select your Web3 provider to authenticate your decentralized identity.</p>
+                    <div class="modal-wallets">
+                        <button class="wallet-option" data-wallet="metamask"><span class="wallet-icon">&#128058;</span><div class="wallet-info"><span class="wallet-name">MetaMask</span><span class="wallet-desc">Browser Extension EIP-1193</span></div><span class="wallet-status" id="mm-status">Detecting...</span></button>
+                        <button class="wallet-option" data-wallet="walletconnect"><span class="wallet-icon">&#9889;</span><div class="wallet-info"><span class="wallet-name">WalletConnect</span><span class="wallet-desc">Open Protocol QR Bridge</span></div><span class="wallet-status">Demo Mode</span></button>
+                        <button class="wallet-option" data-wallet="coinbase"><span class="wallet-icon">&#128737;</span><div class="wallet-info"><span class="wallet-name">Coinbase Wallet</span><span class="wallet-desc">Self-Custody Mobile</span></div><span class="wallet-status">Demo Mode</span></button>
+                        <button class="wallet-option" data-wallet="ledger"><span class="wallet-icon">&#128272;</span><div class="wallet-info"><span class="wallet-name">Ledger Hardware</span><span class="wallet-desc">Cold Storage HID Bridge</span></div><span class="wallet-status">Demo Mode</span></button>
+                    </div>
+                </div>
+            </div>
+            <div class="web3-modal-overlay hidden" id="web3-tx-modal">
+                <div class="web3-modal-card glass-panel text-center">
+                    <div class="modal-header"><h3 id="tx-modal-title">Web3 Request</h3><button class="modal-close" id="web3-tx-close">&times;</button></div>
+                    <div class="tx-modal-body">
+                        <div class="wallet-connect-spinner" id="tx-spinner"><div class="double-bounce1"></div><div class="double-bounce2"></div></div>
+                        <p id="tx-modal-status" class="font-space">Awaiting wallet confirmation...</p>
+                        <div id="tx-modal-details" class="tx-details-box glass-panel font-mono text-left hidden"></div>
+                        <button class="btn btn-secondary hidden" id="tx-modal-done-btn">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COSMOS FEED -->
+        <section id="cosmos" class="view-panel">
+            <div class="dashboard-wrapper">
+                <div class="dashboard-header"><div><span class="badge badge-cyan">NASA Open APIs Space Intelligence</span><h1>Cosmos Intelligence Feed</h1><p>Live NASA Astronomy Picture of the Day, ISS telemetry, and space mission data.</p></div><div class="dashboard-actions"><input type="date" id="apod-date-input" class="search-input" style="max-width:180px"><button id="apod-fetch-btn" class="btn btn-primary">Load Date</button></div></div>
+                <div class="cosmos-grid">
+                    <div class="grid-card apod-main-card">
+                        <div class="apod-image-container" id="apod-image-wrap">
+                            <div class="apod-loading" id="apod-loading"><div class="cosmos-spinner"></div><p>Fetching cosmic imagery from NASA...</p></div>
+                            <img id="apod-img" src="" alt="Astronomy Picture of the Day" class="apod-img hidden">
+                            <iframe id="apod-video" src="" frameborder="0" allowfullscreen class="apod-video hidden"></iframe>
+                        </div>
+                        <div class="apod-meta">
+                            <div class="apod-meta-header"><span class="badge badge-purple" id="apod-date-badge">Loading...</span><span class="badge badge-cyan" id="apod-media-type">IMAGE</span></div>
+                            <h2 id="apod-title">Astronomy Picture of the Day</h2>
+                            <p id="apod-explanation" class="apod-explanation">Fetching today's cosmic wonder from NASA's open API...</p>
+                            <p class="apod-copyright text-muted" id="apod-copyright"></p>
+                        </div>
+                    </div>
+                    <div class="grid-card iss-card">
+                        <div class="card-header-accent font-space"><h3>ISS LIVE TELEMETRY</h3><span class="api-ping-indicator" id="iss-status">Fetching...</span></div>
+                        <div class="iss-body">
+                            <div class="iss-visual"><div class="earth-icon">&#127757;</div><div class="iss-orbit-ring"><div class="iss-dot" id="iss-orbit-dot">&#128760;</div></div></div>
+                            <div class="iss-stats">
+                                <div class="wallet-stat-row"><span class="label">Latitude</span><span class="val font-mono text-cyan" id="iss-lat">-</span></div>
+                                <div class="wallet-stat-row"><span class="label">Longitude</span><span class="val font-mono text-cyan" id="iss-lon">-</span></div>
+                                <div class="wallet-stat-row"><span class="label">Altitude</span><span class="val font-mono">~408 km</span></div>
+                                <div class="wallet-stat-row"><span class="label">Velocity</span><span class="val font-mono text-glow">27,600 km/h</span></div>
+                                <div class="wallet-stat-row"><span class="label">Crew</span><span class="val" id="iss-crew">Loading...</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-card space-news-card">
+                        <div class="card-header-accent font-space"><h3>SPACE NEWS - SPACEFLIGHT NEWS API</h3><span class="api-ping-indicator">Live Feed</span></div>
+                        <div class="space-news-list" id="space-news-list"><div class="tx-log-item text-muted">Loading space news feed...</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WEATHER ORACLE -->
+        <section id="weather" class="view-panel">
+            <div class="dashboard-wrapper">
+                <div class="dashboard-header"><div><span class="badge badge-cyan">OpenWeatherMap Geolocation API</span><h1>Weather Oracle</h1><p>Real-time atmospheric intelligence via auto-detected geolocation and meteorological data streams.</p></div><div class="dashboard-actions"><input type="text" id="weather-city-input" placeholder="Search city..." class="search-input" style="max-width:220px"><button id="weather-search-btn" class="btn btn-primary">Search</button><button id="weather-geo-btn" class="btn btn-secondary">My Location</button></div></div>
+                <div class="weather-grid">
+                    <div class="grid-card weather-main-card">
+                        <div class="weather-hero" id="weather-hero">
+                            <div class="weather-loading" id="weather-loading"><div class="cosmos-spinner"></div><p>Detecting your location...</p></div>
+                            <div class="weather-display hidden" id="weather-display">
+                                <div class="weather-icon-huge" id="weather-icon">&#9728;</div>
+                                <div class="weather-temp-block"><span class="weather-temp" id="weather-temp">--C</span><span class="weather-feels" id="weather-feels">Feels like --C</span></div>
+                                <div class="weather-location-block"><h2 id="weather-city-name">-</h2><p id="weather-description" class="text-muted">-</p></div>
+                            </div>
+                        </div>
+                        <div class="weather-stats-row hidden" id="weather-stats">
+                            <div class="w-stat"><span class="w-label">Humidity</span><span class="w-val text-cyan" id="weather-humidity">--%</span></div>
+                            <div class="w-stat"><span class="w-label">Wind Speed</span><span class="w-val" id="weather-wind">-- km/h</span></div>
+                            <div class="w-stat"><span class="w-label">Pressure</span><span class="w-val" id="weather-pressure">-- hPa</span></div>
+                            <div class="w-stat"><span class="w-label">Visibility</span><span class="w-val" id="weather-visibility">-- km</span></div>
+                            <div class="w-stat"><span class="w-label">UV Index</span><span class="w-val text-glow" id="weather-uv">--</span></div>
+                            <div class="w-stat"><span class="w-label">Condition</span><span class="w-val" id="weather-condition">-</span></div>
+                        </div>
+                    </div>
+                    <div class="grid-card forecast-card">
+                        <div class="card-header-accent font-space"><h3>5-DAY FORECAST</h3><span class="api-ping-indicator">OpenWeatherMap</span></div>
+                        <div class="forecast-list" id="forecast-list"><div class="tx-log-item text-muted">Enable location or search a city...</div></div>
+                    </div>
+                    <div class="grid-card geo-card">
+                        <div class="card-header-accent font-space"><h3>IP GEOLOCATION - ipapi.co</h3><span class="api-ping-indicator">Live</span></div>
+                        <div class="geo-body" id="geo-body">
+                            <div class="wallet-stat-row"><span class="label">IP Address</span><span class="val font-mono text-cyan" id="geo-ip">Detecting...</span></div>
+                            <div class="wallet-stat-row"><span class="label">Country</span><span class="val" id="geo-country">-</span></div>
+                            <div class="wallet-stat-row"><span class="label">Region</span><span class="val" id="geo-region">-</span></div>
+                            <div class="wallet-stat-row"><span class="label">City</span><span class="val" id="geo-city">-</span></div>
+                            <div class="wallet-stat-row"><span class="label">ISP / Org</span><span class="val font-mono" id="geo-org">-</span></div>
+                            <div class="wallet-stat-row"><span class="label">Timezone</span><span class="val" id="geo-tz">-</span></div>
+                            <div class="wallet-stat-row"><span class="label">Currency</span><span class="val" id="geo-currency">-</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DEVELOPER SANDBOX -->
+        <section id="sandbox" class="view-panel">
+            <div class="dashboard-wrapper">
+                <div class="dashboard-header"><div><span class="badge badge-cyan">RESTful API Sandbox</span><h1>LeanEth Developer Console</h1><p>Simulate requests to live APIs, view raw HTTP responses, and test rate-limiters.</p></div></div>
+                <div class="sandbox-grid">
+                    <div class="grid-card control-card">
+                        <div class="card-header-accent font-space"><h3>REQUEST CONFIGURATOR</h3></div>
+                        <div class="control-body">
+                            <div class="control-group"><label for="api-endpoint-select">Select Endpoint</label><select id="api-endpoint-select" class="sandbox-select"><option value="/api/v1/auth/login">POST /api/v1/auth/login</option><option value="/api/v1/analytics/realtime">GET /api/v1/analytics/realtime</option><option value="/api/v1/webhooks/dispatch">POST /api/v1/webhooks/dispatch</option><option value="/api/v1/ai/generate">POST /api/v1/ai/generate</option><option value="/api/v1/rate-limit-test">GET /api/v1/rate-limit-test</option><option value="live:coingecko">LIVE GET /coingecko/markets</option><option value="live:iss">LIVE GET /iss/position</option><option value="live:ip">LIVE GET /ip/geolocation</option><option value="live:joke">LIVE GET /chuck-norris/joke</option><option value="live:apod">LIVE GET /nasa/apod</option></select></div>
+                            <div class="control-group" id="sandbox-payload-group"><label for="api-payload-input">JSON Payload</label><textarea id="api-payload-input" class="sandbox-textarea font-mono">{"client_id":"leaneth_demo_key","scope":["read","write"]}</textarea></div>
+                            <div class="control-group"><label>Headers</label><div class="headers-list"><div class="header-tag">Authorization: Bearer leaneth_token_xyz</div><div class="header-tag">X-LeanEth-Priority: High</div><div class="header-tag">Accept: application/json</div></div></div>
+                            <button id="btn-fire-api" class="btn btn-primary btn-full btn-glow font-space">EXECUTE CALL</button>
+                        </div>
+                    </div>
+                    <div class="grid-card console-card">
+                        <div class="card-header-accent font-space"><h3>LEANETH CLUSTER TERMINAL</h3><span class="terminal-badge font-mono" id="term-status-code">200 OK</span></div>
+                        <div class="console-body">
+                            <div class="terminal-stats font-mono"><div>Latency: <span id="term-stat-latency" class="text-cyan">0ms</span></div><div>Server: <span class="text-purple">LeanEthEdge/1.22.4-Tokyo</span></div><div>Rate Limit: <span id="term-stat-ratelimit">99/100 remaining</span></div></div>
+                            <div class="terminal-screen font-mono" id="terminal-output"><div class="terminal-line text-muted">// Console ready. Awaiting trigger execution from configurator...</div><div class="terminal-line text-cyan">guest@leaneth-edge-server ~ % _</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-brand"><span class="logo-text">LeanEth</span><span class="logo-sub">.API</span><p>Architecting fluid, high-performance integration structures.</p></div>
+            <div class="footer-status font-space"><div class="status-item"><span class="dot pulse-green"></span><span>Edge Nodes: <span class="text-white">Active (12/12)</span></span></div><div class="status-item"><span class="dot pulse-green"></span><span>Global CDN: <span class="text-white">100% Operational</span></span></div></div>
+            <div class="footer-copy">2026 LeanEth Ventures. Crafted with absolute premium vanilla execution.</div>
+        </div>
+    </footer>
+
+    <script src="js/router.js" type="module"></script>
+    <script src="js/parallax.js" type="module"></script>
+    <script src="js/youtube-api.js" type="module"></script>
+    <script src="js/tmdb-api.js" type="module"></script>
+    <script src="js/crypto-api.js" type="module"></script>
+    <script src="js/cosmos-api.js" type="module"></script>
+    <script src="js/weather-api.js" type="module"></script>
+    <script src="js/sandbox.js" type="module"></script>
+    <script src="js/main.js" type="module"></script>
+    <script>function navigateTo(s){var l=document.querySelector('[data-link="'+s+'"]');if(l)l.click();}</script>
+</body>
+</html>

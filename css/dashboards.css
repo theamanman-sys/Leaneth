@@ -1,0 +1,178 @@
+/* DASHBOARD WRAPPERS & GLASS CARDS LAYOUT - LEANETH VENTURES */
+
+.dashboard-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3.5rem;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.dashboard-header h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-top: 0.2rem;
+    background: linear-gradient(135deg, #ffffff 40%, rgba(255,255,255,0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dashboard-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 700px;
+}
+
+/* Shared Dashboard Actions */
+.dashboard-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-input {
+    background: rgba(255, 255, 255, 0.03);
+    border: var(--border-glow);
+    border-radius: 30px;
+    padding: 0.8rem 1.5rem;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    width: 320px;
+    transition: var(--transition-premium);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: rgba(168, 85, 247, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
+}
+
+/* Universal Dashboard Grid Structure */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2rem;
+}
+
+/* Shared Grid Card Component */
+.grid-card {
+    background: var(--bg-panel);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: var(--border-glow);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-premium);
+}
+
+/* Hover Accent Borders */
+.grid-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(6, 182, 212, 0.2)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.grid-card:hover {
+    border-color: transparent;
+    box-shadow: 0 15px 40px rgba(10, 12, 18, 0.6);
+}
+
+.grid-card:hover::after {
+    opacity: 1;
+}
+
+/* Standard Pane Header */
+.pane-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.pane-header h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    font-family: var(--font-heading);
+}
+
+.api-ping-indicator {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.75rem;
+    background: rgba(74, 222, 128, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(74, 222, 128, 0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Card Accent Headers (For EVM & Live Crypto Tickers) */
+.card-header-accent {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 1.2rem;
+    margin-bottom: 1.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header-accent h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+}
+
+/* Width Layout Presets */
+.full-width {
+    grid-column: span 12;
+}
+
+/* Responsive Dashboard Styles */
+@media (max-width: 1024px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+    .search-input {
+        width: 100%;
+    }
+    .dashboard-actions {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-wrapper {
+        padding: 2rem 1rem 4rem;
+    }
+    .grid-card {
+        padding: 1.5rem;
+    }
+}
