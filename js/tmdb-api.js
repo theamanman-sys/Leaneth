@@ -2,8 +2,9 @@
 
 import { playClickSound } from './router.js';
 
-const TMDB_KEY = '5208e5da3f57c0f88f10d53f67f8865f';
+const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMzQyZWNhZjBjNzNmYzU1NmI1NDk3NzQwYmJmZmE5MiIsIm5iZiI6MTc3NTIyMDE5OS42MDA5OTk4LCJzdWIiOiI2OWNmYjVlNzY4YjcwYWNmYjgyZjc2MmQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.jxycsZVC7uLmewooOKm20BvZUZ5s5H4qPsalI3FBmok';
 const TMDB_BASE = 'https://api.themoviedb.org/3';
+const TMDB_HEADERS = { accept: 'application/json', Authorization: `Bearer ${TMDB_TOKEN}` };
 
 const GENRE_MAP = {
     28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy',
@@ -82,7 +83,7 @@ class MovieEngine {
         try {
             const pages = [1, 2, 3];
             const results = await Promise.all(pages.map(p =>
-                fetch(`${TMDB_BASE}/discover/movie?api_key=${TMDB_KEY}&sort_by=popularity.desc&include_adult=false&page=${p}`)
+                fetch(`${TMDB_BASE}/discover/movie?sort_by=popularity.desc&include_adult=false&page=${p}`, { headers: TMDB_HEADERS })
                     .then(r => r.json())
             ));
             let all = [];
@@ -187,7 +188,7 @@ class MovieEngine {
 
     async fetchExtendedDetails(movieId) {
         try {
-            const data = await fetch(`${TMDB_BASE}/movie/${movieId}?api_key=${TMDB_KEY}&append_to_response=credits`).then(r => r.json());
+            const data = await fetch(`${TMDB_BASE}/movie/${movieId}?append_to_response=credits`, { headers: TMDB_HEADERS }).then(r => r.json());
 
             if (data.runtime && this.extraDetails) {
                 const genres = data.genres ? data.genres.map(g => g.name).join(', ') : '—';
