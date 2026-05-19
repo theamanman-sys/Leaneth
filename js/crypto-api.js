@@ -1,6 +1,5 @@
 ﻿/* REAL WEB3 IDENTITY BRIDGE - LEANETH VENTURES
-   Supports real MetaMask EIP-1193 connection + demo mode fallback
-   + CoinGecko live prices (ETH, BTC, SOL, MATIC) */
+   Real MetaMask EIP-1193 connection + CoinGecko live prices */
 
 import { playClickSound } from './router.js';
 
@@ -64,11 +63,23 @@ class Web3IdentityBridge {
         this.detectMetaMask();
         this.fetchLivePrices();
         setInterval(() => this.fetchLivePrices(), 30000);
+
         this.connectBtn.addEventListener('click', () => {
             playClickSound();
-            if (this.connected) { this.disconnectWallet(); } else { this.connectModal.classList.remove('hidden'); }
+            if (this.connected) {
+                this.disconnectWallet();
+            } else if (window.ethereum && window.ethereum.isMetaMask) {
+                this.connectRealMetaMask();
+            } else {
+                this.connectModal.classList.remove('hidden');
+            }
         });
-        this.connectModalClose.addEventListener('click', () => { playClickSound(); this.connectModal.classList.add('hidden'); });
+
+        this.connectModalClose.addEventListener('click', () => {
+            playClickSound();
+            this.connectModal.classList.add('hidden');
+        });
+
         document.querySelectorAll('.wallet-option').forEach(opt => {
             opt.addEventListener('click', () => {
                 const wallet = opt.getAttribute('data-wallet');
@@ -80,16 +91,33 @@ class Web3IdentityBridge {
                 }
             });
         });
+
         this.signBtn && this.signBtn.addEventListener('click', () => this.doSign());
         this.sendBtn && this.sendBtn.addEventListener('click', () => this.doSend());
+
         this.txModalClose.addEventListener('click', () => { this.txModal.classList.add('hidden'); });
         this.txDoneBtn.addEventListener('click', () => { playClickSound(); this.txModal.classList.add('hidden'); });
+
         if (window.ethereum) {
             window.ethereum.on('accountsChanged', (accounts) => {
-                if (accounts.length === 0) { this.disconnectWallet(); } else { this.account = accounts[0]; this.updateAddressUI(); this.fetchBalance(); }
+                if (accounts.length === 0) {
+                    this.disconnectWallet();
+                } else {
+                    this.account = accounts[0];
+                    this.updateAddressUI();
+                    this.fetchBalance();
+                    this.addTxLog('info', `Account switched to ${this.account.slice(0,6)}...${this.account.slice(-4)}`);
+                }
             });
-            window.ethereum.on('chainChanged', () => { if (this.connected) this.fetchChainInfo(); });
+            window.ethereum.on('chainChanged', () => {
+                if (this.connected) this.fetchChainInfo();
+            });
+            window.ethereum.on('disconnect', () => {
+                this.disconnectWallet();
+            });
         }
+
+        this.addTxLog('info', 'Web3 bridge initialized. Click Connect Wallet.');
     }
 
     detectMetaMask() {
@@ -99,7 +127,7 @@ class Web3IdentityBridge {
             this.mmStatus.style.color = 'var(--accent-cyan)';
         } else {
             this.mmStatus.textContent = 'Not Found';
-            this.mmStatus.style.color = 'var(--accent-error, #ff6b6b)';
+            this.mmStatus.style.color = 'var(--error)';
         }
     }
 
@@ -114,8 +142,8 @@ class Web3IdentityBridge {
             this.connected = true;
             this.playSuccessChime();
             this.txModal.classList.add('hidden');
-            this.updateConnectedUI('MetaMask Extension (Real EIP-1193)');
-            this.addTxLog('info', `Real wallet connected: ${this.account.slice(0,6)}...${this.account.slice(-4)}`);
+            this.updateConnectedUI('MetaMask Extension (EIP-1193)');
+            this.addTxLog('success', `Connected: ${this.account.slice(0,6)}...${this.account.slice(-4)}`);
         } catch (err) {
             this.txStatus.textContent = 'Connection rejected: ' + err.message;
             this.txSpinner.classList.add('hidden');
@@ -132,6 +160,7 @@ class Web3IdentityBridge {
             const networkName = CHAIN_NAMES[chainId] || `Unknown Chain (${chainId})`;
             this.networkVal.textContent = networkName;
             this.chainVal.textContent = `${chainId} (${parseInt(chainId, 16)})`;
+            this.addTxLog('info', `Network: ${networkName} (Chain ID: ${parseInt(chainId, 16)})`);
         } catch(e) {}
     }
 
@@ -142,6 +171,7 @@ class Web3IdentityBridge {
             const balWei = parseInt(balHex, 16);
             const balEth = (balWei / 1e18).toFixed(4);
             this.balanceVal.textContent = `${balEth} ETH`;
+            this.addTxLog('info', `Balance: ${balEth} ETH`);
         } catch(e) {
             this.balanceVal.textContent = 'Error fetching';
         }
@@ -168,7 +198,7 @@ class Web3IdentityBridge {
                 this.txDoneBtn.textContent = 'Dismiss';
                 this.txDoneBtn.classList.remove('hidden');
                 this.playSuccessChime();
-                this.addTxLog('success', `Signed: ${sig.slice(0,10)}...`);
+                this.addTxLog('success', `Signed message: ${sig.slice(0,16)}...`);
             } catch(err) {
                 this.txSpinner.classList.add('hidden');
                 this.txStatus.textContent = 'Signature rejected.';
@@ -190,11 +220,10 @@ class Web3IdentityBridge {
         this.txDoneBtn.classList.add('hidden');
         this.txDetails.classList.add('hidden');
         this.txModal.classList.remove('hidden');
-        const gasLimit = 21000;
         const to = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045';
         const value = '0x' + (0.001 * 1e18).toString(16);
-        const payload = `Method: eth_sendTransaction\nTo: ${to}\nValue: 0.001 ETH\nGas: ${gasLimit}`;
-        this.txDetails.textContent = payload;
+        const gasLimit = 21000;
+        this.txDetails.textContent = `Method: eth_sendTransaction\nTo: ${to}\nValue: 0.001 ETH\nGas: ${gasLimit}`;
         this.txDetails.classList.remove('hidden');
         setTimeout(() => {
             this.txSpinner.classList.add('hidden');
@@ -207,7 +236,10 @@ class Web3IdentityBridge {
                 this.txStatus.textContent = 'Broadcasting...';
                 if (this.provider && this.account) {
                     try {
-                        const txHash = await this.provider.request({ method: 'eth_sendTransaction', params: [{ from: this.account, to, value, gas: '0x' + gasLimit.toString(16) }] });
+                        const txHash = await this.provider.request({
+                            method: 'eth_sendTransaction',
+                            params: [{ from: this.account, to, value, gas: '0x' + gasLimit.toString(16) }]
+                        });
                         this.txSpinner.classList.add('hidden');
                         this.txStatus.textContent = 'Tx Broadcasted!';
                         this.txDetails.textContent = `Transaction Hash:\n${txHash}`;
@@ -215,7 +247,7 @@ class Web3IdentityBridge {
                         this.txDoneBtn.classList.remove('hidden');
                         this.txDoneBtn.onclick = () => this.txModal.classList.add('hidden');
                         this.playSuccessChime();
-                        this.addTxLog('success', `Tx: ${txHash.slice(0,12)}...`);
+                        this.addTxLog('success', `Tx broadcast: ${txHash.slice(0,16)}...`);
                     } catch(e) {
                         this.txSpinner.classList.add('hidden');
                         this.txStatus.textContent = 'Transaction rejected.';
@@ -280,7 +312,7 @@ class Web3IdentityBridge {
             this.txDoneBtn.textContent = 'Awesome';
             this.txDoneBtn.classList.remove('hidden');
             this.txDoneBtn.onclick = () => this.txModal.classList.add('hidden');
-            this.addTxLog('success', `Tx: ${hash.slice(0,12)}...`);
+            this.addTxLog('success', `Demo Tx: ${hash.slice(0,12)}...`);
         }, 3500);
     }
 
@@ -337,7 +369,7 @@ class Web3IdentityBridge {
         const ts = new Date().toLocaleTimeString();
         el.textContent = `[${ts}] ${message}`;
         this.txLogList.prepend(el);
-        if (this.txLogList.children.length > 20) this.txLogList.lastChild.remove();
+        if (this.txLogList.children.length > 30) this.txLogList.lastChild.remove();
     }
 
     playSuccessChime() {
