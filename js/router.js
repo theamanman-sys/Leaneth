@@ -15,6 +15,41 @@ export function playClickSound() {
     }
 }
 
+// Mobile menu
+function setupMobileMenu() {
+    const hamburger = document.getElementById('hamburger-btn');
+    const mobileNav = document.getElementById('mobile-nav');
+    const overlay = document.createElement('div');
+    overlay.className = 'mobile-nav-overlay';
+    document.body.appendChild(overlay);
+
+    function closeMenu() {
+        hamburger.classList.remove('active');
+        mobileNav.classList.remove('open');
+        overlay.classList.remove('open');
+    }
+
+    function openMenu() {
+        hamburger.classList.add('active');
+        mobileNav.classList.add('open');
+        overlay.classList.add('open');
+    }
+
+    hamburger.addEventListener('click', () => {
+        if (mobileNav.classList.contains('open')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    overlay.addEventListener('click', closeMenu);
+
+    mobileNav.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+}
+
 // Router class
 class Router {
     constructor() {
@@ -63,7 +98,7 @@ class Router {
             
             targetPanel.classList.add('active');
             
-            // Highlight matching nav link
+            // Highlight matching nav link (both desktop and mobile)
             this.links.forEach(link => {
                 if (link.getAttribute('data-link') === targetViewId) {
                     link.classList.add('active');
@@ -99,6 +134,7 @@ class Router {
 let routerInstance;
 
 export function initRouter() {
+    setupMobileMenu();
     routerInstance = new Router();
     return routerInstance;
 }
