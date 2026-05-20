@@ -356,6 +356,7 @@ class MovieEngine {
     mapTrendingItem(item) {
         return {
             id: item.id,
+            media_type: this.activeType,
             title: item.title || item.name || 'Untitled',
             release_date: (item.release_date || item.first_air_date || '').split('-')[0] || '',
             poster_path: item.poster_path ? `${TMDB_IMG}/w500${item.poster_path}` : '',
@@ -363,7 +364,7 @@ class MovieEngine {
             vote_average: item.vote_average || 0,
             popularity: item.popularity || 0,
             genre: '',
-            embed_url: item.id ? `https://vaplayer.ru/embed/${this.activeType}/${item.id}` : '',
+            embed_url: '',
             overview: item.overview || '',
             tagline: '',
         };
@@ -391,9 +392,7 @@ class MovieEngine {
 
         try {
             const pages = [1, 2, 3];
-            const endpoint = this.activeType === 'tv'
-                ? `/discover/tv?with_networks=${companyId}&sort_by=popularity.desc&include_adult=false`
-                : `/discover/movie?with_companies=${companyId}&sort_by=popularity.desc&include_adult=false`;
+            const endpoint = `/discover/${this.activeType}?with_companies=${companyId}&sort_by=popularity.desc&include_adult=false`;
             const results = await Promise.all(pages.map(p =>
                 fetch(`${TMDB_BASE}${endpoint}&page=${p}`, { headers: TMDB_HEADERS }).then(r => r.json())
             ));
@@ -404,6 +403,7 @@ class MovieEngine {
 
             const mapped = items.map(m => ({
                 id: m.id,
+                media_type: this.activeType,
                 title: m.title || m.name || 'Untitled',
                 release_date: (m.release_date || m.first_air_date || '').split('-')[0] || '',
                 poster_path: m.poster_path ? `${TMDB_IMG}/w500${m.poster_path}` : '',
@@ -411,7 +411,7 @@ class MovieEngine {
                 vote_average: m.vote_average || 0,
                 popularity: m.popularity || 0,
                 genre: '',
-                embed_url: m.id ? `https://vaplayer.ru/embed/${this.activeType}/${m.id}` : '',
+                embed_url: '',
                 overview: m.overview || '',
                 tagline: '',
             }));
@@ -649,6 +649,7 @@ class MovieEngine {
 
             const mapped = results.map(r => ({
                 id: r.id,
+                media_type: r.media_type,
                 title: r.title || r.name || 'Untitled',
                 release_date: (r.release_date || r.first_air_date || '').split('-')[0] || '',
                 poster_path: r.poster_path ? `${TMDB_IMG}/w500${r.poster_path}` : '',
@@ -656,7 +657,7 @@ class MovieEngine {
                 vote_average: r.vote_average || 0,
                 popularity: r.popularity || 0,
                 genre: r.media_type === 'tv' ? 'TV' : 'Movie',
-                embed_url: r.media_type === 'movie' && r.id ? `https://vaplayer.ru/embed/movie/${r.id}` : '',
+                embed_url: '',
                 overview: r.overview || '',
                 tagline: '',
             }));
@@ -692,12 +693,9 @@ class MovieEngine {
             this.overlayCast.innerHTML = '<div class="terminal-line text-muted">Loading details...</div>';
         }
         if (this.overlayPlay) {
-            if (item.embed_url) {
-                this.overlayPlay.classList.remove('hidden');
-                this.currentMovie = item;
-            } else {
-                this.overlayPlay.classList.add('hidden');
-            }
+            this.overlayPlay.classList.remove('hidden');
+            this.overlayPlay.textContent = 'Loading...';
+            this.currentMovie = item;
         }
         if (this.overlayTrailers) {
             this.overlayTrailers.innerHTML = '<div class="terminal-line text-muted">Loading trailers...</div>';
@@ -712,36 +710,122 @@ class MovieEngine {
         this.overlay.scrollTop = 0;
         document.body.style.overflow = 'hidden';
 
-        if (item.id) this.fetchExtendedDetails(item.id);
+        if (item.id) this.fetchExtendedDetails(item.id, item.media_type || this.activeType);
     }
 
     playCurrentMovie() {
-        if (!this.currentMovie || !this.currentMovie.embed_url) return;
+        if (!this.currentMovie) return;
+        const item = this.currentMovie;
         playClickSound();
-        this.overlayIframe.src = this.currentMovie.embed_url;
+
+        if (item.media_type === 'tv') {
+            this.showSeasonPicker(item);
+            return;
+        }
+
+        if (!item.embed_url) {
+            item.embed_url = `https://vaplayer.ru/embed/movie/${item.id}`;
+        }
+        this.overlayIframe.src = item.embed_url;
         this.overlayPlayer.classList.remove('hidden');
         this.overlayPlay.classList.add('hidden');
     }
 
-    async fetchExtendedDetails(movieId) {
+    async showSeasonPicker(item) {
+        this.overlayPlay.textContent = 'Loading episodes...';
+        this.overlayPlay.disabled = true;
         try {
-            const data = await fetch(`${TMDB_BASE}/movie/${movieId}?append_to_response=credits,videos,images`, { headers: TMDB_HEADERS }).then(r => r.json());
+            const data = await fetch(`${TMDB_BASE}/tv/${item.id}`, { headers: TMDB_HEADERS }).then(r => r.json());
+            const seasons = (data.seasons || []).filter(s => s.season_number > 0);
+            if (seasons.length === 0) {
+                item.embed_url = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
+                this.overlayIframe.src = item.embed_url;
+                this.overlayPlayer.classList.remove('hidden');
+                this.overlayPlay.classList.add('hidden');
+                return;
+            }
+            let html = '<div class="episode-picker"><h4>Select Season & Episode</h4>';
+            html += '<div class="ep-picker-row"><label>Season</label><select id="ep-season-select" class="ep-select">';
+            seasons.forEach(s => {
+                html += `<option value="${s.season_number}">${s.name || 'Season ' + s.season_number}</option>`;
+            });
+            html += '</select></div>';
+            html += '<div class="ep-picker-row"><label>Episode</label><select id="ep-episode-select" class="ep-select"></select></div>';
+            html += '<button class="btn btn-primary btn-glow" id="ep-play-btn">▶ Play Episode</button></div>';
 
-            if (data.runtime && this.overlayExtra) {
+            this.overlayPlay.textContent = '▶ Play';
+            this.overlayPlay.disabled = false;
+            this.overlayPlay.classList.add('hidden');
+            this.overlayPlayer.innerHTML = `<div class="movie-player-wrap">${html}</div>`;
+            this.overlayPlayer.classList.remove('hidden');
+
+            const seasonSelect = document.getElementById('ep-season-select');
+            const episodeSelect = document.getElementById('ep-episode-select');
+
+            const loadEpisodes = async (seasonNum) => {
+                try {
+                    const epData = await fetch(`${TMDB_BASE}/tv/${item.id}/season/${seasonNum}`, { headers: TMDB_HEADERS }).then(r => r.json());
+                    const episodes = epData.episodes || [];
+                    episodeSelect.innerHTML = episodes.map(e =>
+                        `<option value="${e.episode_number}">${e.episode_number}. ${e.name || 'Episode ' + e.episode_number}</option>`
+                    ).join('');
+                } catch {
+                    episodeSelect.innerHTML = '<option value="1">Episode 1</option>';
+                }
+            };
+
+            seasonSelect.addEventListener('change', () => loadEpisodes(parseInt(seasonSelect.value)));
+            await loadEpisodes(parseInt(seasonSelect.value));
+
+            document.getElementById('ep-play-btn').addEventListener('click', () => {
+                const s = seasonSelect.value;
+                const e = episodeSelect.value;
+                item.embed_url = `https://vaplayer.ru/embed/tv/${item.id}/${s}/${e}`;
+                this.overlayPlayer.innerHTML = `<div class="movie-player-wrap"><iframe width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay" src="${item.embed_url}"></iframe></div>`;
+            });
+        } catch {
+            item.embed_url = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
+            this.overlayIframe.src = item.embed_url;
+            this.overlayPlayer.classList.remove('hidden');
+            this.overlayPlay.classList.add('hidden');
+        }
+    }
+
+    async fetchExtendedDetails(itemId, mediaType) {
+        const isTv = mediaType === 'tv';
+        const endpoint = isTv ? 'tv' : 'movie';
+        try {
+            const data = await fetch(`${TMDB_BASE}/${endpoint}/${itemId}?append_to_response=credits,videos,images`, { headers: TMDB_HEADERS }).then(r => r.json());
+
+            if (this.overlayExtra) {
                 const genres = data.genres ? data.genres.map(g => g.name).join(', ') : '—';
-                const runtime = data.runtime ? `${data.runtime} min` : '—';
-                const budget = data.budget ? `$${(data.budget / 1e6).toFixed(1)}M` : '—';
-                const revenue = data.revenue ? `$${(data.revenue / 1e6).toFixed(1)}M` : '—';
                 const status = data.status || '—';
                 const lang = data.original_language ? data.original_language.toUpperCase() : '—';
-                this.overlayExtra.innerHTML = `
+                let extra = `
                     <div class="cinema-extra-row"><span class="label">Genres</span><span class="value">${genres}</span></div>
-                    <div class="cinema-extra-row"><span class="label">Runtime</span><span class="value">${runtime}</span></div>
-                    <div class="cinema-extra-row"><span class="label">Budget</span><span class="value">${budget}</span></div>
-                    <div class="cinema-extra-row"><span class="label">Revenue</span><span class="value">${revenue}</span></div>
                     <div class="cinema-extra-row"><span class="label">Status</span><span class="value">${status}</span></div>
                     <div class="cinema-extra-row"><span class="label">Language</span><span class="value">${lang}</span></div>
                 `;
+                if (isTv) {
+                    const seasons = data.number_of_seasons || '—';
+                    const episodes = data.number_of_episodes || '—';
+                    const lastAir = data.last_air_date || '—';
+                    extra += `
+                        <div class="cinema-extra-row"><span class="label">Seasons</span><span class="value">${seasons}</span></div>
+                        <div class="cinema-extra-row"><span class="label">Episodes</span><span class="value">${episodes}</span></div>
+                        <div class="cinema-extra-row"><span class="label">Last Air</span><span class="value">${lastAir}</span></div>
+                    `;
+                } else {
+                    const runtime = data.runtime ? `${data.runtime} min` : '—';
+                    const budget = data.budget ? `$${(data.budget / 1e6).toFixed(1)}M` : '—';
+                    const revenue = data.revenue ? `$${(data.revenue / 1e6).toFixed(1)}M` : '—';
+                    extra += `
+                        <div class="cinema-extra-row"><span class="label">Runtime</span><span class="value">${runtime}</span></div>
+                        <div class="cinema-extra-row"><span class="label">Budget</span><span class="value">${budget}</span></div>
+                        <div class="cinema-extra-row"><span class="label">Revenue</span><span class="value">${revenue}</span></div>
+                    `;
+                }
+                this.overlayExtra.innerHTML = extra;
             }
 
             if (data.overview && this.overlayOverview) {
@@ -749,6 +833,13 @@ class MovieEngine {
             }
             if (data.backdrop_path && this.overlayBackdrop) {
                 this.overlayBackdrop.style.backgroundImage = `url('${TMDB_IMG}/original${data.backdrop_path}')`;
+            }
+
+            /* Enable play button */
+            if (this.overlayPlay && this.currentMovie) {
+                this.currentMovie.media_type = mediaType;
+                this.overlayPlay.classList.remove('hidden');
+                this.overlayPlay.textContent = isTv ? '▶ Select Episode' : '▶ Play';
             }
 
             /* ── Trailers ── */

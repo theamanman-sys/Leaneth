@@ -1895,3 +1895,57 @@
     .stream-hero-title { font-size: 1rem; }
     .stream-hero-desc { font-size: 0.75rem; -webkit-line-clamp: 1; }
 }
+
+/* ==========================================
+   EPISODE PICKER
+   ========================================== */
+
+.episode-picker {
+    padding: 2rem;
+    background: rgba(255,255,255,0.02);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.episode-picker h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    color: var(--text-primary);
+}
+
+.ep-picker-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.ep-picker-row label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    min-width: 60px;
+    font-weight: 500;
+}
+
+.ep-select {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+}
+
+.ep-select:focus {
+    outline: none;
+    border-color: rgba(255,255,255,0.2);
+}
+
+#ep-play-btn {
+    margin-top: 1rem;
+    width: 100%;
+}
