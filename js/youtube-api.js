@@ -5,20 +5,20 @@ import { playClickSound } from './router.js';
 const PIPED_API = 'https://pipedapi.com';
 
 const NEWS_CHANNELS = [
-    { channelId: "UCupvZG-5ko_eiXAupbDfxWw", title: "CNN Live", channel: "CNN", description: "24/7 live news coverage from CNN.", thumb: "https://logo.clearbit.com/cnn.com" },
-    { channelId: "UCBi2mrWuNuyYy4gbM6fU18Q", title: "ABC News Live", channel: "ABC News", description: "Live breaking news, politics, and world events.", thumb: "https://logo.clearbit.com/abcnews.go.com" },
-    { channelId: "UCNye-wNBqNL5ZzHSJj3l8Bg", title: "Al Jazeera Live", channel: "Al Jazeera", description: "Global news and current affairs from Al Jazeera.", thumb: "https://logo.clearbit.com/aljazeera.com" },
-    { channelId: "UC16niRr50-MSBwiO3YDb3RA", title: "BBC News Live", channel: "BBC News", description: "Breaking news, analysis, and world reports.", thumb: "https://logo.clearbit.com/bbc.com" },
-    { channelId: "UCXIJgqnII2ZOINSWNOGFThA", title: "Fox News Live", channel: "Fox News", description: "US news, politics, and live events.", thumb: "https://logo.clearbit.com/foxnews.com" },
-    { channelId: "UCoMdktPbSTixAyNGwb-UYkQ", title: "Sky News Live", channel: "Sky News", description: "UK and international breaking news.", thumb: "https://logo.clearbit.com/sky.com" },
-    { channelId: "UCaXkIU1QidjPwiAYu6GcHjg", title: "MS NBC Live", channel: "MSNBC", description: "US politics, news analysis, and live coverage.", thumb: "https://logo.clearbit.com/msnbc.com" },
-    { channelId: "UCIALMKvObZNtJ6AmdCLP7Lg", title: "Bloomberg Live", channel: "Bloomberg", description: "Financial markets, business news, and analysis.", thumb: "https://logo.clearbit.com/bloomberg.com" },
-    { channelId: "UCeY0bbntWzzVIaj2z3QigXg", title: "NBC News Live", channel: "NBC News", description: "US and world news coverage.", thumb: "https://logo.clearbit.com/nbcnews.com" },
-    { channelId: "UCCCPCZNChQdGa9EkATeye4g", title: "France 24 Live", channel: "France 24", description: "International news 24/7 in English.", thumb: "https://logo.clearbit.com/france24.com" },
-    { channelId: "UCknLrEdhRCp1aegoMqRaCZg", title: "DW News Live", channel: "DW News", description: "German and international news coverage.", thumb: "https://logo.clearbit.com/dw.com" },
-    { channelId: "UChqUTb7kYRX8-EiaN3XFrSQ", title: "Reuters Live", channel: "Reuters", description: "Global news and financial reporting.", thumb: "https://logo.clearbit.com/reuters.com" },
-    { channelId: "UC52X5wxOL_s5yw0dQk7NtgA", title: "Associated Press Live", channel: "AP News", description: "Breaking news from around the globe.", thumb: "https://logo.clearbit.com/apnews.com" },
-    { channelId: "UC8p1vwvWtl6T73JiExfWs1g", title: "CBS News Live", channel: "CBS News", description: "Live news, politics, and investigations.", thumb: "https://logo.clearbit.com/cbsnews.com" },
+    { channelId: "UCupvZG-5ko_eiXAupbDfxWw", title: "CNN Live", channel: "CNN", description: "24/7 live news coverage from CNN.", cover: "https://yt3.googleusercontent.com/wSqAf5WdxsGsl7ZMtlyfz3qKULo_URoFjmKky0gLThm_Jtu2wsVHMu-XzGZPAb-z8zeMBYUUMYA=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UCBi2mrWuNuyYy4gbM6fU18Q", title: "ABC News Live", channel: "ABC News", description: "Live breaking news, politics, and world events.", cover: "https://yt3.googleusercontent.com/GJ8V0NX6NddGh9bf4zED4tsjPjjBK2hdp5FWHMy09pV7sdSkkE3yEhCRSch4waEb9ZavyUrWfw=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UCNye-wNBqNL5ZzHSJj3l8Bg", title: "Al Jazeera Live", channel: "Al Jazeera", description: "Global news and current affairs from Al Jazeera.", cover: "https://yt3.googleusercontent.com/XsTga3Nsfc1E6ZgC6HfHfzTG_3zhuZleOnsKxSK2aILMjwkkIm-0vdALFaU-yt0Lw07iLtbSifk=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UC16niRr50-MSBwiO3YDb3RA", title: "BBC News Live", channel: "BBC News", description: "Breaking news, analysis, and world reports.", cover: "https://yt3.googleusercontent.com/v4JamQ9B-PUiJHjmZQs9UwTaoLQW8vijJMMpV5QvA2wHQ6iwWM8Q1s6O4jgTl0dtDigVWAi7SA=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UCXIJgqnII2ZOINSWNOGFThA", title: "Fox News Live", channel: "Fox News", description: "US news, politics, and live events.", cover: "https://yt3.googleusercontent.com/G3gLy3HBgiZ21mEt1uzR0VPA6VXpsgJReuD7Z91nHwcgyFVu_QpHNpxuULN1D0YEQBwD0F1HwQ=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UCoMdktPbSTixAyNGwb-UYkQ", title: "Sky News Live", channel: "Sky News", description: "UK and international breaking news.", cover: "https://yt3.googleusercontent.com/dGnkztdrLtXRlzkdqReeL-NES2761xxmNVcJhGKqFpR0vQBoP9XaxnXF95FDpwrjyFr2iJvV8Es=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UCaXkIU1QidjPwiAYu6GcHjg", title: "MSNBC Live", channel: "MSNBC", description: "US politics, news analysis, and live coverage.", cover: "https://yt3.googleusercontent.com/k6bDbWwngaO6KSyL1lxkmFIbW6ncdoLKITtcqTumbD5wBazaJltUEkJdrfHjuMtDrHltYaIbLd0=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UCIALMKvObZNtJ6AmdCLP7Lg", title: "Bloomberg Live", channel: "Bloomberg", description: "Financial markets, business news, and analysis.", cover: "https://yt3.googleusercontent.com/4-w44catDebzaDSUWgereql0G5_z5o7VpJXuIYL_eZ3H1vXy0lTmrole9V500jTUXCnQPZ5CuKQ=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UCeY0bbntWzzVIaj2z3QigXg", title: "NBC News Live", channel: "NBC News", description: "US and world news coverage.", cover: "https://yt3.googleusercontent.com/PJj5jtuEOi5UmkFy4IBonj5WcabNcnJAIJe-jZMd1ArwIuVyQxFH_2zryBHwvfv6mJujwRpWDCM=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UCCCPCZNChQdGa9EkATeye4g", title: "France 24 Live", channel: "France 24", description: "International news 24/7 in English.", cover: "https://yt3.googleusercontent.com/ytc/AIdro_k9aU_SRhYAWJjQ6AO7uzQDZE5mb7gmv4synLrC7hEWGjE=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UCknLrEdhRCp1aegoMqRaCZg", title: "DW News Live", channel: "DW News", description: "German and international news coverage.", cover: "https://yt3.googleusercontent.com/NSOdTQTWlqMy8O_j32dx-ftfTCHMOt04Hm7KZ4pfAK6-eQzQSZMWvvss90kG8KQfJ7iNP3phyA=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UChqUTb7kYRX8-EiaN3XFrSQ", title: "Reuters Live", channel: "Reuters", description: "Global news and financial reporting.", cover: "https://yt3.googleusercontent.com/bCcVVrrV0EhGFJKsSvmeZHA9Y-YzSL9Keqrrr0HWYUPQy3-mVUVNHMbjwt7IoVkpsHt4E6BZ3pM=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UC52X5wxOL_s5yw0dQk7NtgA", title: "Associated Press Live", channel: "AP News", description: "Breaking news from around the globe.", cover: "https://yt3.googleusercontent.com/I2UXf4n7ukd9hl7UQDsPKN0QXQ9X_NoujZfOY_qPhbBwyJv-K3-rFsrWIDGc3CFylr2cL2c7=s900-c-k-c0x00ffffff-no-rj" },
+    { channelId: "UC8p1vwvWtl6T73JiExfWs1g", title: "CBS News Live", channel: "CBS News", description: "Live news, politics, and investigations.", cover: "https://yt3.googleusercontent.com/ytc/AIdro_niBFv49gSx4rr1afMZU_Pv7SeuPKO2SMHvv0Ar7OKxM4o=s900-c-k-c0x00ffffff-no-rj" },
 ];
 
 const FALLBACK_VIDEOS = [
@@ -79,11 +79,12 @@ class StreamEngine {
         this.videoList.innerHTML = '';
         NEWS_CHANNELS.forEach((ch) => {
             const card = document.createElement('div');
-            card.className = 'yt-video-card';
+            card.className = 'yt-video-card news-card';
             card.innerHTML = `
-                <div class="yt-thumb-wrapper news-thumb">
+                <div class="news-cover news-thumb">
                     <div class="live-dot"></div>
-                    <img src="${ch.thumb}" alt="${ch.title}" class="yt-thumb" loading="lazy" onerror="this.style.display='none'">
+                    <img src="${ch.cover}" alt="${ch.title}" class="news-cover-img" loading="lazy" onerror="this.style.display='none'">
+                    <div class="news-cover-overlay"></div>
                 </div>
                 <div class="yt-card-info">
                     <h4 class="yt-card-title">${ch.title}</h4>

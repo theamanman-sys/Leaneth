@@ -541,12 +541,58 @@ a {
 
 .live-dot {
     position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 8px;
-    height: 8px;
+    top: 6px;
+    left: 6px;
+    width: 10px;
+    height: 10px;
     background: #ff3333;
     border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
+}
+
+/* News Cover Image */
+.news-card {
+    flex-direction: column !important;
+    padding: 0 !important;
+    overflow: hidden;
+    border-radius: 8px !important;
+}
+
+.news-cover {
+    position: relative;
+    width: 100%;
+    height: 90px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #111;
+}
+
+.news-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.news-cover-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+    pointer-events: none;
+}
+
+.news-card .yt-card-info {
+    padding: 0.5rem 0.7rem 0.7rem;
+}
+
+.news-card .yt-card-title {
+    font-size: 0.85rem;
+}
+
+.news-card .yt-card-channel {
+    font-size: 0.7rem;
+}
     z-index: 2;
     box-shadow: 0 0 8px #ff3333;
     animation: pulse 1.5s infinite;
