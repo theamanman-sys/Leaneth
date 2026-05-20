@@ -24,6 +24,17 @@ const COMPANY_NAMES = {
     '2': 'Disney',
 };
 
+const WATCH_LABELS = {
+    '9': 'Prime Video',
+    '350': 'Apple TV+',
+    '15': 'Hulu',
+    '2303': 'Paramount+',
+    '386': 'Peacock',
+    '2528': 'YouTube TV',
+    '257': 'fuboTV',
+    '300': 'Pluto TV',
+};
+
 const CURATED_NETFLIX_IDS = [
     1297842, 1318447, 701387, 1290417, 875828,
     1234821, 850165, 985939, 1100988, 1306368,
@@ -90,6 +101,7 @@ class MovieEngine {
         this.companyMovies = {};
         this.activeGenre = 'all';
         this.activeCompany = '';
+        this.activeWatch = '';
         this.activeType = 'movie';
         this.currentMovie = null;
         this.heroItems = [];
@@ -145,6 +157,7 @@ class MovieEngine {
             tab.addEventListener('click', () => {
                 playClickSound();
                 const company = tab.dataset.company || '';
+                const watch = tab.dataset.watch || '';
                 if (company === 'celebrities') {
                     this.showCelebrities();
                     return;
@@ -153,7 +166,12 @@ class MovieEngine {
                 tab.classList.add('active');
                 document.getElementById('cinema-search').style.display = '';
                 this.activeCompany = company;
+                this.activeWatch = watch;
+                this.activeGenre = 'all';
                 this.searchResultsMode = false;
+                document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('active'));
+                const allPill = document.querySelector('.genre-pill[data-genre="all"]');
+                if (allPill) allPill.classList.add('active');
                 this.switchCompany();
             });
         });
@@ -273,6 +291,14 @@ class MovieEngine {
             '174': 'https://1000logos.net/wp-content/uploads/2020/09/Warner-Bros-Logo.png',
             '420': 'https://1000logos.net/wp-content/uploads/2023/01/Marvel-Studios-logo.png',
             '2': 'https://1000logos.net/wp-content/uploads/2021/01/Disney-Plus-Logo.png',
+            '9': 'https://1000logos.net/wp-content/uploads/2022/10/Amazon-Prime-Video-Logo.png',
+            '350': 'https://1000logos.net/wp-content/uploads/2022/02/Apple-TV-Logo-1.png',
+            '15': 'https://1000logos.net/wp-content/uploads/2021/04/Hulu-logo.png',
+            '2303': 'https://1000logos.net/wp-content/uploads/2024/02/CBS-All-Access-Logo.png',
+            '386': 'https://1000logos.net/wp-content/uploads/2023/09/Peacock-Logo.png',
+            '2528': 'https://1000logos.net/wp-content/uploads/2021/12/YouTube-TV-Logo.png',
+            '257': 'https://1000logos.net/wp-content/uploads/2024/02/FuboTV-Logo.png',
+            '300': 'https://1000logos.net/wp-content/uploads/2025/07/Pluto-TV-Logo.png',
         };
         document.querySelectorAll('.tab-logo-img').forEach(img => {
             const cid = img.dataset.cid;
@@ -400,7 +426,7 @@ class MovieEngine {
         const companyId = this.activeCompany;
         const cacheKey = `${this.activeType}_${companyId}`;
 
-        if (companyId === '') {
+        if (companyId === '' && !this.activeWatch) {
             document.getElementById('genre-pill-slider').style.display = '';
             this.filterAndRender();
             return;
@@ -420,6 +446,11 @@ class MovieEngine {
 
         if (companyId === '19551' && this.activeType === 'movie') {
             await this.loadCuratedHBO();
+            return;
+        }
+
+        if (this.activeWatch) {
+            await this.loadWatchProvider();
             return;
         }
 
@@ -567,6 +598,50 @@ class MovieEngine {
 
         if (mapped.length === 0) {
             this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">No HBO movies loaded.</div>`;
+        }
+    }
+
+    async loadWatchProvider() {
+        const watchId = this.activeWatch;
+        const cacheKey = `${this.activeType}_watch_${watchId}`;
+
+        if (this.companyMovies[cacheKey]) {
+            this.renderMovies(this.companyMovies[cacheKey]);
+            return;
+        }
+
+        const label = WATCH_LABELS[watchId] || 'Streaming';
+        this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading ${label}...</div>`;
+
+        try {
+            const pages = [1, 2, 3];
+            const endpoint = `/discover/${this.activeType}?with_watch_providers=${watchId}&watch_region=US&sort_by=popularity.desc&include_adult=false`;
+            const results = await Promise.all(pages.map(p =>
+                fetch(`${TMDB_BASE}${endpoint}&page=${p}`, { headers: TMDB_HEADERS }).then(r => r.json())
+            ));
+            let items = [];
+            results.forEach(r => {
+                if (r.results) items = items.concat(r.results);
+            });
+
+            const mapped = items.map(m => ({
+                id: m.id,
+                media_type: this.activeType,
+                title: m.title || m.name || 'Untitled',
+                release_date: (m.release_date || m.first_air_date || '').split('-')[0] || '',
+                poster_path: m.poster_path ? `${TMDB_IMG}/w500${m.poster_path}` : '',
+                backdrop_path: m.backdrop_path ? `${TMDB_IMG}/original${m.backdrop_path}` : '',
+                vote_average: m.vote_average || 0,
+                popularity: m.popularity || 0,
+                genre: '',
+                embed_url: '',
+                overview: m.overview || '',
+                tagline: '',
+            }));
+            this.companyMovies[cacheKey] = mapped;
+            this.renderMovies(mapped);
+        } catch {
+            this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Failed to load.</div>`;
         }
     }
 
