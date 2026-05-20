@@ -380,23 +380,36 @@
 /* Hero Dots */
 .cinema-hero-dots {
     position: absolute;
-    bottom: 1.5rem;
+    bottom: 3.5rem;
     right: 2rem;
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4rem;
     z-index: 3;
+    max-width: 40%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    padding: 0.3rem 0;
+}
+
+.cinema-hero-dots::-webkit-scrollbar {
+    display: none;
 }
 
 .cinema-hero-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+    flex-shrink: 0;
+    width: 32px;
+    height: 4px;
+    border-radius: 2px;
     background: rgba(255,255,255,0.25);
     cursor: pointer;
-    transition: var(--transition-fast);
+    transition: background 0.3s ease, width 0.3s ease;
 }
 
 .cinema-hero-dot.active {
+    width: 48px;
     background: #fff;
     box-shadow: 0 0 8px rgba(255,255,255,0.5);
 }
@@ -834,8 +847,11 @@
     display: flex;
     gap: 1.2rem;
     overflow-x: auto;
+    overflow-y: hidden;
     padding-bottom: 0.5rem;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
 }
 
 .cinema-cast::-webkit-scrollbar {
@@ -913,6 +929,11 @@
     }
     .cinema-hero-desc {
         -webkit-line-clamp: 2;
+    }
+    .cinema-hero-dots {
+        bottom: 1rem;
+        right: 1.5rem;
+        max-width: 60%;
     }
     .cinema-overlay-body {
         flex-direction: column;
@@ -1517,8 +1538,11 @@
     display: flex;
     gap: 1rem;
     overflow-x: auto;
+    overflow-y: hidden;
     padding-bottom: 0.5rem;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
 }
 
 .cinema-trailers::-webkit-scrollbar {
@@ -1614,8 +1638,11 @@
     display: flex;
     gap: 0.8rem;
     overflow-x: auto;
+    overflow-y: hidden;
     padding-bottom: 0.5rem;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
 }
 
 .cinema-posters::-webkit-scrollbar {

@@ -397,6 +397,8 @@ class MovieEngine {
         document.querySelectorAll('.cinema-hero-dot').forEach((d, i) => {
             d.classList.toggle('active', i === index);
         });
+        const activeDot = document.querySelector('.cinema-hero-dot.active');
+        if (activeDot) activeDot.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
 
     /* ── Company / Data ── */
