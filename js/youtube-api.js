@@ -5,20 +5,20 @@ import { playClickSound } from './router.js';
 const PIPED_API = 'https://pipedapi.com';
 
 const NEWS_CHANNELS = [
-    { id: "BMXlH2T6XqY", title: "CNN Live", channel: "CNN", description: "24/7 live news coverage from CNN.", thumb: "https://logo.clearbit.com/cnn.com" },
-    { id: "w_Ma8oQLmXM", title: "ABC News Live", channel: "ABC News", description: "Live breaking news, politics, and world events.", thumb: "https://logo.clearbit.com/abcnews.go.com" },
-    { id: "4lV8jIqDl0s", title: "Al Jazeera Live", channel: "Al Jazeera", description: "Global news and current affairs from Al Jazeera.", thumb: "https://logo.clearbit.com/aljazeera.com" },
-    { id: "16oZ5mcr1v0", title: "BBC News Live", channel: "BBC News", description: "Breaking news, analysis, and world reports.", thumb: "https://logo.clearbit.com/bbc.com" },
-    { id: "SMJgM3qLQm0", title: "Fox News Live", channel: "Fox News", description: "US news, politics, and live events.", thumb: "https://logo.clearbit.com/foxnews.com" },
-    { id: "9Auq9mYxFEE", title: "Sky News Live", channel: "Sky News", description: "UK and international breaking news.", thumb: "https://logo.clearbit.com/sky.com" },
-    { id: "QKi4Q6qQ1aY", title: "MSNBC Live", channel: "MSNBC", description: "US politics, news analysis, and live coverage.", thumb: "https://logo.clearbit.com/msnbc.com" },
-    { id: "lQnJ3sY5VhA", title: "Bloomberg Live", channel: "Bloomberg", description: "Financial markets, business news, and analysis.", thumb: "https://logo.clearbit.com/bloomberg.com" },
-    { id: "py3Y6tQ5vZk", title: "NBC News Live", channel: "NBC News", description: "US and world news coverage.", thumb: "https://logo.clearbit.com/nbcnews.com" },
-    { id: "7j5Q0H3mXzQ", title: "France 24 Live", channel: "France 24", description: "International news 24/7 in English.", thumb: "https://logo.clearbit.com/france24.com" },
-    { id: "LgSqN9PQkQg", title: "DW News Live", channel: "DW News", description: "German and international news coverage.", thumb: "https://logo.clearbit.com/dw.com" },
-    { id: "Gz7WFPfHnHk", title: "Reuters Live", channel: "Reuters", description: "Global news and financial reporting.", thumb: "https://logo.clearbit.com/reuters.com" },
-    { id: "YJ0FY3oJ0cI", title: "Associated Press Live", channel: "AP News", description: "Breaking news from around the globe.", thumb: "https://logo.clearbit.com/apnews.com" },
-    { id: "d8VdcMpI0lM", title: "CBS News Live", channel: "CBS News", description: "Live news, politics, and investigations.", thumb: "https://logo.clearbit.com/cbsnews.com" },
+    { channelId: "UCupvZG-5ko_eiXAupbDfxWw", title: "CNN Live", channel: "CNN", description: "24/7 live news coverage from CNN.", thumb: "https://logo.clearbit.com/cnn.com" },
+    { channelId: "UCBi2mrWuNuyYy4gbM6fU18Q", title: "ABC News Live", channel: "ABC News", description: "Live breaking news, politics, and world events.", thumb: "https://logo.clearbit.com/abcnews.go.com" },
+    { channelId: "UCNye-wNBqNL5ZzHSJj3l8Bg", title: "Al Jazeera Live", channel: "Al Jazeera", description: "Global news and current affairs from Al Jazeera.", thumb: "https://logo.clearbit.com/aljazeera.com" },
+    { channelId: "UC16niRr50-MSBwiO3YDb3RA", title: "BBC News Live", channel: "BBC News", description: "Breaking news, analysis, and world reports.", thumb: "https://logo.clearbit.com/bbc.com" },
+    { channelId: "UCXIJgqnII2ZOINSWNOGFThA", title: "Fox News Live", channel: "Fox News", description: "US news, politics, and live events.", thumb: "https://logo.clearbit.com/foxnews.com" },
+    { channelId: "UCoMdktPbSTixAyNGwb-UYkQ", title: "Sky News Live", channel: "Sky News", description: "UK and international breaking news.", thumb: "https://logo.clearbit.com/sky.com" },
+    { channelId: "UCaXkIU1QidjPwiAYu6GcHjg", title: "MS NBC Live", channel: "MSNBC", description: "US politics, news analysis, and live coverage.", thumb: "https://logo.clearbit.com/msnbc.com" },
+    { channelId: "UCIALMKvObZNtJ6AmdCLP7Lg", title: "Bloomberg Live", channel: "Bloomberg", description: "Financial markets, business news, and analysis.", thumb: "https://logo.clearbit.com/bloomberg.com" },
+    { channelId: "UCeY0bbntWzzVIaj2z3QigXg", title: "NBC News Live", channel: "NBC News", description: "US and world news coverage.", thumb: "https://logo.clearbit.com/nbcnews.com" },
+    { channelId: "UCCCPCZNChQdGa9EkATeye4g", title: "France 24 Live", channel: "France 24", description: "International news 24/7 in English.", thumb: "https://logo.clearbit.com/france24.com" },
+    { channelId: "UCknLrEdhRCp1aegoMqRaCZg", title: "DW News Live", channel: "DW News", description: "German and international news coverage.", thumb: "https://logo.clearbit.com/dw.com" },
+    { channelId: "UChqUTb7kYRX8-EiaN3XFrSQ", title: "Reuters Live", channel: "Reuters", description: "Global news and financial reporting.", thumb: "https://logo.clearbit.com/reuters.com" },
+    { channelId: "UC52X5wxOL_s5yw0dQk7NtgA", title: "Associated Press Live", channel: "AP News", description: "Breaking news from around the globe.", thumb: "https://logo.clearbit.com/apnews.com" },
+    { channelId: "UC8p1vwvWtl6T73JiExfWs1g", title: "CBS News Live", channel: "CBS News", description: "Live news, politics, and investigations.", thumb: "https://logo.clearbit.com/cbsnews.com" },
 ];
 
 const FALLBACK_VIDEOS = [
@@ -193,7 +193,11 @@ class StreamEngine {
         if (cardEl) cardEl.classList.add('active');
 
         this.playerPlaceholder.classList.add('hidden');
-        this.embedVideo(video.id);
+        if (video.channelId) {
+            this.embedChannel(video.channelId);
+        } else {
+            this.embedVideo(video.id);
+        }
 
         this.titleEl.textContent = video.title;
         const desc = video.description || (video.channel ? `Live stream from ${video.channel}.` : 'No description available.');
@@ -207,6 +211,16 @@ class StreamEngine {
     embedVideo(videoId) {
         const iframe = document.createElement('iframe');
         iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+        this._insertIframe(iframe);
+    }
+
+    embedChannel(channelId) {
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/live_stream?channel=${channelId}&autoplay=1&rel=0&modestbranding=1`;
+        this._insertIframe(iframe);
+    }
+
+    _insertIframe(iframe) {
         iframe.style.position = 'absolute';
         iframe.style.top = '0';
         iframe.style.left = '0';
