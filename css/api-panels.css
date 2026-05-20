@@ -1636,3 +1636,227 @@
     .trailer-item { width: 200px; }
     .cinema-search .search-input { max-width: 100%; }
 }
+
+/* ==========================================
+   TAB LOGO BACKGROUND
+   ========================================== */
+
+.cinema-tab[data-company] {
+    background: rgba(255,255,255,0.04);
+    border-radius: 6px;
+    padding: 0.4rem 1rem;
+    border: 1px solid transparent;
+}
+
+.cinema-tab[data-company]:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.06);
+}
+
+.cinema-tab[data-company].active {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.15);
+}
+
+/* ==========================================
+   OVERLAY CLOSE BUTTON
+   ========================================== */
+
+.cinema-overlay-close {
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 1.6rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+    backdrop-filter: blur(8px);
+    line-height: 1;
+    margin-left: 0.5rem;
+}
+
+.cinema-overlay-close:hover {
+    background: rgba(255,255,255,0.15);
+    transform: scale(1.05);
+}
+
+.cinema-overlay-back-wrap {
+    display: flex;
+    align-items: center;
+}
+
+/* ==========================================
+   STREAM HERO BANNER
+   ========================================== */
+
+.stream-hero {
+    position: relative;
+    height: 200px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    background: rgba(255,255,255,0.02);
+}
+
+.stream-hero-backdrop {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 0.6s ease;
+}
+
+.stream-hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(8,10,15,0.9) 0%, rgba(8,10,15,0.5) 60%, rgba(8,10,15,0.2) 100%);
+}
+
+.stream-hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: 100%;
+    padding: 2rem;
+}
+
+.stream-hero-logo-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.stream-hero-text {
+    flex: 1;
+}
+
+.stream-hero-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+}
+
+.stream-hero-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    max-width: 500px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ==========================================
+   SEARCH SUGGESTIONS DROPDOWN
+   ========================================== */
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(10,12,18,0.98);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 100;
+    display: none;
+    margin-top: 4px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+}
+
+.search-suggestions.active {
+    display: block;
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.suggestion-item:hover {
+    background: rgba(255,255,255,0.06);
+}
+
+.suggestion-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    color: var(--text-muted);
+}
+
+.suggestion-poster {
+    width: 36px;
+    height: 54px;
+    flex-shrink: 0;
+    border-radius: 3px;
+    overflow: hidden;
+    background: rgba(0,0,0,0.3);
+}
+
+.suggestion-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.suggestion-poster-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.suggestion-text {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.suggestion-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.suggestion-channel {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Stream suggestions positioning */
+.dashboard-actions {
+    position: relative;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .stream-hero { height: 140px; }
+    .stream-hero-content { padding: 1rem; gap: 1rem; }
+    .stream-hero-logo-img { width: 50px; height: 50px; }
+    .stream-hero-title { font-size: 1.2rem; }
+    .stream-hero-desc { font-size: 0.8rem; -webkit-line-clamp: 1; }
+    .cinema-overlay-close { width: 34px; height: 34px; font-size: 1.3rem; }
+}

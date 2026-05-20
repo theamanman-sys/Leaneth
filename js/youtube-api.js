@@ -51,6 +51,12 @@ class StreamEngine {
         this.paneTitle = document.getElementById('stream-pane-title');
         this.tabBtns = document.querySelectorAll('.stream-tab');
 
+        this.heroBackdrop = document.getElementById('stream-hero-backdrop');
+        this.heroLogo = document.getElementById('stream-hero-logo');
+        this.heroTitle = document.getElementById('stream-hero-title');
+        this.heroDesc = document.getElementById('stream-hero-desc');
+        this.streamHero = document.getElementById('stream-hero');
+
         this.searchCache = {};
         this.lastQuery = '';
         this.offlineMode = false;
@@ -89,6 +95,62 @@ class StreamEngine {
 
         this.renderNewsChannels();
         this.apiStatus.textContent = 'Live News';
+
+        this.setupSearchSuggestions();
+    }
+
+    setupSearchSuggestions() {
+        let debounceTimer;
+        const container = document.createElement('div');
+        container.className = 'search-suggestions';
+        this.searchInput.parentElement.style.position = 'relative';
+        this.searchInput.parentElement.appendChild(container);
+
+        this.searchInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            const q = this.searchInput.value.trim();
+            if (q.length < 2) { container.innerHTML = ''; container.classList.remove('active'); return; }
+            debounceTimer = setTimeout(async () => {
+                const data = await this.fetchPiped(`/search?q=${encodeURIComponent(q)}&filter=videos`);
+                if (!data?.items) { container.innerHTML = ''; container.classList.remove('active'); return; }
+                const items = data.items.slice(0, 6);
+                container.innerHTML = items.map(item => `
+                    <div class="suggestion-item" data-id="${item.url?.replace('/watch?v=', '') || ''}" data-title="${(item.title || '').replace(/"/g, '&quot;')}" data-channel="${(item.uploaderName || '').replace(/"/g, '&quot;')}" data-desc="${(item.shortDescription || '').replace(/"/g, '&quot;')}">
+                        <span class="suggestion-icon">&#128269;</span>
+                        <div class="suggestion-text">
+                            <span class="suggestion-title">${item.title || ''}</span>
+                            <span class="suggestion-channel">${item.uploaderName || ''}</span>
+                        </div>
+                    </div>
+                `).join('');
+                container.classList.add('active');
+                container.querySelectorAll('.suggestion-item').forEach(el => {
+                    el.addEventListener('click', () => {
+                        container.innerHTML = '';
+                        container.classList.remove('active');
+                        const video = {
+                            id: el.dataset.id,
+                            title: el.dataset.title,
+                            channel: el.dataset.channel,
+                            description: el.dataset.desc,
+                            thumb: `https://i.ytimg.com/vi/${el.dataset.id}/mqdefault.jpg`,
+                            views: '',
+                        };
+                        this.searchInput.value = el.dataset.title;
+                        this.lastQuery = el.dataset.title;
+                        const card = document.createElement('div');
+                        this.selectVideo(video, card);
+                    });
+                });
+            }, 300);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dashboard-actions')) {
+                container.innerHTML = '';
+                container.classList.remove('active');
+            }
+        });
     }
 
     renderNewsChannels() {
@@ -109,6 +171,14 @@ class StreamEngine {
             card.addEventListener('click', () => this.selectVideo(ch, card));
             this.videoList.appendChild(card);
         });
+        this.updateHeroForNews();
+    }
+
+    updateHeroForNews() {
+        if (this.heroBackdrop) this.heroBackdrop.style.backgroundImage = 'none';
+        if (this.heroLogo) this.heroLogo.innerHTML = '';
+        if (this.heroTitle) this.heroTitle.textContent = 'Live News Channels';
+        if (this.heroDesc) this.heroDesc.textContent = 'Select a channel from the list to start watching live news coverage.';
     }
 
     async handleSearch() {
@@ -219,10 +289,26 @@ class StreamEngine {
         this.latencyMetric.style.animation = 'pulse 0.5s ease-in-out';
         setTimeout(() => { this.latencyMetric.style.animation = ''; }, 500);
 
+        this.updateHero(video);
+
         if (video.channelId) {
             this._embedNewsChannel(video);
         } else {
             this.embedVideo(video.id);
+        }
+    }
+
+    updateHero(video) {
+        if (this.heroTitle) this.heroTitle.textContent = video.title;
+        if (this.heroDesc) this.heroDesc.textContent = (video.description || video.channel || '').substring(0, 120);
+        if (this.heroBackdrop) {
+            const bg = video.cover || video.thumb || '';
+            this.heroBackdrop.style.backgroundImage = bg ? `url('${bg}')` : 'none';
+        }
+        if (this.heroLogo) {
+            this.heroLogo.innerHTML = video.cover
+                ? `<img src="${video.cover}" alt="${video.channel || ''}" class="stream-hero-logo-img">`
+                : '';
         }
     }
 

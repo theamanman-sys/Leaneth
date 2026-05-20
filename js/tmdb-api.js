@@ -32,6 +32,7 @@ class MovieEngine {
 
         this.overlay = document.getElementById('cinema-overlay');
         this.overlayBack = document.getElementById('cinema-overlay-back');
+        this.overlayClose = document.getElementById('cinema-overlay-close');
         this.overlayBackdrop = document.getElementById('cinema-overlay-backdrop');
         this.overlayPoster = document.getElementById('cinema-overlay-poster');
         this.overlayTitle = document.getElementById('cinema-overlay-title');
@@ -125,7 +126,14 @@ class MovieEngine {
             if (e.key === 'Enter') this.doSearch();
         });
 
+        this.setupSearchSuggestions();
+
         this.overlayBack.addEventListener('click', () => {
+            playClickSound();
+            this.closeOverlay();
+        });
+
+        this.overlayClose.addEventListener('click', () => {
             playClickSound();
             this.closeOverlay();
         });
@@ -497,6 +505,55 @@ class MovieEngine {
                 this.overlayCast.innerHTML = '<div class="terminal-line text-muted">Filmography unavailable.</div>';
             }
         }
+    }
+
+    /* ── Search Suggestions ── */
+
+    setupSearchSuggestions() {
+        let debounceTimer;
+        const container = document.createElement('div');
+        container.className = 'search-suggestions';
+        container.id = 'cinema-search-suggestions';
+        this.searchInput.parentElement.style.position = 'relative';
+        this.searchInput.parentElement.appendChild(container);
+
+        this.searchInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            const q = this.searchInput.value.trim();
+            if (q.length < 2) { container.innerHTML = ''; container.classList.remove('active'); return; }
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const res = await fetch(`${TMDB_BASE}/search/multi?query=${encodeURIComponent(q)}&include_adult=false&language=en-US&page=1`, { headers: TMDB_HEADERS }).then(r => r.json());
+                    const items = (res.results || []).filter(r => r.media_type === 'movie' || r.media_type === 'tv').slice(0, 6);
+                    if (!items.length) { container.innerHTML = ''; container.classList.remove('active'); return; }
+                    container.innerHTML = items.map(item => `
+                        <div class="suggestion-item" data-id="${item.id}" data-title="${(item.title || item.name || '').replace(/"/g, '&quot;')}" data-year="${(item.release_date || item.first_air_date || '').split('-')[0] || ''}" data-poster="${item.poster_path ? TMDB_IMG + '/w92' + item.poster_path : ''}" data-type="${item.media_type}">
+                            <div class="suggestion-poster">${item.poster_path ? `<img src="${TMDB_IMG}/w92${item.poster_path}" alt="">` : '<span class="suggestion-poster-fallback">&#127916;</span>'}</div>
+                            <div class="suggestion-text">
+                                <span class="suggestion-title">${item.title || item.name || ''}</span>
+                                <span class="suggestion-channel">${item.media_type === 'tv' ? 'TV Series' : 'Movie'}${item.release_date || item.first_air_date ? ' • ' + (item.release_date || item.first_air_date).split('-')[0] : ''}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                    container.classList.add('active');
+                    container.querySelectorAll('.suggestion-item').forEach(el => {
+                        el.addEventListener('click', () => {
+                            container.innerHTML = '';
+                            container.classList.remove('active');
+                            this.searchInput.value = el.dataset.title;
+                            this.doSearch();
+                        });
+                    });
+                } catch { container.innerHTML = ''; container.classList.remove('active'); }
+            }, 350);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.cinema-search')) {
+                container.innerHTML = '';
+                container.classList.remove('active');
+            }
+        });
     }
 
     /* ── Search ── */
