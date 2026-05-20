@@ -80,7 +80,6 @@ class MovieEngine {
         this.btnRight = document.getElementById('carousel-right');
 
         this.overlay = document.getElementById('cinema-overlay');
-        this.overlayScroll = document.querySelector('.cinema-overlay-scroll');
         this.overlayBack = document.getElementById('cinema-overlay-back');
         this.overlayClose = document.getElementById('cinema-overlay-close');
         this.overlayBackdrop = document.getElementById('cinema-overlay-backdrop');
@@ -216,16 +215,14 @@ class MovieEngine {
         }
 
         if (this.overlayBack) {
-            this.overlayBack.addEventListener('click', (e) => {
-                e.preventDefault(); e.stopPropagation();
+            this.overlayBack.addEventListener('click', () => {
                 playClickSound();
                 this.closeOverlay();
             });
         }
 
         if (this.overlayClose) {
-            this.overlayClose.addEventListener('click', (e) => {
-                e.preventDefault(); e.stopPropagation();
+            this.overlayClose.addEventListener('click', () => {
                 playClickSound();
                 this.closeOverlay();
             });
@@ -237,23 +234,7 @@ class MovieEngine {
             });
         }
 
-        if (this.overlayPlay) this.overlayPlay.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.playCurrentMovie(); });
-
-        // Delegated handlers: ensure back/play work even if direct listeners miss clicks
-        document.addEventListener('click', (e) => {
-            try {
-                const t = e.target;
-                if (!t) return;
-                const backBtn = t.closest && t.closest('#cinema-overlay-back');
-                if (backBtn) {
-                    e.preventDefault(); e.stopPropagation(); playClickSound(); this.closeOverlay(); return;
-                }
-                const playBtn = t.closest && t.closest('#cinema-overlay-play');
-                if (playBtn) {
-                    e.preventDefault(); e.stopPropagation(); playClickSound(); this.playCurrentMovie(); return;
-                }
-            } catch (err) {}
-        }, true);
+        if (this.overlayPlay) this.overlayPlay.addEventListener('click', () => this.playCurrentMovie());
 
         if (this.heroPlay) {
             this.heroPlay.addEventListener('click', () => {
@@ -815,8 +796,7 @@ class MovieEngine {
         if (this.overlayPosters) this.overlayPosters.parentElement.style.display = 'none';
 
         this.overlay.classList.remove('hidden');
-        if (this.overlayScroll) this.overlayScroll.scrollTop = 0;
-        else this.overlay.scrollTop = 0;
+        this.overlay.scrollTop = 0;
         document.body.style.overflow = 'hidden';
 
         try {
@@ -986,8 +966,7 @@ class MovieEngine {
         }
 
         this.overlay.classList.remove('hidden');
-        if (this.overlayScroll) this.overlayScroll.scrollTop = 0;
-        else this.overlay.scrollTop = 0;
+        this.overlay.scrollTop = 0;
         document.body.style.overflow = 'hidden';
 
         if (item.id) this.fetchExtendedDetails(item.id, item.media_type || this.activeType);
@@ -1010,14 +989,6 @@ class MovieEngine {
         this.overlayIframe.src = item.embed_url;
         this.overlayPlayer.classList.remove('hidden');
         this.overlayPlay.classList.add('hidden');
-        // Scroll player into view inside overlay
-        try {
-            if (this.overlayScroll && this.overlayPlayer) {
-                this.overlayScroll.scrollTo({ top: this.overlayPlayer.offsetTop - 12, behavior: 'smooth' });
-            } else if (this.overlayPlayer) {
-                this.overlayPlayer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        } catch (e) {}
     }
 
     async showSeasonPicker(item) {
@@ -1160,27 +1131,7 @@ class MovieEngine {
                             <div class="trailer-name">${v.name}${v.type === 'Teaser' ? ' (Teaser)' : ''}</div>
                         `;
                         el.addEventListener('click', () => {
-                            // Play the trailer inside the overlay player iframe instead of opening a new tab
-                            try {
-                                const embed = `https://www.youtube.com/embed/${v.key}?autoplay=1&rel=0&modestbranding=1`;
-                                if (this.overlayIframe) {
-                                    this.overlayIframe.src = embed;
-                                }
-                                if (this.overlayPlayer) {
-                                    this.overlayPlayer.classList.remove('hidden');
-                                }
-                                if (this.overlayPlay) {
-                                    this.overlayPlay.classList.add('hidden');
-                                }
-                                // Scroll the player into view inside the overlay scroll container
-                                if (this.overlayScroll && this.overlayPlayer) {
-                                    this.overlayScroll.scrollTo({ top: this.overlayPlayer.offsetTop - 12, behavior: 'smooth' });
-                                } else if (this.overlayPlayer) {
-                                    this.overlayPlayer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                }
-                            } catch (e) { /* fallback: open in new tab if anything fails */
-                                window.open(`https://www.youtube.com/watch?v=${v.key}`, '_blank');
-                            }
+                            window.open(`https://www.youtube.com/watch?v=${v.key}`, '_blank');
                         });
                         this.overlayTrailers.appendChild(el);
                     });
