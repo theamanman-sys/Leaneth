@@ -721,6 +721,7 @@ class MovieEngine {
         playClickSound();
 
         if (item.media_type === 'tv') {
+            this.overlayPlay.classList.add('hidden');
             this.showSeasonPicker(item);
             return;
         }
@@ -738,21 +739,23 @@ class MovieEngine {
         const inner = document.getElementById('episode-picker-inner');
         if (!picker || !inner) return;
 
-        inner.innerHTML = '<div class="terminal-line text-muted">Loading episodes...</div>';
         picker.classList.remove('hidden');
+        inner.innerHTML = '<div class="terminal-line text-muted">Loading episodes...</div>';
 
         try {
             const data = await fetch(`${TMDB_BASE}/tv/${item.id}`, { headers: TMDB_HEADERS }).then(r => r.json());
             const seasons = (data.seasons || []).filter(s => s.season_number > 0);
             if (seasons.length === 0) {
-                this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
-                this.overlayPlayer.classList.remove('hidden');
-                this.overlayPlay.classList.add('hidden');
-                picker.classList.add('hidden');
+                inner.innerHTML = '<button class="btn btn-primary btn-glow" id="ep-play-btn">▶ Play Series</button>';
+                document.getElementById('ep-play-btn').addEventListener('click', () => {
+                    picker.classList.add('hidden');
+                    this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
+                    this.overlayPlayer.classList.remove('hidden');
+                    this.overlayPlay.classList.add('hidden');
+                });
                 return;
             }
-            let html = '<h4>Select Season & Episode</h4>';
-            html += '<div class="ep-picker-row"><label>Season</label><select id="ep-season-select" class="ep-select">';
+            let html = '<div class="ep-picker-row"><label>Season</label><select id="ep-season-select" class="ep-select">';
             seasons.forEach(s => {
                 html += `<option value="${s.season_number}">${s.name || 'Season ' + s.season_number}${s.episode_count ? ' (' + s.episode_count + ' eps)' : ''}</option>`;
             });
@@ -788,10 +791,16 @@ class MovieEngine {
                 this.overlayPlay.classList.add('hidden');
             });
         } catch {
-            picker.classList.add('hidden');
-            this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
-            this.overlayPlayer.classList.remove('hidden');
-            this.overlayPlay.classList.add('hidden');
+            inner.innerHTML = '<button class="btn btn-primary btn-glow" id="ep-play-btn">▶ Play Series</button>';
+            const btn = document.getElementById('ep-play-btn');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    picker.classList.add('hidden');
+                    this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
+                    this.overlayPlayer.classList.remove('hidden');
+                    this.overlayPlay.classList.add('hidden');
+                });
+            }
         }
     }
 
@@ -839,11 +848,16 @@ class MovieEngine {
                 this.overlayBackdrop.style.backgroundImage = `url('${TMDB_IMG}/original${data.backdrop_path}')`;
             }
 
-            /* Enable play button */
+            /* Enable play button or episode picker for TV */
             if (this.overlayPlay && this.currentMovie) {
                 this.currentMovie.media_type = mediaType;
-                this.overlayPlay.classList.remove('hidden');
-                this.overlayPlay.textContent = isTv ? '▶ Select Episode' : '▶ Play';
+                if (isTv) {
+                    this.overlayPlay.classList.add('hidden');
+                    this.showSeasonPicker(this.currentMovie);
+                } else {
+                    this.overlayPlay.classList.remove('hidden');
+                    this.overlayPlay.textContent = '▶ Play';
+                }
             }
 
             /* ── Trailers ── */
