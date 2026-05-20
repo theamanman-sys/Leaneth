@@ -709,6 +709,7 @@ class MovieEngine {
                 if (r.results) people = people.concat(r.results);
             });
             people = people.filter(p => p.known_for_department === 'Acting' && p.profile_path);
+            people.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
             people = people.slice(0, 60);
             this.celebrities = people;
             this.renderCelebrities(people);

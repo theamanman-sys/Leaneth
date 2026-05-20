@@ -1650,9 +1650,10 @@
 
 .celebrity-img-wrap {
     width: 100%;
-    padding-top: 100%;
+    aspect-ratio: 1;
     position: relative;
     background: rgba(0,0,0,0.3);
+    overflow: hidden;
 }
 
 .celebrity-img {
