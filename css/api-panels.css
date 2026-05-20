@@ -672,10 +672,8 @@
     inset: 0;
     z-index: 2000;
     background: rgba(8,10,15,0.96);
-    overflow: hidden;
+    overflow-y: auto;
     animation: fadeIn 0.3s ease;
-    display: flex;
-    flex-direction: column;
 }
 
 .cinema-overlay.hidden {
@@ -710,9 +708,6 @@
     padding: 0 3rem 4rem;
     position: relative;
     z-index: 2;
-    flex: 1;
-    overflow-y: auto;
-    min-height: 0;
 }
 
 .cinema-overlay-poster-col {
@@ -766,11 +761,12 @@
 }
 
 .cinema-overlay-scroll {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    min-height: 100vh;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+    overscroll-behavior: contain;
 }
 
 .cinema-overlay-backdrop {
@@ -819,6 +815,18 @@
 
 .cinema-cast-section {
     margin-top: 2rem;
+    max-height: 260px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.cinema-cast-section::-webkit-scrollbar {
+    width: 4px;
+}
+
+.cinema-cast-section::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
 }
 
 .cinema-cast-section h4 {
@@ -826,6 +834,9 @@
     font-weight: 700;
     margin-bottom: 1rem;
     color: var(--text-primary);
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .cinema-cast {
@@ -1495,6 +1506,18 @@
 
 .cinema-trailers-section {
     margin-top: 2rem;
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.cinema-trailers-section::-webkit-scrollbar {
+    width: 4px;
+}
+
+.cinema-trailers-section::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
 }
 
 .cinema-trailers-section h4 {
@@ -1502,6 +1525,9 @@
     font-weight: 700;
     margin-bottom: 1rem;
     color: var(--text-primary);
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .cinema-trailers {
@@ -1580,6 +1606,18 @@
 
 .cinema-posters-section {
     margin-top: 2rem;
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.cinema-posters-section::-webkit-scrollbar {
+    width: 4px;
+}
+
+.cinema-posters-section::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
 }
 
 .cinema-posters-section h4 {
@@ -1587,6 +1625,9 @@
     font-weight: 700;
     margin-bottom: 1rem;
     color: var(--text-primary);
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .cinema-posters {
