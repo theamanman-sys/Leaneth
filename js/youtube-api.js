@@ -117,6 +117,9 @@ class StreamEngine {
 
         playClickSound();
 
+        const searchTab = [...this.tabBtns].find(b => b.dataset.tab === 'search');
+        if (searchTab) searchTab.classList.add('active');
+
         if (this.searchCache[query]) {
             this.renderCatalog(this.searchCache[query]);
             if (this.paneTitle) this.paneTitle.textContent = `\uD83D\uDD0D Results: "${query}"`;
