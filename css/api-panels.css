@@ -372,6 +372,83 @@
     padding: 0.7rem 1.5rem;
 }
 
+/* Hero Dots */
+.cinema-hero-dots {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 2rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 3;
+}
+
+.cinema-hero-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.cinema-hero-dot.active {
+    background: #fff;
+    box-shadow: 0 0 8px rgba(255,255,255,0.5);
+}
+
+/* Company Tabs */
+.cinema-tabs {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    scrollbar-width: none;
+}
+
+.cinema-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.cinema-tab {
+    background: transparent;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+    position: relative;
+    transition: var(--transition-fast);
+    font-family: var(--font-heading);
+    letter-spacing: 0.02em;
+}
+
+.cinema-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: #fff;
+    transition: width 0.3s ease;
+}
+
+.cinema-tab:hover {
+    color: var(--text-primary);
+}
+
+.cinema-tab.active {
+    color: #fff;
+}
+
+.cinema-tab.active::after {
+    width: 60%;
+}
+
 /* Genre Pills */
 .genre-pill-slider {
     display: flex;
