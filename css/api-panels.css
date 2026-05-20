@@ -647,10 +647,12 @@
     transition: var(--transition-fast);
     font-family: var(--font-body);
     backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 30;
 }
 
 .cinema-overlay-back:hover {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.2);
 }
 
 .cinema-overlay-scroll {
@@ -669,7 +671,12 @@
 .cinema-overlay-gradient {
     position: absolute;
     inset: 0;
+    z-index: 1;
     background: linear-gradient(0deg, rgba(8,10,15,1) 0%, rgba(8,10,15,0.2) 70%, transparent 100%);
+}
+
+.cinema-overlay-back-wrap {
+    z-index: 20;
 }
 
 .cinema-overlay-body {
@@ -875,6 +882,14 @@
     .cinema-overlay-backdrop {
         height: 35vh;
         min-height: 200px;
+    }
+    .cinema-overlay-back-wrap {
+        top: 0.8rem;
+        left: 1rem;
+    }
+    .cinema-overlay-back {
+        font-size: 0.8rem;
+        padding: 0.4rem 1rem;
     }
     .movie-card {
         width: 160px;
@@ -1372,14 +1387,7 @@
     width: auto;
     display: none;
     object-fit: contain;
-    filter: brightness(1) contrast(1.2);
 }
-
-.cinema-tab[data-company="213"] .tab-logo-img { filter: brightness(0) invert(1); }
-.cinema-tab[data-company="19551"] .tab-logo-img { filter: brightness(0) invert(1); }
-.cinema-tab[data-company="174"] .tab-logo-img { filter: brightness(0) invert(1); }
-.cinema-tab[data-company="420"] .tab-logo-img { filter: brightness(0) invert(1); }
-.cinema-tab[data-company="2"] .tab-logo-img { filter: brightness(0) invert(1); }
 
 .cinema-tab .tab-logo-img + span {
     display: none;
