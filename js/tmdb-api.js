@@ -268,11 +268,11 @@ class MovieEngine {
 
     loadCompanyLogos() {
         const logoMap = {
-            '213': 'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg',
-            '19551': 'https://upload.wikimedia.org/wikipedia/commons/d/de/HBO_logo.svg',
-            '174': 'https://upload.wikimedia.org/wikipedia/commons/6/64/Warner_Bros_logo.svg',
-            '420': 'https://upload.wikimedia.org/wikipedia/commons/b/b9/Marvel_Logo.svg',
-            '2': 'https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg',
+            '213': 'https://1000logos.net/wp-content/uploads/2017/05/Netflix-Logo.png',
+            '19551': 'https://1000logos.net/wp-content/uploads/2022/02/HBO-Max-Logo.png',
+            '174': 'https://1000logos.net/wp-content/uploads/2020/09/Warner-Bros-Logo.png',
+            '420': 'https://1000logos.net/wp-content/uploads/2023/01/Marvel-Studios-logo.png',
+            '2': 'https://1000logos.net/wp-content/uploads/2021/01/Disney-Plus-Logo.png',
         };
         document.querySelectorAll('.tab-logo-img').forEach(img => {
             const cid = img.dataset.cid;
