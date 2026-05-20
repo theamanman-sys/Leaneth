@@ -449,49 +449,50 @@ class MovieEngine {
 
         this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading Netflix...</div>`;
 
-        try {
-            const pages = [1, 2, 3];
-            const results = await Promise.all(pages.map(p =>
-                fetch(`${TMDB_BASE}/discover/movie?with_companies=213&sort_by=popularity.desc&include_adult=false&page=${p}`, { headers: TMDB_HEADERS }).then(r => r.json())
+        const mapped = [];
+        const seenIds = new Set();
+
+        const toEntry = (m) => ({
+            id: m.id,
+            media_type: 'movie',
+            title: m.title || 'Untitled',
+            release_date: (m.release_date || '').split('-')[0] || '',
+            poster_path: m.poster_path ? `${TMDB_IMG}/w500${m.poster_path}` : '',
+            backdrop_path: m.backdrop_path ? `${TMDB_IMG}/original${m.backdrop_path}` : '',
+            vote_average: m.vote_average || 0,
+            popularity: m.popularity || 0,
+            genre: '',
+            embed_url: '',
+            overview: m.overview || '',
+            tagline: '',
+        });
+
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+        for (let i = 0; i < CURATED_NETFLIX_IDS.length; i += 3) {
+            const batch = CURATED_NETFLIX_IDS.slice(i, i + 3);
+            const results = await Promise.all(batch.map(id =>
+                fetch(`${TMDB_BASE}/movie/${id}?language=en-US`, { headers: TMDB_HEADERS })
+                    .then(r => r.ok ? r.json() : null)
+                    .catch(() => null)
             ));
-            let items = [];
-            results.forEach(r => { if (r.results) items = items.concat(r.results); });
-
-            const seen = new Set();
-            const curatedSet = new Set(CURATED_NETFLIX_IDS);
-
-            const curated = [];
-            const rest = [];
-
-            items.forEach(m => {
-                if (seen.has(m.id)) return;
-                seen.add(m.id);
-                const entry = {
-                    id: m.id,
-                    media_type: 'movie',
-                    title: m.title || m.name || 'Untitled',
-                    release_date: (m.release_date || m.first_air_date || '').split('-')[0] || '',
-                    poster_path: m.poster_path ? `${TMDB_IMG}/w500${m.poster_path}` : '',
-                    backdrop_path: m.backdrop_path ? `${TMDB_IMG}/original${m.backdrop_path}` : '',
-                    vote_average: m.vote_average || 0,
-                    popularity: m.popularity || 0,
-                    genre: '',
-                    embed_url: '',
-                    overview: m.overview || '',
-                    tagline: '',
-                };
-                if (curatedSet.has(m.id)) {
-                    curated.push(entry);
-                } else {
-                    rest.push(entry);
+            let changed = false;
+            results.forEach(m => {
+                if (m && m.success !== false && !seenIds.has(m.id)) {
+                    seenIds.add(m.id);
+                    mapped.push(toEntry(m));
+                    changed = true;
                 }
             });
+            if (changed) {
+                this.companyMovies[cacheKey] = [...mapped];
+                this.renderMovies(this.companyMovies[cacheKey]);
+            }
+            await sleep(700);
+        }
 
-            const mapped = [...curated, ...rest];
-            this.companyMovies[cacheKey] = mapped;
-            this.renderMovies(mapped);
-        } catch {
-            this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Failed to load.</div>`;
+        if (mapped.length === 0) {
+            this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">No Netflix movies loaded.</div>`;
         }
     }
 
