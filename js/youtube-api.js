@@ -3,6 +3,11 @@
 import { playClickSound } from './router.js';
 
 const PIPED_API = 'https://pipedapi.com';
+const PIPED_FALLBACKS = [
+    'https://pipedapi.kavin.rocks',
+    'https://pipedapi.adminforge.de',
+    'https://piped.moomoo.me',
+];
 
 const NEWS_CHANNELS = [
     { channelId: "UCupvZG-5ko_eiXAupbDfxWw", title: "CNN Live", channel: "CNN", description: "24/7 live news coverage from CNN.", cover: "https://yt3.googleusercontent.com/wSqAf5WdxsGsl7ZMtlyfz3qKULo_URoFjmKky0gLThm_Jtu2wsVHMu-XzGZPAb-z8zeMBYUUMYA=s900-c-k-c0x00ffffff-no-rj" },
@@ -115,16 +120,7 @@ class StreamEngine {
         }
 
         this.videoList.innerHTML = `<div class="terminal-line text-muted text-center" style="padding:2rem;">Searching...</div>`;
-
-        if (this.offlineMode) {
-            const filtered = FALLBACK_VIDEOS.filter(v =>
-                v.title.toLowerCase().includes(query.toLowerCase()) ||
-                v.channel.toLowerCase().includes(query.toLowerCase())
-            );
-            this.renderCatalog(filtered.length ? filtered : FALLBACK_VIDEOS);
-            if (this.paneTitle) this.paneTitle.textContent = `\uD83D\uDD0D Results: "${query}"`;
-            return;
-        }
+        this.offlineMode = false;
 
         const data = await this.fetchPiped(`/search?q=${encodeURIComponent(query)}&filter=videos`);
 
@@ -146,11 +142,18 @@ class StreamEngine {
     }
 
     async fetchPiped(path) {
-        try {
-            const res = await fetch(`${PIPED_API}${path}`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return await res.json();
-        } catch { return null; }
+        const instances = [PIPED_API, ...PIPED_FALLBACKS];
+        for (const base of instances) {
+            try {
+                const controller = new AbortController();
+                const id = setTimeout(() => controller.abort(), 5000);
+                const res = await fetch(`${base}${path}`, { signal: controller.signal });
+                clearTimeout(id);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch { continue; }
+        }
+        return null;
     }
 
     mapPipedItems(items) {
