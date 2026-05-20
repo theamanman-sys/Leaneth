@@ -236,6 +236,8 @@ class MovieEngine {
         this.overlayPlay.classList.remove('hidden');
         this.overlay.classList.add('hidden');
         document.body.style.overflow = '';
+        const picker = document.getElementById('episode-picker');
+        if (picker) picker.classList.add('hidden');
     }
 
     /* ── Company Logos ── */
@@ -732,32 +734,32 @@ class MovieEngine {
     }
 
     async showSeasonPicker(item) {
-        this.overlayPlay.textContent = 'Loading episodes...';
-        this.overlayPlay.disabled = true;
+        const picker = document.getElementById('episode-picker');
+        const inner = document.getElementById('episode-picker-inner');
+        if (!picker || !inner) return;
+
+        inner.innerHTML = '<div class="terminal-line text-muted">Loading episodes...</div>';
+        picker.classList.remove('hidden');
+
         try {
             const data = await fetch(`${TMDB_BASE}/tv/${item.id}`, { headers: TMDB_HEADERS }).then(r => r.json());
             const seasons = (data.seasons || []).filter(s => s.season_number > 0);
             if (seasons.length === 0) {
-                item.embed_url = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
-                this.overlayIframe.src = item.embed_url;
+                this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
                 this.overlayPlayer.classList.remove('hidden');
                 this.overlayPlay.classList.add('hidden');
+                picker.classList.add('hidden');
                 return;
             }
-            let html = '<div class="episode-picker"><h4>Select Season & Episode</h4>';
+            let html = '<h4>Select Season & Episode</h4>';
             html += '<div class="ep-picker-row"><label>Season</label><select id="ep-season-select" class="ep-select">';
             seasons.forEach(s => {
-                html += `<option value="${s.season_number}">${s.name || 'Season ' + s.season_number}</option>`;
+                html += `<option value="${s.season_number}">${s.name || 'Season ' + s.season_number}${s.episode_count ? ' (' + s.episode_count + ' eps)' : ''}</option>`;
             });
             html += '</select></div>';
             html += '<div class="ep-picker-row"><label>Episode</label><select id="ep-episode-select" class="ep-select"></select></div>';
-            html += '<button class="btn btn-primary btn-glow" id="ep-play-btn">▶ Play Episode</button></div>';
-
-            this.overlayPlay.textContent = '▶ Play';
-            this.overlayPlay.disabled = false;
-            this.overlayPlay.classList.add('hidden');
-            this.overlayPlayer.innerHTML = `<div class="movie-player-wrap">${html}</div>`;
-            this.overlayPlayer.classList.remove('hidden');
+            html += '<button class="btn btn-primary btn-glow" id="ep-play-btn">▶ Play Episode</button>';
+            inner.innerHTML = html;
 
             const seasonSelect = document.getElementById('ep-season-select');
             const episodeSelect = document.getElementById('ep-episode-select');
@@ -780,12 +782,14 @@ class MovieEngine {
             document.getElementById('ep-play-btn').addEventListener('click', () => {
                 const s = seasonSelect.value;
                 const e = episodeSelect.value;
-                item.embed_url = `https://vaplayer.ru/embed/tv/${item.id}/${s}/${e}`;
-                this.overlayPlayer.innerHTML = `<div class="movie-player-wrap"><iframe width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay" src="${item.embed_url}"></iframe></div>`;
+                picker.classList.add('hidden');
+                this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/${s}/${e}`;
+                this.overlayPlayer.classList.remove('hidden');
+                this.overlayPlay.classList.add('hidden');
             });
         } catch {
-            item.embed_url = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
-            this.overlayIframe.src = item.embed_url;
+            picker.classList.add('hidden');
+            this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
             this.overlayPlayer.classList.remove('hidden');
             this.overlayPlay.classList.add('hidden');
         }
