@@ -135,11 +135,16 @@
                 <div class="cinema-browser">
                     <div class="cinema-tabs" id="cinema-tabs">
                         <button class="cinema-tab active" data-company="">Trending</button>
-                        <button class="cinema-tab" data-company="213"><span class="tab-logo tab-n">N</span> Netflix</button>
-                        <button class="cinema-tab" data-company="19551"><span class="tab-logo tab-h">HBO</span></button>
-                        <button class="cinema-tab" data-company="174"><span class="tab-logo tab-w">WB</span></button>
-                        <button class="cinema-tab" data-company="420"><span class="tab-logo tab-m">M</span> Marvel</button>
-                        <button class="cinema-tab" data-company="2"><span class="tab-logo tab-d">D</span> Disney</button>
+                        <button class="cinema-tab" data-company="213"><img class="tab-logo-img" src="" alt="Netflix" data-cid="213"><span>Netflix</span></button>
+                        <button class="cinema-tab" data-company="19551"><img class="tab-logo-img" src="" alt="HBO" data-cid="19551"><span>HBO</span></button>
+                        <button class="cinema-tab" data-company="174"><img class="tab-logo-img" src="" alt="Warner" data-cid="174"><span>Warner</span></button>
+                        <button class="cinema-tab" data-company="420"><img class="tab-logo-img" src="" alt="Marvel" data-cid="420"><span>Marvel</span></button>
+                        <button class="cinema-tab" data-company="2"><img class="tab-logo-img" src="" alt="Disney" data-cid="2"><span>Disney</span></button>
+                        <button class="cinema-tab" data-company="celebrities">&#127916; Celebrities</button>
+                    </div>
+                    <div class="cinema-search" id="cinema-search">
+                        <input type="text" id="cinema-search-input" placeholder="Search movies, actors, keywords..." class="search-input">
+                        <button id="cinema-search-btn" class="btn btn-primary">Search</button>
                     </div>
                     <div class="genre-pill-slider" id="genre-pill-slider">
                         <button class="genre-pill active" data-genre="all">All Genres</button>
@@ -181,9 +186,17 @@
                             <button class="btn btn-primary btn-glow btn-play-overlay hidden" id="cinema-overlay-play">&#9654; Play</button>
                             <div class="movie-player-wrap hidden" id="cinema-overlay-player"><iframe id="cinema-overlay-iframe" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay"></iframe></div>
                             <div class="cinema-extra" id="cinema-overlay-extra"></div>
+                            <div class="cinema-trailers-section" id="cinema-trailers-section">
+                                <h4>Trailers</h4>
+                                <div class="cinema-trailers" id="cinema-overlay-trailers"></div>
+                            </div>
                             <div class="cinema-cast-section">
                                 <h4>Cast</h4>
                                 <div class="cinema-cast" id="cinema-overlay-cast"></div>
+                            </div>
+                            <div class="cinema-posters-section" id="cinema-posters-section">
+                                <h4>Posters</h4>
+                                <div class="cinema-posters" id="cinema-overlay-posters"></div>
                             </div>
                         </div>
                     </div>

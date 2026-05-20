@@ -428,24 +428,6 @@
     gap: 0.5rem;
 }
 
-.tab-logo {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 800;
-    letter-spacing: 0;
-}
-
-.tab-n { background: #e50914; color: #fff; }
-.tab-h { background: #000; color: #fff; border: 1px solid #fff; font-size: 0.55rem; padding: 0 2px; width: auto; }
-.tab-w { background: #ff0; color: #000; font-size: 0.55rem; width: auto; padding: 0 3px; }
-.tab-m { background: #e62429; color: #fff; }
-.tab-d { background: #113cc2; color: #fff; }
-
 .cinema-tab::after {
     content: '';
     position: absolute;
@@ -915,317 +897,6 @@
     outline: none;
 }
 
-/* Genre Selector */
-.genre-pill-slider {
-    display: flex;
-    gap: 0.8rem;
-    overflow-x: auto;
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
-    scrollbar-width: none; /* Hide scrollbars */
-}
-
-.genre-pill-slider::-webkit-scrollbar {
-    display: none;
-}
-
-.genre-pill {
-    background: rgba(255, 255, 255, 0.03);
-    border: var(--border-glow);
-    padding: 0.5rem 1.2rem;
-    border-radius: 20px;
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: 500;
-    white-space: nowrap;
-    transition: var(--transition-fast);
-}
-
-.genre-pill:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text-primary);
-}
-
-.genre-pill.active {
-    background: rgba(6, 182, 212, 0.12);
-    color: var(--accent-cyan);
-    border-color: rgba(6, 182, 212, 0.4);
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
-}
-
-/* Horizontally Scrolling Movie Carousel */
-.movie-carousel-container {
-    position: relative;
-    margin-bottom: 3.5rem;
-}
-
-.movie-carousel {
-    display: flex;
-    gap: 1.5rem;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 1rem 0.2rem;
-    scrollbar-width: none;
-}
-
-.movie-carousel::-webkit-scrollbar {
-    display: none;
-}
-
-.carousel-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(10, 12, 18, 0.8);
-    backdrop-filter: blur(10px);
-    border: var(--border-glow);
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 10;
-    transition: var(--transition-fast);
-}
-
-.carousel-nav:hover {
-    background: var(--accent-cyan);
-    color: var(--bg-dark);
-    box-shadow: 0 0 15px var(--accent-cyan-glow);
-    transform: translateY(-50%) scale(1.05);
-}
-
-.nav-left { left: -22px; }
-.nav-right { right: -22px; }
-
-/* Movie Cards */
-.movie-card {
-    width: 200px;
-    flex-shrink: 0;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    background: var(--bg-panel);
-    border: var(--border-glow);
-    cursor: pointer;
-    position: relative;
-    transition: var(--transition-premium);
-}
-
-.movie-poster-wrapper {
-    position: relative;
-    width: 100%;
-    padding-top: 150%; /* standard 2:3 poster ratio */
-    background: rgba(0,0,0,0.2);
-}
-
-.movie-poster {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.movie-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: rgba(6, 182, 212, 0.4);
-    box-shadow: 0 10px 25px rgba(6, 182, 212, 0.15);
-}
-
-.movie-card:hover .movie-poster {
-    transform: scale(1.05);
-}
-
-.movie-card-info {
-    padding: 1rem;
-}
-
-.movie-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 0.2rem;
-}
-
-.movie-meta-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-}
-
-.rating-badge {
-    color: var(--accent-cyan);
-    font-weight: 700;
-}
-
-/* Movie Detail Focus Block */
-.focus-movie-card {
-    background: var(--bg-panel);
-    border: var(--border-glow);
-    border-radius: var(--radius-md);
-    position: relative;
-    overflow: hidden;
-    padding: 0 !important;
-    animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.focus-close-btn {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    background: rgba(0,0,0,0.5);
-    border: var(--border-glow);
-    color: var(--text-primary);
-    font-size: 1.5rem;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition-fast);
-}
-
-.focus-close-btn:hover {
-    background: var(--error);
-    border-color: transparent;
-}
-
-.focus-backdrop-bg {
-    height: 250px;
-    background-size: cover;
-    background-position: center 20%;
-    position: relative;
-}
-
-.focus-backdrop-bg::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(0deg, var(--bg-dark) 0%, rgba(10,12,18,0.5) 50%, transparent 100%);
-}
-
-.focus-content {
-    display: flex;
-    padding: 2.5rem;
-    margin-top: -100px;
-    position: relative;
-    z-index: 2;
-    gap: 2.5rem;
-}
-
-.focus-poster {
-    width: 150px;
-    height: 225px;
-    border-radius: var(--radius-sm);
-    object-fit: cover;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    border: var(--border-glow);
-}
-
-.focus-details {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-}
-
-.focus-badge {
-    background: rgba(255,255,255,0.08);
-    border: var(--border-glow);
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.75rem;
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    width: fit-content;
-    margin-bottom: 0.8rem;
-    font-weight: 600;
-}
-
-.focus-details h2 {
-    font-size: 2.2rem;
-    margin-bottom: 0.2rem;
-}
-
-.focus-tagline {
-    font-style: italic;
-    color: var(--accent-cyan);
-    margin-bottom: 1.2rem;
-    font-size: 0.95rem;
-}
-
-.focus-overview {
-    color: var(--text-secondary);
-    margin-bottom: 1.8rem;
-    font-size: 0.95rem;
-    max-width: 800px;
-}
-
-.focus-metadata {
-    display: flex;
-    gap: 3rem;
-    font-size: 0.9rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    padding-top: 1.2rem;
-}
-
-.focus-metadata span {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-}
-
-@media (max-width: 768px) {
-    .focus-content {
-        flex-direction: column;
-        margin-top: -60px;
-        padding: 1.5rem;
-    }
-    .focus-poster {
-        width: 110px;
-        height: 165px;
-    }
-    .focus-metadata {
-        flex-direction: column;
-        gap: 0.8rem;
-    }
-}
-
-.btn-play-movie {
-    margin: 1.2rem 0;
-    width: fit-content;
-    font-size: 1.1rem;
-    padding: 0.7rem 2rem;
-}
-
-.movie-player-wrap {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    background: #000;
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    margin: 1rem 0;
-}
-
-.movie-player-wrap iframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
-}
-
 /* ==========================================
    WEB3 CRYPTO BRIDGE
    ========================================== */
@@ -1690,4 +1361,270 @@
     .sandbox-grid .control-card, .sandbox-grid .console-card {
         grid-column: span 12;
     }
+}
+
+/* ==========================================
+   CINEMA — Tab Logo Images
+   ========================================== */
+
+.tab-logo-img {
+    height: 20px;
+    width: auto;
+    display: none;
+    object-fit: contain;
+    filter: brightness(1) contrast(1.2);
+}
+
+.cinema-tab[data-company="213"] .tab-logo-img { filter: brightness(0) invert(1); }
+.cinema-tab[data-company="19551"] .tab-logo-img { filter: brightness(0) invert(1); }
+.cinema-tab[data-company="174"] .tab-logo-img { filter: brightness(0) invert(1); }
+.cinema-tab[data-company="420"] .tab-logo-img { filter: brightness(0) invert(1); }
+.cinema-tab[data-company="2"] .tab-logo-img { filter: brightness(0) invert(1); }
+
+.cinema-tab .tab-logo-img + span {
+    display: none;
+}
+
+/* ==========================================
+   CINEMA — Search Bar
+   ========================================== */
+
+.cinema-search {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+.cinema-search .search-input {
+    flex: 1;
+    max-width: 400px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-family: var(--font-body);
+    transition: var(--transition-fast);
+}
+
+.cinema-search .search-input:focus {
+    outline: none;
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.06);
+}
+
+/* ==========================================
+   CINEMA — Trailers
+   ========================================== */
+
+.cinema-trailers-section {
+    margin-top: 2rem;
+}
+
+.cinema-trailers-section h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.cinema-trailers {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+}
+
+.cinema-trailers::-webkit-scrollbar {
+    display: none;
+}
+
+.trailer-item {
+    flex-shrink: 0;
+    width: 240px;
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.trailer-item:hover {
+    transform: scale(1.04);
+}
+
+.trailer-thumb {
+    width: 100%;
+    height: 135px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.trailer-thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+}
+
+.trailer-play-icon {
+    font-size: 2.5rem;
+    color: #fff;
+    z-index: 1;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+}
+
+.trailer-item:hover .trailer-play-icon {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.trailer-name {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 0.4rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ==========================================
+   CINEMA — Posters
+   ========================================== */
+
+.cinema-posters-section {
+    margin-top: 2rem;
+}
+
+.cinema-posters-section h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.cinema-posters {
+    display: flex;
+    gap: 0.8rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+}
+
+.cinema-posters::-webkit-scrollbar {
+    display: none;
+}
+
+.poster-item {
+    flex-shrink: 0;
+    width: 140px;
+    cursor: pointer;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.poster-item:hover {
+    transform: scale(1.05);
+}
+
+.poster-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+}
+
+/* ==========================================
+   CINEMA — Celebrity Cards
+   ========================================== */
+
+.celebrity-card {
+    width: 180px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.04);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+
+.celebrity-card:hover {
+    transform: scale(1.05);
+    z-index: 5;
+    border-color: rgba(255,255,255,0.12);
+}
+
+.celebrity-img-wrap {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    background: rgba(0,0,0,0.3);
+}
+
+.celebrity-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.celebrity-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.03);
+}
+
+.celebrity-info {
+    padding: 0.8rem;
+}
+
+.celebrity-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+}
+
+.celebrity-known {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 0.15rem;
+}
+
+.cast-item {
+    cursor: pointer;
+}
+
+.cast-item:hover .cast-img {
+    border-color: rgba(255,255,255,0.2);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .celebrity-card { width: 140px; }
+    .poster-item { width: 110px; }
+    .trailer-item { width: 200px; }
+    .cinema-search .search-input { max-width: 100%; }
 }

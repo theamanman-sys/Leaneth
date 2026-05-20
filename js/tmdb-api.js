@@ -4,14 +4,15 @@ const VIDAPI_BASE = 'https://vidapi.ru';
 
 const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMzQyZWNhZjBjNzNmYzU1NmI1NDk3NzQwYmJmZmE5MiIsIm5iZiI6MTc3NTIyMDE5OS42MDA5OTk4LCJzdWIiOiI2OWNmYjVlNzY4YjcwYWNmYjgyZjc2MmQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.jxycsZVC7uLmewooOKm20BvZUZ5s5H4qPsalI3FBmok';
 const TMDB_BASE = 'https://api.themoviedb.org/3';
+const TMDB_IMG = 'https://image.tmdb.org/t/p';
 const TMDB_HEADERS = { accept: 'application/json', Authorization: `Bearer ${TMDB_TOKEN}` };
 
 const FALLBACK_MOVIES = [
-    { id: 157336, title: "Interstellar", overview: "The adventures of a group of explorers who make use of a newly discovered wormhole.", poster_path: "https://image.tmdb.org/t/p/w500/gEU2QvEw3Fg7lsbqgZ47Lj4GlKW.jpg", backdrop_path: "https://image.tmdb.org/t/p/original/xjhKW2v9fj25elz77G60i4t4iE4.jpg", vote_average: 8.4, release_date: "2014", popularity: 184.2, genre: "Sci-Fi, Adventure", embed_url: "" },
-    { id: 603, title: "The Matrix", overview: "A computer hacker joins a group of underground freedom fighters.", poster_path: "https://image.tmdb.org/t/p/w500/f89U3wz6v26tSVLI8rT88Yv35j3.jpg", backdrop_path: "https://image.tmdb.org/t/p/original/o0q6R6Bt7n364IQ24nTaC4RxvH1.jpg", vote_average: 8.2, release_date: "1999", popularity: 110.5, genre: "Sci-Fi, Action", embed_url: "" },
-    { id: 335984, title: "Blade Runner 2049", overview: "A new blade runner unearths a long-buried secret.", poster_path: "https://image.tmdb.org/t/p/w500/gGe580LnZgHYjuU1K14ysRh55S2.jpg", backdrop_path: "https://image.tmdb.org/t/p/original/mVrY4143WLv7vLAYyNHSS8nWKzs.jpg", vote_average: 7.6, release_date: "2017", popularity: 145.8, genre: "Sci-Fi, Action", embed_url: "" },
-    { id: 27205, title: "Inception", overview: "A skilled thief extracts secrets during the dream state.", poster_path: "https://image.tmdb.org/t/p/w500/l9G6Vclt2h7J3971T3i9P9c8yZ8.jpg", backdrop_path: "https://image.tmdb.org/t/p/original/s3Tld8H0oX2S6TAptHw2564R36c.jpg", vote_average: 8.4, release_date: "2010", popularity: 154.2, genre: "Sci-Fi, Action, Adventure", embed_url: "" },
-    { id: 693134, title: "Dune: Part Two", overview: "Paul Atreides unites with the Fremen.", poster_path: "https://image.tmdb.org/t/p/w500/czEM0wBpTyLg5OI8nJ3r6ZAI6P4.jpg", backdrop_path: "https://image.tmdb.org/t/p/original/xOMo8BRK7ev26756u61ZcK6DC2K.jpg", vote_average: 8.3, release_date: "2024", popularity: 290.4, genre: "Sci-Fi, Adventure", embed_url: "" },
+    { id: 157336, title: "Interstellar", overview: "The adventures of a group of explorers who make use of a newly discovered wormhole.", poster_path: `${TMDB_IMG}/w500/gEU2QvEw3Fg7lsbqgZ47Lj4GlKW.jpg`, backdrop_path: `${TMDB_IMG}/original/xjhKW2v9fj25elz77G60i4t4iE4.jpg`, vote_average: 8.4, release_date: "2014", popularity: 184.2, genre: "Sci-Fi, Adventure", embed_url: "" },
+    { id: 603, title: "The Matrix", overview: "A computer hacker joins a group of underground freedom fighters.", poster_path: `${TMDB_IMG}/w500/f89U3wz6v26tSVLI8rT88Yv35j3.jpg`, backdrop_path: `${TMDB_IMG}/original/o0q6R6Bt7n364IQ24nTaC4RxvH1.jpg`, vote_average: 8.2, release_date: "1999", popularity: 110.5, genre: "Sci-Fi, Action", embed_url: "" },
+    { id: 335984, title: "Blade Runner 2049", overview: "A new blade runner unearths a long-buried secret.", poster_path: `${TMDB_IMG}/w500/gGe580LnZgHYjuU1K14ysRh55S2.jpg`, backdrop_path: `${TMDB_IMG}/original/mVrY4143WLv7vLAYyNHSS8nWKzs.jpg`, vote_average: 7.6, release_date: "2017", popularity: 145.8, genre: "Sci-Fi, Action", embed_url: "" },
+    { id: 27205, title: "Inception", overview: "A skilled thief extracts secrets during the dream state.", poster_path: `${TMDB_IMG}/w500/l9G6Vclt2h7J3971T3i9P9c8yZ8.jpg`, backdrop_path: `${TMDB_IMG}/original/s3Tld8H0oX2S6TAptHw2564R36c.jpg`, vote_average: 8.4, release_date: "2010", popularity: 154.2, genre: "Sci-Fi, Action, Adventure", embed_url: "" },
+    { id: 693134, title: "Dune: Part Two", overview: "Paul Atreides unites with the Fremen.", poster_path: `${TMDB_IMG}/w500/czEM0wBpTyLg5OI8nJ3r6ZAI6P4.jpg`, backdrop_path: `${TMDB_IMG}/original/xOMo8BRK7ev26756u61ZcK6DC2K.jpg`, vote_average: 8.3, release_date: "2024", popularity: 290.4, genre: "Sci-Fi, Adventure", embed_url: "" },
 ];
 
 const COMPANY_NAMES = {
@@ -43,6 +44,8 @@ class MovieEngine {
         this.overlayIframe = document.getElementById('cinema-overlay-iframe');
         this.overlayExtra = document.getElementById('cinema-overlay-extra');
         this.overlayCast = document.getElementById('cinema-overlay-cast');
+        this.overlayTrailers = document.getElementById('cinema-overlay-trailers');
+        this.overlayPosters = document.getElementById('cinema-overlay-posters');
 
         this.heroBackdrop = document.getElementById('cinema-hero-backdrop');
         this.heroTitle = document.getElementById('cinema-hero-title');
@@ -55,6 +58,8 @@ class MovieEngine {
         this.heroInfo = document.getElementById('cinema-hero-info');
         this.heroDots = document.getElementById('cinema-hero-dots');
         this.tabContainer = document.getElementById('cinema-tabs');
+        this.searchInput = document.getElementById('cinema-search-input');
+        this.searchBtn = document.getElementById('cinema-search-btn');
 
         this.allMovies = [];
         this.companyMovies = {};
@@ -64,6 +69,11 @@ class MovieEngine {
         this.heroItems = [];
         this.heroIndex = 0;
         this.heroTimer = null;
+
+        this.celebrities = [];
+        this.searchResultsMode = false;
+
+        this.companyLogos = {};
         this.init();
     }
 
@@ -72,6 +82,7 @@ class MovieEngine {
 
         this.fetchAllMovies();
         this.startHeroRotation();
+        this.loadCompanyLogos();
 
         this.btnLeft.addEventListener('click', () => {
             playClickSound();
@@ -85,9 +96,16 @@ class MovieEngine {
         document.querySelectorAll('.cinema-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 playClickSound();
+                const company = tab.dataset.company || '';
+                if (company === 'celebrities') {
+                    this.showCelebrities();
+                    return;
+                }
                 document.querySelectorAll('.cinema-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
-                this.activeCompany = tab.dataset.company || '';
+                document.getElementById('cinema-search').style.display = '';
+                this.activeCompany = company;
+                this.searchResultsMode = false;
                 this.switchCompany();
             });
         });
@@ -100,6 +118,11 @@ class MovieEngine {
                 this.activeGenre = pill.dataset.genre;
                 this.filterAndRender();
             });
+        });
+
+        this.searchBtn.addEventListener('click', () => this.doSearch());
+        this.searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') this.doSearch();
         });
 
         this.overlayBack.addEventListener('click', () => {
@@ -128,6 +151,27 @@ class MovieEngine {
         this.overlayPlay.classList.remove('hidden');
         this.overlay.classList.add('hidden');
         document.body.style.overflow = '';
+    }
+
+    /* ── Company Logos ── */
+
+    async loadCompanyLogos() {
+        const ids = ['213', '19551', '174', '420', '2'];
+        const results = await Promise.allSettled(ids.map(id =>
+            fetch(`${TMDB_BASE}/company/${id}`, { headers: TMDB_HEADERS }).then(r => r.json())
+        ));
+        results.forEach((res, i) => {
+            if (res.status === 'fulfilled' && res.value.logo_path) {
+                this.companyLogos[ids[i]] = `${TMDB_IMG}/w500${res.value.logo_path}`;
+            }
+        });
+        document.querySelectorAll('.tab-logo-img').forEach(img => {
+            const cid = img.dataset.cid;
+            if (this.companyLogos[cid]) {
+                img.style.display = 'inline';
+                img.src = this.companyLogos[cid];
+            }
+        });
     }
 
     /* ── Hero Rotation ── */
@@ -189,7 +233,7 @@ class MovieEngine {
         const title = item.title || item.name || '';
         const year = (item.release_date || item.first_air_date || '').split('-')[0] || '—';
         const rating = item.vote_average ? item.vote_average.toFixed(1) : '—';
-        const backdrop = item.backdrop_path ? `https://image.tmdb.org/t/p/original${item.backdrop_path}` : '';
+        const backdrop = item.backdrop_path ? `${TMDB_IMG}/original${item.backdrop_path}` : '';
         const overview = item.overview || '';
         const type = item.media_type === 'tv' ? 'Series' : 'Movie';
 
@@ -267,8 +311,8 @@ class MovieEngine {
                 id: m.id,
                 title: m.title || 'Untitled',
                 release_date: (m.release_date || '').split('-')[0] || '',
-                poster_path: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '',
-                backdrop_path: m.backdrop_path ? `https://image.tmdb.org/t/p/original${m.backdrop_path}` : '',
+                poster_path: m.poster_path ? `${TMDB_IMG}/w500${m.poster_path}` : '',
+                backdrop_path: m.backdrop_path ? `${TMDB_IMG}/original${m.backdrop_path}` : '',
                 vote_average: m.vote_average || 0,
                 popularity: m.popularity || 0,
                 genre: '',
@@ -302,6 +346,7 @@ class MovieEngine {
     }
 
     filterAndRender() {
+        this.searchResultsMode = false;
         if (this.activeGenre === 'all') {
             this.renderMovies(this.allMovies);
         } else {
@@ -339,6 +384,162 @@ class MovieEngine {
         });
     }
 
+    /* ── Celebrities ── */
+
+    async showCelebrities() {
+        playClickSound();
+        document.querySelectorAll('.cinema-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector('.cinema-tab[data-company="celebrities"]').classList.add('active');
+        document.getElementById('cinema-search').style.display = 'none';
+        document.getElementById('genre-pill-slider').style.display = 'none';
+        this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading celebrities...</div>`;
+
+        if (this.celebrities.length > 0) {
+            this.renderCelebrities(this.celebrities);
+            return;
+        }
+
+        try {
+            const pages = [1, 2, 3];
+            const results = await Promise.all(pages.map(p =>
+                fetch(`${TMDB_BASE}/trending/person/week?language=en-US&page=${p}`, { headers: TMDB_HEADERS }).then(r => r.json())
+            ));
+            let people = [];
+            results.forEach(r => {
+                if (r.results) people = people.concat(r.results);
+            });
+            people = people.filter(p => p.known_for_department === 'Acting' && p.profile_path);
+            people = people.slice(0, 60);
+            this.celebrities = people;
+            this.renderCelebrities(people);
+        } catch {
+            this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Failed to load celebrities.</div>`;
+        }
+    }
+
+    renderCelebrities(people) {
+        this.cardsContainer.innerHTML = '';
+        people.forEach(person => {
+            const card = document.createElement('div');
+            card.className = 'celebrity-card';
+            const img = person.profile_path
+                ? `<img src="${TMDB_IMG}/w185${person.profile_path}" alt="${person.name}" class="celebrity-img">`
+                : `<div class="celebrity-img celebrity-placeholder">${person.name.charAt(0)}</div>`;
+            const knownFor = (person.known_for || []).map(k => k.title || k.name || '').filter(Boolean).slice(0, 3).join(', ');
+            card.innerHTML = `
+                <div class="celebrity-img-wrap">${img}</div>
+                <div class="celebrity-info">
+                    <h4 class="celebrity-name">${person.name}</h4>
+                    <div class="celebrity-known">${knownFor || 'Popular Actor'}</div>
+                </div>
+            `;
+            card.addEventListener('click', () => this.showCelebrityDetails(person));
+            this.cardsContainer.appendChild(card);
+        });
+    }
+
+    async showCelebrityDetails(person) {
+        playClickSound();
+        this.closeOverlay();
+
+        this.overlayBackdrop.style.backgroundImage = 'none';
+        this.overlayPoster.src = person.profile_path ? `${TMDB_IMG}/w500${person.profile_path}` : '';
+        this.overlayTitle.textContent = person.name;
+        this.overlayYear.textContent = person.known_for_department || 'Actor';
+        this.overlayRating.textContent = `★ ${person.popularity ? person.popularity.toFixed(1) : '—'}`;
+        this.overlayGenre.textContent = '';
+        this.overlayOverview.textContent = '';
+        this.overlayPlay.classList.add('hidden');
+
+        this.overlayExtra.innerHTML = `<div class="cinema-extra-row"><span class="label">Popularity</span><span class="value">${person.popularity ? person.popularity.toFixed(1) : '—'}</span></div>`;
+        if (this.overlayCast) {
+            this.overlayCast.innerHTML = '<div class="terminal-line text-muted">Loading filmography...</div>';
+        }
+
+        if (this.overlayTrailers) this.overlayTrailers.parentElement.style.display = 'none';
+        if (this.overlayPosters) this.overlayPosters.parentElement.style.display = 'none';
+
+        this.overlay.classList.remove('hidden');
+        this.overlay.scrollTop = 0;
+        document.body.style.overflow = 'hidden';
+
+        try {
+            const data = await fetch(`${TMDB_BASE}/person/${person.id}/movie_credits?language=en-US`, { headers: TMDB_HEADERS }).then(r => r.json());
+            const cast = (data.cast || []).sort((a, b) => parseFloat(b.popularity || 0) - parseFloat(a.popularity || 0)).slice(0, 12);
+            if (this.overlayCast) {
+                this.overlayCast.innerHTML = '';
+                cast.forEach(m => {
+                    const img = m.poster_path
+                        ? `<img src="${TMDB_IMG}/w185${m.poster_path}" alt="${m.title}" class="cast-img">`
+                        : `<div class="cast-img cast-placeholder">${(m.title || '?').charAt(0)}</div>`;
+                    const el = document.createElement('div');
+                    el.className = 'cast-item';
+                    el.innerHTML = `${img}<div class="cast-name">${m.title || 'Untitled'}</div><div class="cast-role">${m.character || ''}</div>`;
+                    el.addEventListener('click', () => {
+                        const movie = {
+                            id: m.id,
+                            title: m.title || 'Untitled',
+                            overview: m.overview || '',
+                            poster_path: m.poster_path ? `${TMDB_IMG}/w500${m.poster_path}` : '',
+                            backdrop_path: '',
+                            vote_average: m.vote_average || 0,
+                            release_date: (m.release_date || '').split('-')[0] || '',
+                            genre: '',
+                            embed_url: m.id ? `https://vaplayer.ru/embed/movie/${m.id}` : '',
+                        };
+                        this.showItemDetails(movie);
+                    });
+                    this.overlayCast.appendChild(el);
+                });
+            }
+        } catch {
+            if (this.overlayCast) {
+                this.overlayCast.innerHTML = '<div class="terminal-line text-muted">Filmography unavailable.</div>';
+            }
+        }
+    }
+
+    /* ── Search ── */
+
+    async doSearch() {
+        const query = this.searchInput.value.trim();
+        if (!query) return;
+        playClickSound();
+        this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Searching "${query}"...</div>`;
+
+        document.querySelectorAll('.cinema-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('genre-pill-slider').style.display = 'none';
+
+        this.searchResultsMode = true;
+
+        try {
+            const res = await fetch(`${TMDB_BASE}/search/multi?query=${encodeURIComponent(query)}&include_adult=false&language=en-US&page=1`, { headers: TMDB_HEADERS }).then(r => r.json());
+            const results = (res.results || []).filter(r => r.media_type === 'movie' || r.media_type === 'tv').slice(0, 40);
+
+            if (results.length === 0) {
+                this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">No results for "${query}".</div>`;
+                return;
+            }
+
+            const mapped = results.map(r => ({
+                id: r.id,
+                title: r.title || r.name || 'Untitled',
+                release_date: (r.release_date || r.first_air_date || '').split('-')[0] || '',
+                poster_path: r.poster_path ? `${TMDB_IMG}/w500${r.poster_path}` : '',
+                backdrop_path: r.backdrop_path ? `${TMDB_IMG}/original${r.backdrop_path}` : '',
+                vote_average: r.vote_average || 0,
+                popularity: r.popularity || 0,
+                genre: r.media_type === 'tv' ? 'TV' : 'Movie',
+                embed_url: r.media_type === 'movie' && r.id ? `https://vaplayer.ru/embed/movie/${r.id}` : '',
+                overview: r.overview || '',
+                tagline: '',
+            }));
+            this.renderMovies(mapped);
+        } catch {
+            this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Search failed.</div>`;
+        }
+    }
+
     /* ── Detail overlay ── */
 
     showItemDetails(item) {
@@ -372,6 +573,14 @@ class MovieEngine {
                 this.overlayPlay.classList.add('hidden');
             }
         }
+        if (this.overlayTrailers) {
+            this.overlayTrailers.innerHTML = '<div class="terminal-line text-muted">Loading trailers...</div>';
+            this.overlayTrailers.parentElement.style.display = '';
+        }
+        if (this.overlayPosters) {
+            this.overlayPosters.innerHTML = '<div class="terminal-line text-muted">Loading posters...</div>';
+            this.overlayPosters.parentElement.style.display = '';
+        }
 
         this.overlay.classList.remove('hidden');
         this.overlay.scrollTop = 0;
@@ -390,7 +599,7 @@ class MovieEngine {
 
     async fetchExtendedDetails(movieId) {
         try {
-            const data = await fetch(`${TMDB_BASE}/movie/${movieId}?append_to_response=credits`, { headers: TMDB_HEADERS }).then(r => r.json());
+            const data = await fetch(`${TMDB_BASE}/movie/${movieId}?append_to_response=credits,videos,images`, { headers: TMDB_HEADERS }).then(r => r.json());
 
             if (data.runtime && this.overlayExtra) {
                 const genres = data.genres ? data.genres.map(g => g.name).join(', ') : '—';
@@ -413,24 +622,84 @@ class MovieEngine {
                 this.overlayOverview.textContent = data.overview;
             }
             if (data.backdrop_path && this.overlayBackdrop) {
-                this.overlayBackdrop.style.backgroundImage = `url('https://image.tmdb.org/t/p/original${data.backdrop_path}')`;
+                this.overlayBackdrop.style.backgroundImage = `url('${TMDB_IMG}/original${data.backdrop_path}')`;
             }
 
+            /* ── Trailers ── */
+            if (data.videos && data.videos.results && this.overlayTrailers) {
+                this.overlayTrailers.innerHTML = '';
+                const trailers = data.videos.results.filter(v => v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'));
+                if (trailers.length === 0) {
+                    this.overlayTrailers.innerHTML = '<div class="terminal-line text-muted">No trailers available.</div>';
+                } else {
+                    trailers.slice(0, 4).forEach(v => {
+                        const el = document.createElement('div');
+                        el.className = 'trailer-item';
+                        el.innerHTML = `
+                            <div class="trailer-thumb" style="background-image:url('https://img.youtube.com/vi/${v.key}/mqdefault.jpg')">
+                                <span class="trailer-play-icon">&#9654;</span>
+                            </div>
+                            <div class="trailer-name">${v.name}${v.type === 'Teaser' ? ' (Teaser)' : ''}</div>
+                        `;
+                        el.addEventListener('click', () => {
+                            window.open(`https://www.youtube.com/watch?v=${v.key}`, '_blank');
+                        });
+                        this.overlayTrailers.appendChild(el);
+                    });
+                }
+            }
+
+            /* ── Posters ── */
+            if (data.images && data.images.posters && this.overlayPosters) {
+                this.overlayPosters.innerHTML = '';
+                const posters = data.images.posters.slice(0, 10);
+                if (posters.length === 0) {
+                    this.overlayPosters.innerHTML = '<div class="terminal-line text-muted">No additional posters.</div>';
+                } else {
+                    posters.forEach(p => {
+                        const el = document.createElement('div');
+                        el.className = 'poster-item';
+                        const src = `${TMDB_IMG}/w342${p.file_path}`;
+                        el.innerHTML = `<img src="${src}" alt="Poster" loading="lazy">`;
+                        el.addEventListener('click', () => {
+                            window.open(`${TMDB_IMG}/original${p.file_path}`, '_blank');
+                        });
+                        this.overlayPosters.appendChild(el);
+                    });
+                }
+            }
+
+            /* ── Cast ── */
             if (data.credits && data.credits.cast && this.overlayCast) {
                 this.overlayCast.innerHTML = '';
-                data.credits.cast.slice(0, 8).forEach(person => {
+                data.credits.cast.slice(0, 12).forEach(person => {
                     const img = person.profile_path
-                        ? `<img src="https://image.tmdb.org/t/p/w185${person.profile_path}" alt="${person.name}" class="cast-img">`
+                        ? `<img src="${TMDB_IMG}/w185${person.profile_path}" alt="${person.name}" class="cast-img">`
                         : `<div class="cast-img cast-placeholder">${person.name.charAt(0)}</div>`;
                     const el = document.createElement('div');
                     el.className = 'cast-item';
                     el.innerHTML = `${img}<div class="cast-name">${person.name}</div><div class="cast-role">${person.character || ''}</div>`;
+                    el.addEventListener('click', () => {
+                        this.showCelebrityDetails({
+                            id: person.id,
+                            name: person.name,
+                            profile_path: person.profile_path,
+                            known_for_department: person.known_for_department || 'Actor',
+                            popularity: person.popularity || 0,
+                        });
+                    });
                     this.overlayCast.appendChild(el);
                 });
             }
         } catch {
             if (this.overlayCast) {
                 this.overlayCast.innerHTML = '<div class="terminal-line text-muted">Extended data unavailable.</div>';
+            }
+            if (this.overlayTrailers) {
+                this.overlayTrailers.innerHTML = '<div class="terminal-line text-muted">Trailers unavailable.</div>';
+            }
+            if (this.overlayPosters) {
+                this.overlayPosters.innerHTML = '<div class="terminal-line text-muted">Posters unavailable.</div>';
             }
         }
     }
