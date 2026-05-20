@@ -1696,11 +1696,12 @@
 
 .stream-hero {
     position: relative;
-    height: 200px;
-    border-radius: var(--radius-md);
+    height: 180px;
     overflow: hidden;
     margin-bottom: 1.5rem;
-    background: rgba(255,255,255,0.02);
+    background: rgba(255,255,255,0.01);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: var(--radius-sm);
 }
 
 .stream-hero-backdrop {
@@ -1709,12 +1710,13 @@
     background-size: cover;
     background-position: center;
     transition: background-image 0.6s ease;
+    opacity: 0.5;
 }
 
 .stream-hero-gradient {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(8,10,15,0.9) 0%, rgba(8,10,15,0.5) 60%, rgba(8,10,15,0.2) 100%);
+    background: linear-gradient(90deg, rgba(8,10,15,1) 0%, rgba(8,10,15,0.7) 50%, rgba(8,10,15,0.4) 100%);
 }
 
 .stream-hero-content {
@@ -1724,16 +1726,16 @@
     align-items: center;
     gap: 1.5rem;
     height: 100%;
-    padding: 2rem;
+    padding: 1.5rem 2rem;
 }
 
 .stream-hero-logo-img {
-    width: 80px;
-    height: 80px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid rgba(255,255,255,0.15);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 
 .stream-hero-text {
@@ -1741,14 +1743,14 @@
 }
 
 .stream-hero-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.3rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.2rem;
 }
 
 .stream-hero-desc {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
     max-width: 500px;
     display: -webkit-box;
@@ -1853,10 +1855,10 @@
 
 /* Mobile */
 @media (max-width: 768px) {
-    .stream-hero { height: 140px; }
-    .stream-hero-content { padding: 1rem; gap: 1rem; }
-    .stream-hero-logo-img { width: 50px; height: 50px; }
-    .stream-hero-title { font-size: 1.2rem; }
-    .stream-hero-desc { font-size: 0.8rem; -webkit-line-clamp: 1; }
+    .stream-hero { height: 120px; }
+    .stream-hero-content { padding: 1rem 1.2rem; gap: 0.8rem; }
+    .stream-hero-logo-img { width: 44px; height: 44px; }
+    .stream-hero-title { font-size: 1rem; }
+    .stream-hero-desc { font-size: 0.75rem; -webkit-line-clamp: 1; }
     .cinema-overlay-close { width: 34px; height: 34px; font-size: 1.3rem; }
 }
