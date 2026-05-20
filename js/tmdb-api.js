@@ -24,6 +24,20 @@ const COMPANY_NAMES = {
     '2': 'Disney',
 };
 
+const GENRE_MAP = {
+    28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy',
+    80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family',
+    14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music',
+    9648: 'Mystery', 10749: 'Romance', 878: 'Sci-Fi',
+    10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western',
+};
+
+function mapGenres(m) {
+    if (m.genres) return m.genres.map(g => g.name).join(', ');
+    if (m.genre_ids) return m.genre_ids.map(id => GENRE_MAP[id]).filter(Boolean).join(', ');
+    return '';
+}
+
 const WATCH_LABELS = {
     '9': 'Prime Video',
     '350': 'Apple TV+',
@@ -204,7 +218,7 @@ class MovieEngine {
         });
 
         this.overlay.addEventListener('click', (e) => {
-            if (e.target === this.overlay) this.closeOverlay();
+            if (e.target === this.overlay || e.target.classList.contains('cinema-overlay-scroll')) this.closeOverlay();
         });
 
         this.overlayPlay.addEventListener('click', () => this.playCurrentMovie());
@@ -415,7 +429,7 @@ class MovieEngine {
             backdrop_path: item.backdrop_path ? `${TMDB_IMG}/original${item.backdrop_path}` : '',
             vote_average: item.vote_average || 0,
             popularity: item.popularity || 0,
-            genre: '',
+            genre: mapGenres(item),
             embed_url: '',
             overview: item.overview || '',
             tagline: '',
@@ -477,7 +491,7 @@ class MovieEngine {
                 backdrop_path: m.backdrop_path ? `${TMDB_IMG}/original${m.backdrop_path}` : '',
                 vote_average: m.vote_average || 0,
                 popularity: m.popularity || 0,
-                genre: '',
+                genre: mapGenres(m),
                 embed_url: '',
                 overview: m.overview || '',
                 tagline: '',
@@ -510,7 +524,7 @@ class MovieEngine {
             backdrop_path: m.backdrop_path ? `${TMDB_IMG}/original${m.backdrop_path}` : '',
             vote_average: m.vote_average || 0,
             popularity: m.popularity || 0,
-            genre: '',
+            genre: mapGenres(m),
             embed_url: '',
             overview: m.overview || '',
             tagline: '',
@@ -566,7 +580,7 @@ class MovieEngine {
             backdrop_path: m.backdrop_path ? `${TMDB_IMG}/original${m.backdrop_path}` : '',
             vote_average: m.vote_average || 0,
             popularity: m.popularity || 0,
-            genre: '',
+            genre: mapGenres(m),
             embed_url: '',
             overview: m.overview || '',
             tagline: '',
@@ -633,7 +647,7 @@ class MovieEngine {
                 backdrop_path: m.backdrop_path ? `${TMDB_IMG}/original${m.backdrop_path}` : '',
                 vote_average: m.vote_average || 0,
                 popularity: m.popularity || 0,
-                genre: '',
+                genre: mapGenres(m),
                 embed_url: '',
                 overview: m.overview || '',
                 tagline: '',
@@ -785,7 +799,7 @@ class MovieEngine {
                             backdrop_path: '',
                             vote_average: m.vote_average || 0,
                             release_date: (m.release_date || '').split('-')[0] || '',
-                            genre: '',
+                            genre: mapGenres(m),
                             embed_url: m.id ? `https://vaplayer.ru/embed/movie/${m.id}` : '',
                         };
                         this.showItemDetails(movie);

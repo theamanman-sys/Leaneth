@@ -609,7 +609,7 @@
 .movie-poster-wrapper {
     position: relative;
     width: 100%;
-    padding-top: 150%;
+    aspect-ratio: 2 / 3;
     background: rgba(0,0,0,0.3);
 }
 
@@ -629,12 +629,6 @@
     right: 0;
     padding: 2rem 0.8rem 0.8rem;
     background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.movie-card:hover .movie-card-info {
-    opacity: 1;
 }
 
 .movie-title {
@@ -1640,6 +1634,8 @@
     background: rgba(255,255,255,0.02);
     border: 1px solid rgba(255,255,255,0.04);
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .celebrity-card:hover {
@@ -1650,7 +1646,8 @@
 
 .celebrity-img-wrap {
     width: 100%;
-    aspect-ratio: 1;
+    height: 180px;
+    flex-shrink: 0;
     position: relative;
     background: rgba(0,0,0,0.3);
     overflow: hidden;
@@ -1658,10 +1655,13 @@
 
 .celebrity-img {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
     object-fit: cover;
 }
 
@@ -1708,10 +1708,14 @@
 /* Mobile responsive */
 @media (max-width: 768px) {
     .celebrity-card { width: 140px; }
+    .celebrity-img-wrap { height: 140px; }
     .movie-card { width: 160px; }
     .poster-item { width: 110px; }
     .trailer-item { width: 200px; }
+    .cinema-search { flex-wrap: wrap; }
     .cinema-search .search-input { max-width: 100%; }
+    .cinema-search .search-input::placeholder { font-size: 0.8rem; }
+    .cinema-search .btn { font-size: 0.8rem; padding: 0.6rem 0.8rem; }
     .celebrity-name { font-size: 0.75rem; }
     .celebrity-known { font-size: 0.65rem; }
     .movie-carousel { gap: 0.7rem; }
@@ -1726,6 +1730,7 @@
 
 @media (max-width: 480px) {
     .celebrity-card { width: 120px; }
+    .celebrity-img-wrap { height: 120px; }
     .movie-card { width: 130px; }
     .celebrity-info { padding: 0.5rem; }
     .celebrity-name { font-size: 0.7rem; }
@@ -1741,6 +1746,10 @@
     .cast-role { font-size: 0.55rem; }
     .trailer-item { width: 160px; }
     .poster-item { width: 90px; }
+    .cinema-search { flex-direction: column; gap: 0.4rem; }
+    .cinema-search .search-input { width: 100%; font-size: 0.85rem; }
+    .cinema-search .search-input::placeholder { font-size: 0.75rem; }
+    .cinema-search .btn { width: 100%; text-align: center; }
 }
 
 /* ==========================================
