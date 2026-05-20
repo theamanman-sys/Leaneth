@@ -659,8 +659,10 @@
     inset: 0;
     z-index: 2000;
     background: rgba(8,10,15,0.96);
-    overflow-y: auto;
+    overflow: hidden;
     animation: fadeIn 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .cinema-overlay.hidden {
@@ -695,6 +697,9 @@
     padding: 0 3rem 4rem;
     position: relative;
     z-index: 2;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .cinema-overlay-poster-col {
@@ -748,8 +753,11 @@
 }
 
 .cinema-overlay-scroll {
-    min-height: 100vh;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     position: relative;
+    overflow: hidden;
 }
 
 .cinema-overlay-backdrop {
@@ -908,7 +916,6 @@
     }
     .cinema-overlay-body {
         flex-direction: column;
-        align-items: center;
         margin-top: -4rem;
         padding: 0 1.5rem 2rem;
         gap: 1.5rem;
@@ -917,9 +924,16 @@
         width: 140px;
     }
     .cinema-overlay-poster-col img {
+        display: none;
+    }
+    .cinema-overlay.celebrity-mode .cinema-overlay-poster-col {
+        align-self: center;
+    }
+    .cinema-overlay.celebrity-mode .cinema-overlay-poster-col img {
         display: block;
         margin: 0 auto;
         max-width: 140px;
+        border-radius: 8px;
     }
     .cinema-overlay-details h2 {
         font-size: 1.8rem;

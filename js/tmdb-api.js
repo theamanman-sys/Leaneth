@@ -287,6 +287,7 @@ class MovieEngine {
     }
 
     closeOverlay() {
+        this.overlay.classList.remove('celebrity-mode');
         this.overlayPlayer.classList.add('hidden');
         this.overlayIframe.src = '';
         this.overlayPlay.classList.remove('hidden');
@@ -757,6 +758,7 @@ class MovieEngine {
         playClickSound();
         this.closeOverlay();
 
+        this.overlay.classList.add('celebrity-mode');
         this.overlayBackdrop.style.backgroundImage = 'none';
         this.overlayPoster.src = person.profile_path ? `${TMDB_IMG}/w500${person.profile_path}` : '';
         this.overlayTitle.textContent = person.name;
