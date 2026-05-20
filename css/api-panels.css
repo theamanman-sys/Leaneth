@@ -1665,14 +1665,53 @@
 }
 
 /* ==========================================
-   TAB LOGO BACKGROUND
+   TAB LOGO BACKGROUND & STYLING
    ========================================== */
 
 .cinema-tab[data-company] {
-    background: rgba(255,255,255,0.04);
     border-radius: 6px;
-    padding: 0.4rem 1rem;
+    padding: 0.3rem 0.8rem;
     border: 1px solid transparent;
+}
+
+.cinema-tab[data-company="213"] { background: rgba(229,9,20,0.15); }
+.cinema-tab[data-company="213"]:hover { background: rgba(229,9,20,0.25); }
+.cinema-tab[data-company="213"].active { background: rgba(229,9,20,0.35); border-color: rgba(229,9,20,0.5); }
+
+.cinema-tab[data-company="19551"] { background: rgba(255,255,255,0.08); }
+.cinema-tab[data-company="19551"]:hover { background: rgba(255,255,255,0.15); }
+.cinema-tab[data-company="19551"].active { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3); }
+
+.cinema-tab[data-company="174"] { background: rgba(255,200,0,0.12); }
+.cinema-tab[data-company="174"]:hover { background: rgba(255,200,0,0.2); }
+.cinema-tab[data-company="174"].active { background: rgba(255,200,0,0.3); border-color: rgba(255,200,0,0.5); }
+
+.cinema-tab[data-company="420"] { background: rgba(230,36,41,0.15); }
+.cinema-tab[data-company="420"]:hover { background: rgba(230,36,41,0.25); }
+.cinema-tab[data-company="420"].active { background: rgba(230,36,41,0.35); border-color: rgba(230,36,41,0.5); }
+
+.cinema-tab[data-company="2"] { background: rgba(17,60,194,0.12); }
+.cinema-tab[data-company="2"]:hover { background: rgba(17,60,194,0.2); }
+.cinema-tab[data-company="2"].active { background: rgba(17,60,194,0.3); border-color: rgba(17,60,194,0.5); }
+
+.cinema-tab[data-company="celebrities"] { background: rgba(255,255,255,0.04); }
+.cinema-tab[data-company="celebrities"]:hover { background: rgba(255,255,255,0.08); }
+.cinema-tab[data-company="celebrities"].active { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.15); }
+
+.tab-logo-img {
+    height: 18px;
+    width: auto;
+    display: none;
+    object-fit: contain;
+    filter: brightness(1.2) contrast(1.3);
+}
+
+.cinema-tab[data-company="19551"] .tab-logo-img { filter: brightness(10); }
+.cinema-tab[data-company="174"] .tab-logo-img { filter: brightness(0.8) saturate(2); }
+.cinema-tab[data-company="2"] .tab-logo-img { filter: brightness(5); }
+
+.cinema-tab .tab-logo-img + span {
+    display: none;
 }
 
 .cinema-tab[data-company]:hover {

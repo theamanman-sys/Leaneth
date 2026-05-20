@@ -240,21 +240,19 @@ class MovieEngine {
 
     /* ── Company Logos ── */
 
-    async loadCompanyLogos() {
-        const ids = ['213', '19551', '174', '420', '2'];
-        const results = await Promise.allSettled(ids.map(id =>
-            fetch(`${TMDB_BASE}/company/${id}`, { headers: TMDB_HEADERS }).then(r => r.json())
-        ));
-        results.forEach((res, i) => {
-            if (res.status === 'fulfilled' && res.value.logo_path) {
-                this.companyLogos[ids[i]] = `${TMDB_IMG}/w500${res.value.logo_path}`;
-            }
-        });
+    loadCompanyLogos() {
+        const logoMap = {
+            '213': 'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg',
+            '19551': 'https://upload.wikimedia.org/wikipedia/commons/d/de/HBO_logo.svg',
+            '174': 'https://upload.wikimedia.org/wikipedia/commons/6/64/Warner_Bros_logo.svg',
+            '420': 'https://upload.wikimedia.org/wikipedia/commons/b/b9/Marvel_Logo.svg',
+            '2': 'https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg',
+        };
         document.querySelectorAll('.tab-logo-img').forEach(img => {
             const cid = img.dataset.cid;
-            if (this.companyLogos[cid]) {
+            if (logoMap[cid]) {
+                img.src = logoMap[cid];
                 img.style.display = 'inline';
-                img.src = this.companyLogos[cid];
             }
         });
     }
