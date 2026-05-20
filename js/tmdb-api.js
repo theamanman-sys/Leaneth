@@ -151,6 +151,60 @@ class MovieEngine {
         this.heroInfo.addEventListener('click', () => {
             if (this.currentHeroItem) this.showItemDetails(this.currentHeroItem);
         });
+
+        this.setupHeroSwipe();
+    }
+
+    setupHeroSwipe() {
+        const hero = document.getElementById('cinema-hero');
+        if (!hero) return;
+        let startX = 0, isDragging = false;
+
+        const onStart = (x) => { startX = x; isDragging = true; };
+        const onMove = (x) => {
+            if (!isDragging) return;
+            const diff = x - startX;
+            if (Math.abs(diff) > 30) {
+                isDragging = false;
+                if (diff > 0) this.heroPrev();
+                else this.heroNext();
+            }
+        };
+        const onEnd = () => { isDragging = false; };
+
+        hero.addEventListener('mousedown', (e) => onStart(e.clientX));
+        hero.addEventListener('mousemove', (e) => onMove(e.clientX));
+        hero.addEventListener('mouseup', onEnd);
+        hero.addEventListener('mouseleave', onEnd);
+        hero.addEventListener('touchstart', (e) => onStart(e.touches[0].clientX), { passive: true });
+        hero.addEventListener('touchmove', (e) => {
+            if (isDragging) e.preventDefault();
+            onMove(e.touches[0].clientX);
+        }, { passive: false });
+        hero.addEventListener('touchend', onEnd);
+        hero.style.userSelect = 'none';
+    }
+
+    heroNext() {
+        if (!this.heroItems.length) return;
+        this.heroIndex = (this.heroIndex + 1) % this.heroItems.length;
+        this.showHeroItem(this.heroIndex);
+        this.resetHeroTimer();
+    }
+
+    heroPrev() {
+        if (!this.heroItems.length) return;
+        this.heroIndex = (this.heroIndex - 1 + this.heroItems.length) % this.heroItems.length;
+        this.showHeroItem(this.heroIndex);
+        this.resetHeroTimer();
+    }
+
+    resetHeroTimer() {
+        if (this.heroTimer) { clearInterval(this.heroTimer); this.heroTimer = null; }
+        this.heroTimer = setInterval(() => {
+            this.heroIndex = (this.heroIndex + 1) % this.heroItems.length;
+            this.showHeroItem(this.heroIndex);
+        }, 6000);
     }
 
     closeOverlay() {
@@ -223,11 +277,7 @@ class MovieEngine {
             dot.addEventListener('click', () => {
                 this.heroIndex = i;
                 this.showHeroItem(i);
-                if (this.heroTimer) { clearInterval(this.heroTimer); this.heroTimer = null; }
-                this.heroTimer = setInterval(() => {
-                    this.heroIndex = (this.heroIndex + 1) % this.heroItems.length;
-                    this.showHeroItem(this.heroIndex);
-                }, 6000);
+                this.resetHeroTimer();
             });
             this.heroDots.appendChild(dot);
         });
