@@ -950,6 +950,10 @@
         font-size: 0.8rem;
         padding: 0.4rem 1rem;
     }
+    .btn-play-overlay {
+        width: 100%;
+        text-align: center;
+    }
     .cinema-wrapper {
         padding: 0 1rem;
     }
