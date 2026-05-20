@@ -30,7 +30,7 @@ class MovieEngine {
         this.btnRight = document.getElementById('carousel-right');
 
         this.overlay = document.getElementById('cinema-overlay');
-        this.overlayClose = document.getElementById('cinema-overlay-close');
+        this.overlayBack = document.getElementById('cinema-overlay-back');
         this.overlayBackdrop = document.getElementById('cinema-overlay-backdrop');
         this.overlayPoster = document.getElementById('cinema-overlay-poster');
         this.overlayTitle = document.getElementById('cinema-overlay-title');
@@ -102,7 +102,7 @@ class MovieEngine {
             });
         });
 
-        this.overlayClose.addEventListener('click', () => {
+        this.overlayBack.addEventListener('click', () => {
             playClickSound();
             this.closeOverlay();
         });
@@ -254,10 +254,16 @@ class MovieEngine {
         this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading ${COMPANY_NAMES[companyId] || 'movies'}...</div>`;
 
         try {
-            const url = `${TMDB_BASE}/discover/movie?with_companies=${companyId}&sort_by=popularity.desc&include_adult=false&page=1`;
-            const res = await fetch(url, { headers: TMDB_HEADERS });
-            const data = await res.json();
-            const items = (data.results || []).map(m => ({
+            const pages = [1, 2, 3];
+            const results = await Promise.all(pages.map(p =>
+                fetch(`${TMDB_BASE}/discover/movie?with_companies=${companyId}&sort_by=popularity.desc&include_adult=false&page=${p}`, { headers: TMDB_HEADERS }).then(r => r.json())
+            ));
+            let items = [];
+            results.forEach(r => {
+                if (r.results) items = items.concat(r.results);
+            });
+
+            const mapped = items.map(m => ({
                 id: m.id,
                 title: m.title || 'Untitled',
                 release_date: (m.release_date || '').split('-')[0] || '',
@@ -265,13 +271,13 @@ class MovieEngine {
                 backdrop_path: m.backdrop_path ? `https://image.tmdb.org/t/p/original${m.backdrop_path}` : '',
                 vote_average: m.vote_average || 0,
                 popularity: m.popularity || 0,
-                genre: m.genre_ids ? '' : '',
+                genre: '',
                 embed_url: m.id ? `https://vaplayer.ru/embed/movie/${m.id}` : '',
                 overview: m.overview || '',
                 tagline: '',
             }));
-            this.companyMovies[companyId] = items;
-            this.renderMovies(items);
+            this.companyMovies[companyId] = mapped;
+            this.renderMovies(mapped);
         } catch {
             this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Failed to load.</div>`;
         }
