@@ -54,7 +54,7 @@
     text-align: center;
     padding: 2rem;
     color: var(--text-muted);
-    background: radial-gradient(circle at center, hsl(220, 20%, 8%) 0%, #000 100%);
+    background: var(--bg-card);
 }
 
 .player-placeholder svg {
@@ -69,18 +69,17 @@
     display: flex;
     align-items: baseline;
     gap: 0;
+    opacity: 0.9;
 }
 
 .placeholder-logo .logo-text {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.7));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #fff;
 }
 
 .placeholder-logo .logo-sub {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 600;
     color: var(--accent-purple);
     filter: drop-shadow(0 0 12px var(--accent-purple-glow));
