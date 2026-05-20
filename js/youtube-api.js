@@ -193,19 +193,65 @@ class StreamEngine {
         if (cardEl) cardEl.classList.add('active');
 
         this.playerPlaceholder.classList.add('hidden');
-        if (video.channelId) {
-            this.embedChannel(video.channelId);
-        } else {
-            this.embedVideo(video.id);
-        }
-
         this.titleEl.textContent = video.title;
         const desc = video.description || (video.channel ? `Live stream from ${video.channel}.` : 'No description available.');
         this.descEl.textContent = desc;
         this.latencyMetric.textContent = `${Math.floor(Math.random() * 15) + 5}ms`;
-
         this.latencyMetric.style.animation = 'pulse 0.5s ease-in-out';
         setTimeout(() => { this.latencyMetric.style.animation = ''; }, 500);
+
+        if (video.channelId) {
+            this._embedNewsChannel(video);
+        } else {
+            this.embedVideo(video.id);
+        }
+    }
+
+    async _embedNewsChannel(video) {
+        this._showLoader();
+        const vid = await this._resolveLiveVideo(video.channelId, video.channel);
+        if (vid) {
+            this.embedVideo(vid);
+        } else {
+            this.embedChannel(video.channelId);
+        }
+    }
+
+    async _resolveLiveVideo(channelId, channelName) {
+        const cacheKey = `live_${channelId}`;
+        if (this.searchCache[cacheKey]) return this.searchCache[cacheKey];
+
+        const queries = [
+            { q: `${channelName} live`, filter: 'streams' },
+            { q: channelName, filter: 'streams' },
+            { q: `${channelName} live`, filter: 'videos' },
+        ];
+
+        for (const { q, filter } of queries) {
+            const data = await this.fetchPiped(`/search?q=${encodeURIComponent(q)}&filter=${filter}`);
+            if (data?.items?.length) {
+                const match = data.items.find(item =>
+                    item.url?.startsWith('/watch') && (
+                        item.uploaderUrl?.includes(channelId) ||
+                        item.uploaderName?.toLowerCase() === channelName.toLowerCase()
+                    )
+                );
+                if (match) {
+                    const vid = match.url.replace('/watch?v=', '');
+                    this.searchCache[cacheKey] = vid;
+                    return vid;
+                }
+            }
+        }
+        this.searchCache[cacheKey] = null;
+        return null;
+    }
+
+    _showLoader() {
+        const container = document.getElementById('yt-player');
+        if (container) {
+            container.innerHTML = `<div class="terminal-line text-muted text-center" style="display:flex;align-items:center;justify-content:center;height:100%;padding:2rem;">Connecting to live stream...</div>`;
+        }
     }
 
     embedVideo(videoId) {
