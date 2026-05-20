@@ -629,54 +629,23 @@
 }
 
 .cinema-overlay-back-wrap {
-    position: absolute;
-    top: 1.5rem;
-    left: 2rem;
-    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
 }
 
 .cinema-overlay-back {
     background: rgba(0,0,0,0.6);
     border: 1px solid rgba(255,255,255,0.12);
     color: #fff;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 0.5rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.4rem 1rem;
     border-radius: 6px;
     cursor: pointer;
     transition: var(--transition-fast);
     font-family: var(--font-body);
-    backdrop-filter: blur(8px);
-    position: relative;
-    z-index: 30;
-}
-
-.cinema-overlay-back:hover {
-    background: rgba(255,255,255,0.2);
-}
-
-.cinema-overlay-scroll {
-    min-height: 100vh;
-    position: relative;
-}
-
-.cinema-overlay-backdrop {
-    position: relative;
-    height: 55vh;
-    min-height: 350px;
-    background-size: cover;
-    background-position: center top;
-}
-
-.cinema-overlay-gradient {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(0deg, rgba(8,10,15,1) 0%, rgba(8,10,15,0.2) 70%, transparent 100%);
-}
-
-.cinema-overlay-back-wrap {
-    z-index: 20;
 }
 
 .cinema-overlay-body {
@@ -737,6 +706,25 @@
     font-size: 1.1rem;
     padding: 0.7rem 2.5rem;
     margin-bottom: 1rem;
+}
+
+.cinema-overlay-scroll {
+    min-height: 100vh;
+    position: relative;
+}
+
+.cinema-overlay-backdrop {
+    position: relative;
+    height: 55vh;
+    min-height: 350px;
+    background-size: cover;
+    background-position: center top;
+}
+
+.cinema-overlay-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(8,10,15,1) 0%, rgba(8,10,15,0.2) 70%, transparent 100%);
 }
 
 .cinema-extra {
@@ -1659,38 +1647,6 @@
 }
 
 /* ==========================================
-   OVERLAY CLOSE BUTTON
-   ========================================== */
-
-.cinema-overlay-close {
-    background: rgba(0,0,0,0.6);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #fff;
-    font-size: 1.6rem;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: var(--transition-fast);
-    backdrop-filter: blur(8px);
-    line-height: 1;
-    margin-left: 0.5rem;
-}
-
-.cinema-overlay-close:hover {
-    background: rgba(255,255,255,0.15);
-    transform: scale(1.05);
-}
-
-.cinema-overlay-back-wrap {
-    display: flex;
-    align-items: center;
-}
-
-/* ==========================================
    STREAM HERO BANNER
    ========================================== */
 
@@ -1860,5 +1816,4 @@
     .stream-hero-logo-img { width: 44px; height: 44px; }
     .stream-hero-title { font-size: 1rem; }
     .stream-hero-desc { font-size: 0.75rem; -webkit-line-clamp: 1; }
-    .cinema-overlay-close { width: 34px; height: 34px; font-size: 1.3rem; }
 }
