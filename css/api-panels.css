@@ -64,6 +64,28 @@
     animation: pulse 3s infinite;
 }
 
+.placeholder-logo {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+}
+
+.placeholder-logo .logo-text {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.7));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.placeholder-logo .logo-sub {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--accent-purple);
+    filter: drop-shadow(0 0 12px var(--accent-purple-glow));
+}
+
 .player-placeholder p {
     font-size: 0.95rem;
     max-width: 380px;
