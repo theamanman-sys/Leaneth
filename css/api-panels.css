@@ -646,19 +646,16 @@
     display: none;
 }
 
-.cinema-overlay-topbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+.cinema-overlay-back-wrap {
+    position: absolute;
+    top: 1.5rem;
+    left: 2rem;
     z-index: 20;
-    padding: 1rem 2rem;
-    background: linear-gradient(180deg, rgba(8,10,15,0.9) 0%, transparent 100%);
 }
 
 .cinema-overlay-back {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.12);
     color: #fff;
     font-size: 0.9rem;
     font-weight: 600;
@@ -667,14 +664,16 @@
     cursor: pointer;
     transition: var(--transition-fast);
     font-family: var(--font-body);
+    backdrop-filter: blur(8px);
 }
 
 .cinema-overlay-back:hover {
-    background: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.15);
 }
 
 .cinema-overlay-scroll {
     min-height: 100vh;
+    position: relative;
 }
 
 .cinema-overlay-backdrop {
