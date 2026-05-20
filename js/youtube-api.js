@@ -2,8 +2,12 @@
 
 import { playClickSound } from './router.js';
 
-const PIPED_API = 'https://pipedapi.com';
+const PIPED_API = 'https://api.piped.private.coffee';
 const PIPED_FALLBACKS = [
+    'https://pipedapi.orangenet.cc',
+    'https://pipedapi.reallyaweso.me',
+    'https://pipedapi.leptons.xyz',
+    'https://pipedapi-libre.kavin.rocks',
     'https://pipedapi.kavin.rocks',
     'https://pipedapi.adminforge.de',
     'https://piped.moomoo.me',
@@ -146,7 +150,7 @@ class StreamEngine {
         for (const base of instances) {
             try {
                 const controller = new AbortController();
-                const id = setTimeout(() => controller.abort(), 5000);
+                const id = setTimeout(() => controller.abort(), 10000);
                 const res = await fetch(`${base}${path}`, { signal: controller.signal });
                 clearTimeout(id);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
