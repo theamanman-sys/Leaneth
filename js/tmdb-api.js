@@ -24,6 +24,17 @@ const COMPANY_NAMES = {
     '2': 'Disney',
 };
 
+const CURATED_NETFLIX_IDS = [
+    1297842, 1318447, 701387, 1290417, 875828,
+    1234821, 850165, 985939, 1100988, 1306368,
+    812583, 1245993, 639933, 1241983, 774370,
+    744653, 1214554, 1263256, 803796, 635731,
+    1151039, 1086637, 1280672, 1120911, 1180629,
+    1214506, 1052280, 646097, 1154762, 974635,
+    940721, 1083658, 1214521, 1226841, 906126,
+    839369, 1115128, 1058647, 1400782,
+];
+
 class MovieEngine {
     constructor() {
         this.cardsContainer = document.getElementById('movie-cards-container');
@@ -389,6 +400,11 @@ class MovieEngine {
             return;
         }
 
+        if (companyId === '213' && this.activeType === 'movie') {
+            await this.loadCuratedNetflix();
+            return;
+        }
+
         const label = COMPANY_NAMES[companyId] || 'content';
         this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading ${label}...</div>`;
 
@@ -417,6 +433,61 @@ class MovieEngine {
                 overview: m.overview || '',
                 tagline: '',
             }));
+            this.companyMovies[cacheKey] = mapped;
+            this.renderMovies(mapped);
+        } catch {
+            this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Failed to load.</div>`;
+        }
+    }
+
+    async loadCuratedNetflix() {
+        const cacheKey = `movie_213`;
+        if (this.companyMovies[cacheKey]) {
+            this.renderMovies(this.companyMovies[cacheKey]);
+            return;
+        }
+
+        this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading Netflix...</div>`;
+
+        try {
+            const pages = [1, 2, 3];
+            const results = await Promise.all(pages.map(p =>
+                fetch(`${TMDB_BASE}/discover/movie?with_companies=213&sort_by=popularity.desc&include_adult=false&page=${p}`, { headers: TMDB_HEADERS }).then(r => r.json())
+            ));
+            let items = [];
+            results.forEach(r => { if (r.results) items = items.concat(r.results); });
+
+            const seen = new Set();
+            const curatedSet = new Set(CURATED_NETFLIX_IDS);
+
+            const curated = [];
+            const rest = [];
+
+            items.forEach(m => {
+                if (seen.has(m.id)) return;
+                seen.add(m.id);
+                const entry = {
+                    id: m.id,
+                    media_type: 'movie',
+                    title: m.title || m.name || 'Untitled',
+                    release_date: (m.release_date || m.first_air_date || '').split('-')[0] || '',
+                    poster_path: m.poster_path ? `${TMDB_IMG}/w500${m.poster_path}` : '',
+                    backdrop_path: m.backdrop_path ? `${TMDB_IMG}/original${m.backdrop_path}` : '',
+                    vote_average: m.vote_average || 0,
+                    popularity: m.popularity || 0,
+                    genre: '',
+                    embed_url: '',
+                    overview: m.overview || '',
+                    tagline: '',
+                };
+                if (curatedSet.has(m.id)) {
+                    curated.push(entry);
+                } else {
+                    rest.push(entry);
+                }
+            });
+
+            const mapped = [...curated, ...rest];
             this.companyMovies[cacheKey] = mapped;
             this.renderMovies(mapped);
         } catch {
