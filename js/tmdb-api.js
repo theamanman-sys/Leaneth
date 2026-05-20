@@ -35,6 +35,19 @@ const CURATED_NETFLIX_IDS = [
     839369, 1115128, 1058647, 1400782,
 ];
 
+const CURATED_HBO_IDS = [
+    1233413, 933260, 1317288, 1078605, 786892,
+    693134, 1054867, 1151031, 760329, 346698,
+    858017, 62, 129, 78, 121,
+    128, 1398, 593, 603, 286217,
+    238, 240, 891, 1949, 429200,
+    10775, 11368, 155, 414906, 968,
+    204, 694, 25623, 348, 9552,
+    31417, 30959, 346, 289, 422,
+    872, 780, 5967, 3782, 499,
+    445571, 391713, 914, 3082,
+];
+
 class MovieEngine {
     constructor() {
         this.cardsContainer = document.getElementById('movie-cards-container');
@@ -405,6 +418,11 @@ class MovieEngine {
             return;
         }
 
+        if (companyId === '19551' && this.activeType === 'movie') {
+            await this.loadCuratedHBO();
+            return;
+        }
+
         const label = COMPANY_NAMES[companyId] || 'content';
         this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading ${label}...</div>`;
 
@@ -493,6 +511,62 @@ class MovieEngine {
 
         if (mapped.length === 0) {
             this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">No Netflix movies loaded.</div>`;
+        }
+    }
+
+    async loadCuratedHBO() {
+        const cacheKey = `movie_19551`;
+        if (this.companyMovies[cacheKey]) {
+            this.renderMovies(this.companyMovies[cacheKey]);
+            return;
+        }
+
+        this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading HBO...</div>`;
+
+        const mapped = [];
+        const seenIds = new Set();
+
+        const toEntry = (m) => ({
+            id: m.id,
+            media_type: 'movie',
+            title: m.title || 'Untitled',
+            release_date: (m.release_date || '').split('-')[0] || '',
+            poster_path: m.poster_path ? `${TMDB_IMG}/w500${m.poster_path}` : '',
+            backdrop_path: m.backdrop_path ? `${TMDB_IMG}/original${m.backdrop_path}` : '',
+            vote_average: m.vote_average || 0,
+            popularity: m.popularity || 0,
+            genre: '',
+            embed_url: '',
+            overview: m.overview || '',
+            tagline: '',
+        });
+
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+        for (let i = 0; i < CURATED_HBO_IDS.length; i += 3) {
+            const batch = CURATED_HBO_IDS.slice(i, i + 3);
+            const results = await Promise.all(batch.map(id =>
+                fetch(`${TMDB_BASE}/movie/${id}?language=en-US`, { headers: TMDB_HEADERS })
+                    .then(r => r.ok ? r.json() : null)
+                    .catch(() => null)
+            ));
+            let changed = false;
+            results.forEach(m => {
+                if (m && m.success !== false && !seenIds.has(m.id)) {
+                    seenIds.add(m.id);
+                    mapped.push(toEntry(m));
+                    changed = true;
+                }
+            });
+            if (changed) {
+                this.companyMovies[cacheKey] = [...mapped];
+                this.renderMovies(this.companyMovies[cacheKey]);
+            }
+            await sleep(700);
+        }
+
+        if (mapped.length === 0) {
+            this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">No HBO movies loaded.</div>`;
         }
     }
 
