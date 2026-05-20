@@ -112,18 +112,71 @@
 
         <!-- CINEMATIC HUB -->
         <section id="cinema" class="view-panel">
-            <div class="dashboard-wrapper">
-                <div class="dashboard-header"><div><span class="badge badge-cyan">Movie Intelligence</span><h1>Cinematic Hub</h1><p>Popular movies with full details, cast, budget, and revenue.</p></div></div>
-                <div class="genre-pill-slider">
-                    <button class="genre-pill active" data-genre="all">All Genres</button>
-                    <button class="genre-pill" data-genre="action">Action</button><button class="genre-pill" data-genre="sci-fi">Sci-Fi</button><button class="genre-pill" data-genre="adventure">Adventure</button><button class="genre-pill" data-genre="horror">Horror</button><button class="genre-pill" data-genre="comedy">Comedy</button><button class="genre-pill" data-genre="drama">Drama</button><button class="genre-pill" data-genre="animation">Animation</button>
+            <div class="cinema-wrapper">
+                <div class="cinema-hero" id="cinema-hero">
+                    <div class="cinema-hero-backdrop" id="cinema-hero-backdrop"></div>
+                    <div class="cinema-hero-gradient"></div>
+                    <div class="cinema-hero-content">
+                        <span class="cinema-hero-badge">Trending Now</span>
+                        <h1 class="cinema-hero-title" id="cinema-hero-title">Loading...</h1>
+                        <div class="cinema-hero-meta">
+                            <span id="cinema-hero-year">—</span>
+                            <span class="cinema-hero-rating" id="cinema-hero-rating">★ —</span>
+                            <span id="cinema-hero-genre">—</span>
+                        </div>
+                        <p class="cinema-hero-desc" id="cinema-hero-desc">Discover the latest movies</p>
+                        <div class="cinema-hero-actions">
+                            <button class="btn btn-primary btn-glow btn-play-hero" id="cinema-hero-play">&#9654; Play</button>
+                            <button class="btn btn-secondary btn-info-hero" id="cinema-hero-info">More Info</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="movie-carousel-container">
-                    <button class="carousel-nav nav-left" id="carousel-left"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
-                    <div class="movie-carousel" id="movie-cards-container"></div>
-                    <button class="carousel-nav nav-right" id="carousel-right"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                <div class="cinema-browser">
+                    <div class="genre-pill-slider">
+                        <button class="genre-pill active" data-genre="all">All Genres</button>
+                        <button class="genre-pill" data-genre="action">Action</button>
+                        <button class="genre-pill" data-genre="sci-fi">Sci-Fi</button>
+                        <button class="genre-pill" data-genre="adventure">Adventure</button>
+                        <button class="genre-pill" data-genre="horror">Horror</button>
+                        <button class="genre-pill" data-genre="comedy">Comedy</button>
+                        <button class="genre-pill" data-genre="drama">Drama</button>
+                        <button class="genre-pill" data-genre="animation">Animation</button>
+                    </div>
+                    <div class="movie-carousel-container">
+                        <div class="movie-carousel" id="movie-cards-container"></div>
+                        <button class="carousel-nav nav-left" id="carousel-left"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+                        <button class="carousel-nav nav-right" id="carousel-right"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                    </div>
                 </div>
-                <div class="grid-card focus-movie-card hidden" id="movie-focus-panel"><button class="focus-close-btn" id="movie-focus-close">&times;</button><div class="focus-backdrop-bg" id="movie-focus-backdrop"></div><div class="focus-content"><img src="" id="movie-focus-poster" class="focus-poster" alt="Poster"><div class="focus-details"><span class="focus-badge" id="movie-focus-year">—</span><h2 id="movie-focus-title">Title</h2><p class="focus-tagline" id="movie-focus-tagline"></p><p class="focus-overview" id="movie-focus-overview"></p><div class="focus-metadata"><div><strong>Rating:</strong> <span id="movie-focus-rating" class="text-glow">-</span></div><div><strong>Popularity:</strong> <span id="movie-focus-pop">-</span></div></div><button class="btn btn-primary btn-play-movie hidden" id="movie-play-btn">&#9654; Play</button><div class="movie-player-wrap hidden" id="movie-player-wrap"><iframe id="movie-player-iframe" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay"></iframe></div><div class="movie-extra-details" id="movie-extra-details"></div><div class="movie-cast-section"><h4 class="cast-heading">Top Cast</h4><div class="movie-cast" id="movie-cast"></div></div></div></div></div>
+            </div>
+            <div class="cinema-overlay hidden" id="cinema-overlay">
+                <button class="cinema-overlay-close" id="cinema-overlay-close">&times;</button>
+                <div class="cinema-overlay-scroll">
+                    <div class="cinema-overlay-backdrop" id="cinema-overlay-backdrop">
+                        <div class="cinema-overlay-gradient"></div>
+                    </div>
+                    <div class="cinema-overlay-body">
+                        <div class="cinema-overlay-poster-col">
+                            <img src="" id="cinema-overlay-poster" alt="Poster">
+                        </div>
+                        <div class="cinema-overlay-details">
+                            <h2 id="cinema-overlay-title">Title</h2>
+                            <div class="cinema-overlay-meta">
+                                <span id="cinema-overlay-year">—</span>
+                                <span class="cinema-rating" id="cinema-overlay-rating">★ —</span>
+                                <span id="cinema-overlay-genre">—</span>
+                            </div>
+                            <p class="cinema-overview" id="cinema-overlay-overview"></p>
+                            <button class="btn btn-primary btn-glow btn-play-overlay hidden" id="cinema-overlay-play">&#9654; Play</button>
+                            <div class="movie-player-wrap hidden" id="cinema-overlay-player"><iframe id="cinema-overlay-iframe" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay"></iframe></div>
+                            <div class="cinema-extra" id="cinema-overlay-extra"></div>
+                            <div class="cinema-cast-section">
+                                <h4>Cast</h4>
+                                <div class="cinema-cast" id="cinema-overlay-cast"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 

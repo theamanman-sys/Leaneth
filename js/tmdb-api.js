@@ -1,7 +1,6 @@
 import { playClickSound } from './router.js';
 
 const VIDAPI_BASE = 'https://vidapi.ru';
-const VIDAPI_ITEMS_PER_PAGE = 24;
 
 const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMzQyZWNhZjBjNzNmYzU1NmI1NDk3NzQwYmJmZmE5MiIsIm5iZiI6MTc3NTIyMDE5OS42MDA5OTk4LCJzdWIiOiI2OWNmYjVlNzY4YjcwYWNmYjgyZjc2MmQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.jxycsZVC7uLmewooOKm20BvZUZ5s5H4qPsalI3FBmok';
 const TMDB_BASE = 'https://api.themoviedb.org/3';
@@ -21,24 +20,34 @@ class MovieEngine {
         this.cardsContainer = document.getElementById('movie-cards-container');
         this.btnLeft = document.getElementById('carousel-left');
         this.btnRight = document.getElementById('carousel-right');
-        this.focusPanel = document.getElementById('movie-focus-panel');
-        this.focusClose = document.getElementById('movie-focus-close');
-        this.focusBackdrop = document.getElementById('movie-focus-backdrop');
-        this.focusPoster = document.getElementById('movie-focus-poster');
-        this.focusTitle = document.getElementById('movie-focus-title');
-        this.focusYear = document.getElementById('movie-focus-year');
-        this.focusTagline = document.getElementById('movie-focus-tagline');
-        this.focusOverview = document.getElementById('movie-focus-overview');
-        this.focusRating = document.getElementById('movie-focus-rating');
-        this.focusPop = document.getElementById('movie-focus-pop');
-        this.extraDetails = document.getElementById('movie-extra-details');
-        this.castContainer = document.getElementById('movie-cast');
-        this.playBtn = document.getElementById('movie-play-btn');
-        this.playerWrap = document.getElementById('movie-player-wrap');
-        this.playerIframe = document.getElementById('movie-player-iframe');
+
+        this.overlay = document.getElementById('cinema-overlay');
+        this.overlayClose = document.getElementById('cinema-overlay-close');
+        this.overlayBackdrop = document.getElementById('cinema-overlay-backdrop');
+        this.overlayPoster = document.getElementById('cinema-overlay-poster');
+        this.overlayTitle = document.getElementById('cinema-overlay-title');
+        this.overlayYear = document.getElementById('cinema-overlay-year');
+        this.overlayRating = document.getElementById('cinema-overlay-rating');
+        this.overlayGenre = document.getElementById('cinema-overlay-genre');
+        this.overlayOverview = document.getElementById('cinema-overlay-overview');
+        this.overlayPlay = document.getElementById('cinema-overlay-play');
+        this.overlayPlayer = document.getElementById('cinema-overlay-player');
+        this.overlayIframe = document.getElementById('cinema-overlay-iframe');
+        this.overlayExtra = document.getElementById('cinema-overlay-extra');
+        this.overlayCast = document.getElementById('cinema-overlay-cast');
+
+        this.heroBackdrop = document.getElementById('cinema-hero-backdrop');
+        this.heroTitle = document.getElementById('cinema-hero-title');
+        this.heroYear = document.getElementById('cinema-hero-year');
+        this.heroRating = document.getElementById('cinema-hero-rating');
+        this.heroGenre = document.getElementById('cinema-hero-genre');
+        this.heroDesc = document.getElementById('cinema-hero-desc');
+        this.heroPlay = document.getElementById('cinema-hero-play');
+        this.heroInfo = document.getElementById('cinema-hero-info');
 
         this.movies = [];
         this.activeGenre = 'all';
+        this.currentMovie = null;
         this.init();
     }
 
@@ -58,7 +67,7 @@ class MovieEngine {
 
         const pills = document.querySelectorAll('.genre-pill');
         pills.forEach(pill => {
-            pill.addEventListener('click', (e) => {
+            pill.addEventListener('click', () => {
                 playClickSound();
                 pills.forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
@@ -67,19 +76,36 @@ class MovieEngine {
             });
         });
 
-        this.focusClose.addEventListener('click', () => {
+        this.overlayClose.addEventListener('click', () => {
             playClickSound();
-            this.closePlayer();
-            this.focusPanel.classList.add('hidden');
+            this.closeOverlay();
         });
 
-        this.playBtn.addEventListener('click', () => this.playCurrentMovie());
+        this.overlay.addEventListener('click', (e) => {
+            if (e.target === this.overlay) this.closeOverlay();
+        });
+
+        this.overlayPlay.addEventListener('click', () => this.playCurrentMovie());
+
+        this.heroPlay.addEventListener('click', () => {
+            if (this.currentMovie) {
+                this.showMovieDetails(this.currentMovie);
+            }
+        });
+
+        this.heroInfo.addEventListener('click', () => {
+            if (this.currentMovie) {
+                this.showMovieDetails(this.currentMovie);
+            }
+        });
     }
 
-    closePlayer() {
-        this.playerWrap.classList.add('hidden');
-        this.playerIframe.src = '';
-        this.playBtn.classList.remove('hidden');
+    closeOverlay() {
+        this.overlayPlayer.classList.add('hidden');
+        this.overlayIframe.src = '';
+        this.overlayPlay.classList.remove('hidden');
+        this.overlay.classList.add('hidden');
+        document.body.style.overflow = '';
     }
 
     async fetchAllMovies() {
@@ -98,14 +124,48 @@ class MovieEngine {
             if (all.length > 0) {
                 all.sort((a, b) => parseFloat(b.popularity || 0) - parseFloat(a.popularity || 0));
                 this.movies = all.map(item => this.mapVidApiItem(item));
+                this.setHero(this.movies[0]);
                 this.filterAndRender();
                 return;
             }
             throw new Error('No results');
         } catch {
             this.movies = [...FALLBACK_MOVIES];
+            this.setHero(this.movies[0]);
             this.filterAndRender();
         }
+    }
+
+    setHero(movie) {
+        if (!movie) return;
+        this.currentMovie = movie;
+        if (this.heroBackdrop && movie.backdrop_path) {
+            this.heroBackdrop.style.backgroundImage = `url('${movie.backdrop_path}')`;
+        }
+        if (this.heroTitle) this.heroTitle.textContent = movie.title;
+        if (this.heroYear) this.heroYear.textContent = movie.release_date || '—';
+        if (this.heroRating) this.heroRating.textContent = `★ ${movie.vote_average ? movie.vote_average.toFixed(1) : '—'}`;
+        if (this.heroGenre) this.heroGenre.textContent = movie.genre || '';
+        if (this.heroDesc) this.heroDesc.textContent = movie.overview || 'Discover the latest movies';
+
+        this.fetchBackdrop(movie);
+    }
+
+    async fetchBackdrop(movie) {
+        if (!movie.id) return;
+        try {
+            const data = await fetch(`${TMDB_BASE}/movie/${movie.id}`, { headers: TMDB_HEADERS }).then(r => r.json());
+            if (data.backdrop_path && this.heroBackdrop) {
+                const url = `https://image.tmdb.org/t/p/original${data.backdrop_path}`;
+                this.heroBackdrop.style.backgroundImage = `url('${url}')`;
+                movie.backdrop_path = url;
+            }
+            if (data.overview && this.heroDesc) {
+                this.heroDesc.textContent = data.overview;
+                movie.overview = data.overview;
+            }
+            if (data.tagline) movie.tagline = data.tagline;
+        } catch {}
     }
 
     mapVidApiItem(item) {
@@ -164,43 +224,43 @@ class MovieEngine {
         });
     }
 
-    async showMovieDetails(movie) {
+    showMovieDetails(movie) {
         playClickSound();
-        this.closePlayer();
+        this.closeOverlay();
 
         const backdropUrl = movie.backdrop_path || '';
         const posterUrl = movie.poster_path || '';
 
-        this.focusBackdrop.style.backgroundImage = backdropUrl ? `url('${backdropUrl}')` : 'none';
-        this.focusPoster.src = posterUrl || '';
-        this.focusTitle.textContent = movie.title;
-        this.focusYear.textContent = movie.release_date || '—';
-        this.focusTagline.textContent = movie.tagline || '';
-        this.focusOverview.textContent = movie.overview || '';
-        this.focusRating.textContent = movie.vote_average ? `${movie.vote_average.toFixed(1)}/10` : '—';
-        this.focusPop.textContent = movie.popularity ? movie.popularity.toFixed(2) : '—';
+        this.overlayBackdrop.style.backgroundImage = backdropUrl ? `url('${backdropUrl}')` : 'none';
+        this.overlayPoster.src = posterUrl || '';
+        this.overlayTitle.textContent = movie.title;
+        this.overlayYear.textContent = movie.release_date || '—';
+        this.overlayRating.textContent = `★ ${movie.vote_average ? movie.vote_average.toFixed(1) : '—'}`;
+        this.overlayGenre.textContent = movie.genre || '—';
+        this.overlayOverview.textContent = movie.overview || '';
 
-        if (this.extraDetails) {
-            this.extraDetails.innerHTML = `
-                <div class="movie-detail-row"><span class="detail-label">Genres</span><span class="detail-val">${movie.genre || '—'}</span></div>
+        if (this.overlayExtra) {
+            this.overlayExtra.innerHTML = `
+                <div class="cinema-extra-row"><span class="label">Genres</span><span class="value">${movie.genre || '—'}</span></div>
             `;
         }
 
-        if (this.castContainer) {
-            this.castContainer.innerHTML = '<div class="terminal-line text-muted">Loading details...</div>';
+        if (this.overlayCast) {
+            this.overlayCast.innerHTML = '<div class="terminal-line text-muted">Loading details...</div>';
         }
 
-        if (this.playBtn) {
+        if (this.overlayPlay) {
             if (movie.embed_url) {
-                this.playBtn.classList.remove('hidden');
+                this.overlayPlay.classList.remove('hidden');
                 this.currentMovie = movie;
             } else {
-                this.playBtn.classList.add('hidden');
+                this.overlayPlay.classList.add('hidden');
             }
         }
 
-        this.focusPanel.classList.remove('hidden');
-        this.focusPanel.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        this.overlay.classList.remove('hidden');
+        this.overlay.scrollTop = 0;
+        document.body.style.overflow = 'hidden';
 
         if (movie.id) {
             this.fetchExtendedDetails(movie.id);
@@ -210,45 +270,41 @@ class MovieEngine {
     playCurrentMovie() {
         if (!this.currentMovie || !this.currentMovie.embed_url) return;
         playClickSound();
-        this.playerIframe.src = this.currentMovie.embed_url;
-        this.playerWrap.classList.remove('hidden');
-        this.playBtn.classList.add('hidden');
-        this.playerWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        this.overlayIframe.src = this.currentMovie.embed_url;
+        this.overlayPlayer.classList.remove('hidden');
+        this.overlayPlay.classList.add('hidden');
     }
 
     async fetchExtendedDetails(movieId) {
         try {
             const data = await fetch(`${TMDB_BASE}/movie/${movieId}?append_to_response=credits`, { headers: TMDB_HEADERS }).then(r => r.json());
 
-            if (data.runtime && this.extraDetails) {
+            if (data.runtime && this.overlayExtra) {
                 const genres = data.genres ? data.genres.map(g => g.name).join(', ') : '—';
                 const runtime = data.runtime ? `${data.runtime} min` : '—';
                 const budget = data.budget ? `$${(data.budget / 1e6).toFixed(1)}M` : '—';
                 const revenue = data.revenue ? `$${(data.revenue / 1e6).toFixed(1)}M` : '—';
                 const status = data.status || '—';
                 const lang = data.original_language ? data.original_language.toUpperCase() : '—';
-                this.extraDetails.innerHTML = `
-                    <div class="movie-detail-row"><span class="detail-label">Genres</span><span class="detail-val">${genres}</span></div>
-                    <div class="movie-detail-row"><span class="detail-label">Runtime</span><span class="detail-val">${runtime}</span></div>
-                    <div class="movie-detail-row"><span class="detail-label">Budget</span><span class="detail-val">${budget}</span></div>
-                    <div class="movie-detail-row"><span class="detail-label">Revenue</span><span class="detail-val">${revenue}</span></div>
-                    <div class="movie-detail-row"><span class="detail-label">Status</span><span class="detail-val">${status}</span></div>
-                    <div class="movie-detail-row"><span class="detail-label">Language</span><span class="detail-val">${lang}</span></div>
+                this.overlayExtra.innerHTML = `
+                    <div class="cinema-extra-row"><span class="label">Genres</span><span class="value">${genres}</span></div>
+                    <div class="cinema-extra-row"><span class="label">Runtime</span><span class="value">${runtime}</span></div>
+                    <div class="cinema-extra-row"><span class="label">Budget</span><span class="value">${budget}</span></div>
+                    <div class="cinema-extra-row"><span class="label">Revenue</span><span class="value">${revenue}</span></div>
+                    <div class="cinema-extra-row"><span class="label">Status</span><span class="value">${status}</span></div>
+                    <div class="cinema-extra-row"><span class="label">Language</span><span class="value">${lang}</span></div>
                 `;
             }
 
-            if (data.overview && this.focusOverview) {
-                this.focusOverview.textContent = data.overview;
+            if (data.overview && this.overlayOverview) {
+                this.overlayOverview.textContent = data.overview;
             }
-            if (data.tagline && this.focusTagline) {
-                this.focusTagline.textContent = data.tagline;
-            }
-            if (data.backdrop_path && this.focusBackdrop) {
-                this.focusBackdrop.style.backgroundImage = `url('https://image.tmdb.org/t/p/original${data.backdrop_path}')`;
+            if (data.backdrop_path && this.overlayBackdrop) {
+                this.overlayBackdrop.style.backgroundImage = `url('https://image.tmdb.org/t/p/original${data.backdrop_path}')`;
             }
 
-            if (data.credits && data.credits.cast && this.castContainer) {
-                this.castContainer.innerHTML = '';
+            if (data.credits && data.credits.cast && this.overlayCast) {
+                this.overlayCast.innerHTML = '';
                 const topCast = data.credits.cast.slice(0, 8);
                 topCast.forEach(person => {
                     const img = person.profile_path
@@ -257,12 +313,12 @@ class MovieEngine {
                     const el = document.createElement('div');
                     el.className = 'cast-item';
                     el.innerHTML = `${img}<div class="cast-name">${person.name}</div><div class="cast-role">${person.character || ''}</div>`;
-                    this.castContainer.appendChild(el);
+                    this.overlayCast.appendChild(el);
                 });
             }
         } catch {
-            if (this.castContainer) {
-                this.castContainer.innerHTML = '<div class="terminal-line text-muted">Extended data unavailable.</div>';
+            if (this.overlayCast) {
+                this.overlayCast.innerHTML = '<div class="terminal-line text-muted">Extended data unavailable.</div>';
             }
         }
     }

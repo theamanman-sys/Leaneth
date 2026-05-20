@@ -271,16 +271,534 @@
 }
 
 /* ==========================================
-   TMDB MOVIES HUB
+   CINEMATIC HUB — Netflix-style
    ========================================== */
 
-.api-key-injector {
+.cinema-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Hero Banner */
+.cinema-hero {
+    position: relative;
+    height: 480px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+}
+
+.cinema-hero-backdrop {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center top;
+    transition: background-image 0.6s ease;
+}
+
+.cinema-hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(8,10,15,0.92) 0%, rgba(8,10,15,0.6) 50%, rgba(8,10,15,0.3) 100%),
+                linear-gradient(0deg, rgba(8,10,15,1) 0%, transparent 50%);
+}
+
+.cinema-hero-content {
+    position: absolute;
+    bottom: 3rem;
+    left: 3rem;
+    max-width: 600px;
+    z-index: 2;
+}
+
+.cinema-hero-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.8rem;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.cinema-hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 0.6rem;
+}
+
+.cinema-hero-meta {
     display: flex;
-    gap: 0.5rem;
-    padding: 0.5rem 0.8rem;
-    border-radius: 30px;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.cinema-hero-rating {
+    color: #ffc107;
+}
+
+.cinema-hero-desc {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.cinema-hero-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-play-hero {
+    font-size: 1.1rem;
+    padding: 0.7rem 2rem;
+}
+
+.btn-info-hero {
+    font-size: 0.9rem;
+    padding: 0.7rem 1.5rem;
+}
+
+/* Genre Pills */
+.genre-pill-slider {
+    display: flex;
+    gap: 0.6rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    scrollbar-width: none;
+}
+
+.genre-pill-slider::-webkit-scrollbar {
+    display: none;
+}
+
+.genre-pill {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: var(--transition-fast);
+    font-family: var(--font-body);
+}
+
+.genre-pill:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-primary);
+}
+
+.genre-pill.active {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border-color: rgba(255,255,255,0.2);
+}
+
+/* Carousel Container */
+.movie-carousel-container {
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.movie-carousel {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 0.5rem 0.2rem;
+    scrollbar-width: none;
+}
+
+.movie-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(10, 12, 18, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-primary);
+    display: flex;
     align-items: center;
-    background: rgba(16, 20, 30, 0.4);
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: var(--transition-fast);
+    opacity: 0;
+}
+
+.movie-carousel-container:hover .carousel-nav {
+    opacity: 1;
+}
+
+.carousel-nav:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.nav-left { left: -18px; }
+.nav-right { right: -18px; }
+
+/* Movie Cards — Netflix style */
+.movie-card {
+    width: 220px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    background: rgba(255,255,255,0.02);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+    will-change: transform;
+}
+
+.movie-card:hover {
+    transform: scale(1.06);
+    z-index: 5;
+}
+
+.movie-poster-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 150%;
+    background: rgba(0,0,0,0.3);
+}
+
+.movie-poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.movie-card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem 0.8rem 0.8rem;
+    background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.movie-card:hover .movie-card-info {
+    opacity: 1;
+}
+
+.movie-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+}
+
+.movie-meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-top: 0.2rem;
+}
+
+.rating-badge {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+/* Overlay — full-screen detail view */
+.cinema-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(8,10,15,0.96);
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease;
+}
+
+.cinema-overlay.hidden {
+    display: none;
+}
+
+.cinema-overlay-close {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 10;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 1.8rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+
+.cinema-overlay-close:hover {
+    background: var(--error);
+}
+
+.cinema-overlay-scroll {
+    min-height: 100vh;
+}
+
+.cinema-overlay-backdrop {
+    position: relative;
+    height: 55vh;
+    min-height: 350px;
+    background-size: cover;
+    background-position: center top;
+}
+
+.cinema-overlay-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(8,10,15,1) 0%, rgba(8,10,15,0.2) 70%, transparent 100%);
+}
+
+.cinema-overlay-body {
+    display: flex;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: -8rem auto 0;
+    padding: 0 3rem 4rem;
+    position: relative;
+    z-index: 2;
+}
+
+.cinema-overlay-poster-col {
+    flex-shrink: 0;
+    width: 220px;
+}
+
+.cinema-overlay-poster-col img {
+    width: 100%;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.cinema-overlay-details {
+    flex: 1;
+    padding-top: 2rem;
+}
+
+.cinema-overlay-details h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+}
+
+.cinema-overlay-meta {
+    display: flex;
+    gap: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.cinema-rating {
+    color: #ffc107;
+}
+
+.cinema-overview {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    max-width: 700px;
+}
+
+.btn-play-overlay {
+    font-size: 1.1rem;
+    padding: 0.7rem 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.cinema-extra {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.2rem;
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: rgba(255,255,255,0.02);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+.cinema-extra-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.cinema-extra-row .label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.cinema-extra-row .value {
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.cinema-cast-section {
+    margin-top: 2rem;
+}
+
+.cinema-cast-section h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.cinema-cast {
+    display: flex;
+    gap: 1.2rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+}
+
+.cinema-cast::-webkit-scrollbar {
+    display: none;
+}
+
+.cast-item {
+    flex-shrink: 0;
+    text-align: center;
+    width: 110px;
+}
+
+.cast-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.4rem;
+    border: 2px solid rgba(255,255,255,0.04);
+}
+
+.cast-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cast-role {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Player */
+.movie-player-wrap {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin: 1rem 0;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.6);
+}
+
+.movie-player-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .cinema-hero {
+        height: 320px;
+        border-radius: 0;
+        margin-bottom: 1.5rem;
+    }
+    .cinema-hero-content {
+        bottom: 1.5rem;
+        left: 1.5rem;
+        right: 1.5rem;
+    }
+    .cinema-hero-title {
+        font-size: 1.8rem;
+    }
+    .cinema-hero-desc {
+        -webkit-line-clamp: 2;
+    }
+    .cinema-overlay-body {
+        flex-direction: column;
+        margin-top: -4rem;
+        padding: 0 1.5rem 2rem;
+        gap: 1.5rem;
+    }
+    .cinema-overlay-poster-col {
+        width: 140px;
+    }
+    .cinema-overlay-poster-col img {
+        display: none;
+    }
+    .cinema-overlay-details h2 {
+        font-size: 1.8rem;
+    }
+    .cinema-overlay-backdrop {
+        height: 35vh;
+        min-height: 200px;
+    }
+    .movie-card {
+        width: 160px;
+    }
+    .cinema-wrapper {
+        padding: 0 1rem;
+    }
 }
 
 .key-input {
