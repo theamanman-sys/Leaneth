@@ -52,6 +52,7 @@ class StreamEngine {
         this.tabBtns = document.querySelectorAll('.stream-tab');
 
         this.searchCache = {};
+        this.lastQuery = '';
         this.offlineMode = false;
         this.activeTab = 'news';
 
@@ -76,6 +77,12 @@ class StreamEngine {
                     this.apiStatus.textContent = 'Live News';
                     if (this.paneTitle) this.paneTitle.textContent = '\uD83D\uDCFA Live News Channels';
                     this.searchInput.value = '';
+                } else if (this.activeTab === 'search') {
+                    if (this.lastQuery && this.searchCache[this.lastQuery]) {
+                        this.renderCatalog(this.searchCache[this.lastQuery]);
+                    } else {
+                        this.searchInput.focus();
+                    }
                 }
             });
         });
@@ -116,6 +123,8 @@ class StreamEngine {
         }
 
         playClickSound();
+
+        this.lastQuery = query;
 
         const searchTab = [...this.tabBtns].find(b => b.dataset.tab === 'search');
         if (searchTab) searchTab.classList.add('active');
