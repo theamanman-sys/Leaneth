@@ -78,7 +78,7 @@ class MovieEngine {
     }
 
     async fetchAllMovies() {
-        this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading movies from TMDB...</div>`;
+        this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading movies...</div>`;
 
         try {
             const pages = [1, 2, 3];

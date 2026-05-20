@@ -74,8 +74,8 @@ class StreamEngine {
                 this.activeTab = btn.dataset.tab;
                 if (this.activeTab === 'news') {
                     this.renderNewsChannels();
-                    this.apiStatus.textContent = 'Live News';
-                    if (this.paneTitle) this.paneTitle.textContent = '\uD83D\uDCFA Live News Channels';
+                    this.apiStatus.textContent = 'Live';
+                    if (this.paneTitle) this.paneTitle.textContent = '\uD83D\uDCFA Live Channels';
                     this.searchInput.value = '';
                 } else if (this.activeTab === 'search') {
                     if (this.lastQuery && this.searchCache[this.lastQuery]) {
