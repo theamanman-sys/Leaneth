@@ -401,6 +401,40 @@
     box-shadow: 0 0 8px rgba(255,255,255,0.5);
 }
 
+/* Type Tabs (Movies / TV Series) */
+.cinema-type-tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    padding: 0.25rem;
+    width: fit-content;
+}
+
+.cinema-type-tab {
+    background: transparent;
+    border: none;
+    padding: 0.4rem 1.2rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: var(--transition-fast);
+    font-family: var(--font-heading);
+    white-space: nowrap;
+}
+
+.cinema-type-tab:hover {
+    color: var(--text-primary);
+}
+
+.cinema-type-tab.active {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
 /* Company Tabs */
 .cinema-tabs {
     display: flex;

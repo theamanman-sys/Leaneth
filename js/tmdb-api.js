@@ -66,6 +66,7 @@ class MovieEngine {
         this.companyMovies = {};
         this.activeGenre = 'all';
         this.activeCompany = '';
+        this.activeType = 'movie';
         this.currentMovie = null;
         this.heroItems = [];
         this.heroIndex = 0;
@@ -81,7 +82,7 @@ class MovieEngine {
     init() {
         if (!this.cardsContainer) return;
 
-        this.fetchAllMovies();
+        this.fetchAllContent();
         this.startHeroRotation();
         this.loadCompanyLogos();
 
@@ -92,6 +93,28 @@ class MovieEngine {
         this.btnRight.addEventListener('click', () => {
             playClickSound();
             this.cardsContainer.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+
+        document.querySelectorAll('.cinema-type-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                playClickSound();
+                const type = tab.dataset.type;
+                if (type === this.activeType) return;
+                document.querySelectorAll('.cinema-type-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                this.activeType = type;
+                document.querySelectorAll('.cinema-tab').forEach(t => t.classList.remove('active'));
+                const trendingTab = document.querySelector('.cinema-tab[data-company=""]');
+                if (trendingTab) trendingTab.classList.add('active');
+                this.activeCompany = '';
+                this.activeGenre = 'all';
+                this.searchResultsMode = false;
+                document.getElementById('genre-pill-slider').style.display = '';
+                document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('active'));
+                const allPill = document.querySelector('.genre-pill[data-genre="all"]');
+                if (allPill) allPill.classList.add('active');
+                this.fetchAllContent();
+            });
         });
 
         document.querySelectorAll('.cinema-tab').forEach(tab => {
@@ -313,20 +336,15 @@ class MovieEngine {
 
     /* ── Company / Data ── */
 
-    async fetchAllMovies() {
-        this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading movies...</div>`;
+    async fetchAllContent() {
+        const label = this.activeType === 'tv' ? 'series' : 'movies';
+        this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading ${label}...</div>`;
 
         try {
-            const pages = [1, 2, 3];
-            const results = await Promise.all(pages.map(p =>
-                fetch(`${VIDAPI_BASE}/movies/latest/page-${p}.json`).then(r => r.json())
-            ));
-            let all = [];
-            results.forEach(r => { if (r.items) all = all.concat(r.items); });
-
-            if (all.length > 0) {
-                all.sort((a, b) => parseFloat(b.popularity || 0) - parseFloat(a.popularity || 0));
-                this.allMovies = all.map(item => this.mapVidApiItem(item));
+            const res = await fetch(`${TMDB_BASE}/trending/${this.activeType}/week?language=en-US`, { headers: TMDB_HEADERS }).then(r => r.json());
+            const items = (res.results || []).slice(0, 60).map(item => this.mapTrendingItem(item));
+            if (items.length > 0) {
+                this.allMovies = items;
                 this.filterAndRender();
                 return;
             }
@@ -337,8 +355,25 @@ class MovieEngine {
         }
     }
 
+    mapTrendingItem(item) {
+        return {
+            id: item.id,
+            title: item.title || item.name || 'Untitled',
+            release_date: (item.release_date || item.first_air_date || '').split('-')[0] || '',
+            poster_path: item.poster_path ? `${TMDB_IMG}/w500${item.poster_path}` : '',
+            backdrop_path: item.backdrop_path ? `${TMDB_IMG}/original${item.backdrop_path}` : '',
+            vote_average: item.vote_average || 0,
+            popularity: item.popularity || 0,
+            genre: '',
+            embed_url: item.id ? `https://vaplayer.ru/embed/${this.activeType}/${item.id}` : '',
+            overview: item.overview || '',
+            tagline: '',
+        };
+    }
+
     async switchCompany() {
         const companyId = this.activeCompany;
+        const cacheKey = `${this.activeType}_${companyId}`;
 
         if (companyId === '') {
             document.getElementById('genre-pill-slider').style.display = '';
@@ -348,17 +383,21 @@ class MovieEngine {
 
         document.getElementById('genre-pill-slider').style.display = 'none';
 
-        if (this.companyMovies[companyId]) {
-            this.renderMovies(this.companyMovies[companyId]);
+        if (this.companyMovies[cacheKey]) {
+            this.renderMovies(this.companyMovies[cacheKey]);
             return;
         }
 
-        this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading ${COMPANY_NAMES[companyId] || 'movies'}...</div>`;
+        const label = COMPANY_NAMES[companyId] || 'content';
+        this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading ${label}...</div>`;
 
         try {
             const pages = [1, 2, 3];
+            const endpoint = this.activeType === 'tv'
+                ? `/discover/tv?with_networks=${companyId}&sort_by=popularity.desc&include_adult=false`
+                : `/discover/movie?with_companies=${companyId}&sort_by=popularity.desc&include_adult=false`;
             const results = await Promise.all(pages.map(p =>
-                fetch(`${TMDB_BASE}/discover/movie?with_companies=${companyId}&sort_by=popularity.desc&include_adult=false&page=${p}`, { headers: TMDB_HEADERS }).then(r => r.json())
+                fetch(`${TMDB_BASE}${endpoint}&page=${p}`, { headers: TMDB_HEADERS }).then(r => r.json())
             ));
             let items = [];
             results.forEach(r => {
@@ -367,40 +406,22 @@ class MovieEngine {
 
             const mapped = items.map(m => ({
                 id: m.id,
-                title: m.title || 'Untitled',
-                release_date: (m.release_date || '').split('-')[0] || '',
+                title: m.title || m.name || 'Untitled',
+                release_date: (m.release_date || m.first_air_date || '').split('-')[0] || '',
                 poster_path: m.poster_path ? `${TMDB_IMG}/w500${m.poster_path}` : '',
                 backdrop_path: m.backdrop_path ? `${TMDB_IMG}/original${m.backdrop_path}` : '',
                 vote_average: m.vote_average || 0,
                 popularity: m.popularity || 0,
                 genre: '',
-                embed_url: m.id ? `https://vaplayer.ru/embed/movie/${m.id}` : '',
+                embed_url: m.id ? `https://vaplayer.ru/embed/${this.activeType}/${m.id}` : '',
                 overview: m.overview || '',
                 tagline: '',
             }));
-            this.companyMovies[companyId] = mapped;
+            this.companyMovies[cacheKey] = mapped;
             this.renderMovies(mapped);
         } catch {
             this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Failed to load.</div>`;
         }
-    }
-
-    mapVidApiItem(item) {
-        const id = parseInt(item.tmdb_id) || 0;
-        return {
-            id,
-            imdb_id: item.imdb_id || '',
-            title: item.title || 'Untitled',
-            release_date: item.year || '',
-            poster_path: item.poster_url || '',
-            backdrop_path: '',
-            vote_average: parseFloat(item.rating) || 0,
-            popularity: parseFloat(item.popularity) || 0,
-            genre: item.genre || '',
-            embed_url: item.embed_url || '',
-            tagline: '',
-            overview: '',
-        };
     }
 
     filterAndRender() {
