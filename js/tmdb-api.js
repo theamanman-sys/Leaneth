@@ -748,7 +748,6 @@ class MovieEngine {
             if (seasons.length === 0) {
                 inner.innerHTML = '<button class="btn btn-primary btn-glow" id="ep-play-btn">▶ Play Series</button>';
                 document.getElementById('ep-play-btn').addEventListener('click', () => {
-                    picker.classList.add('hidden');
                     this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
                     this.overlayPlayer.classList.remove('hidden');
                     this.overlayPlay.classList.add('hidden');
@@ -785,7 +784,6 @@ class MovieEngine {
             document.getElementById('ep-play-btn').addEventListener('click', () => {
                 const s = seasonSelect.value;
                 const e = episodeSelect.value;
-                picker.classList.add('hidden');
                 this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/${s}/${e}`;
                 this.overlayPlayer.classList.remove('hidden');
                 this.overlayPlay.classList.add('hidden');
@@ -795,7 +793,6 @@ class MovieEngine {
             const btn = document.getElementById('ep-play-btn');
             if (btn) {
                 btn.addEventListener('click', () => {
-                    picker.classList.add('hidden');
                     this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
                     this.overlayPlayer.classList.remove('hidden');
                     this.overlayPlay.classList.add('hidden');
