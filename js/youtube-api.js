@@ -81,10 +81,9 @@ class StreamEngine {
             const card = document.createElement('div');
             card.className = 'yt-video-card news-card';
             card.innerHTML = `
-                <div class="news-cover news-thumb">
+                <div class="yt-thumb-wrapper news-thumb">
                     <div class="live-dot"></div>
-                    <img src="${ch.cover}" alt="${ch.title}" class="news-cover-img" loading="lazy" onerror="this.style.display='none'">
-                    <div class="news-cover-overlay"></div>
+                    <img src="${ch.cover}" alt="${ch.title}" class="yt-thumb yt-thumb-contain" loading="lazy" onerror="this.style.display='none'">
                 </div>
                 <div class="yt-card-info">
                     <h4 class="yt-card-title">${ch.title}</h4>
