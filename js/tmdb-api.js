@@ -136,14 +136,18 @@ class MovieEngine {
         this.startHeroRotation();
         this.loadCompanyLogos();
 
-        this.btnLeft.addEventListener('click', () => {
-            playClickSound();
-            this.cardsContainer.scrollBy({ left: -300, behavior: 'smooth' });
-        });
-        this.btnRight.addEventListener('click', () => {
-            playClickSound();
-            this.cardsContainer.scrollBy({ left: 300, behavior: 'smooth' });
-        });
+        if (this.btnLeft) {
+            this.btnLeft.addEventListener('click', () => {
+                playClickSound();
+                this.cardsContainer.scrollBy({ left: -300, behavior: 'smooth' });
+            });
+        }
+        if (this.btnRight) {
+            this.btnRight.addEventListener('click', () => {
+                playClickSound();
+                this.cardsContainer.scrollBy({ left: 300, behavior: 'smooth' });
+            });
+        }
 
         document.querySelectorAll('.cinema-type-tab').forEach(tab => {
             tab.addEventListener('click', () => {
@@ -159,7 +163,8 @@ class MovieEngine {
                 this.activeCompany = '';
                 this.activeGenre = 'all';
                 this.searchResultsMode = false;
-                document.getElementById('genre-pill-slider').style.display = '';
+                const genreSlider = document.getElementById('genre-pill-slider');
+                if (genreSlider) genreSlider.style.display = '';
                 document.querySelectorAll('.genre-pill').forEach(p => p.classList.remove('active'));
                 const allPill = document.querySelector('.genre-pill[data-genre="all"]');
                 if (allPill) allPill.classList.add('active');
@@ -178,7 +183,8 @@ class MovieEngine {
                 }
                 document.querySelectorAll('.cinema-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
-                document.getElementById('cinema-search').style.display = '';
+                const cinemaSearch = document.getElementById('cinema-search');
+                if (cinemaSearch) cinemaSearch.style.display = '';
                 this.activeCompany = company;
                 this.activeWatch = watch;
                 this.activeGenre = 'all';
@@ -200,36 +206,47 @@ class MovieEngine {
             });
         });
 
-        this.searchBtn.addEventListener('click', () => this.doSearch());
-        this.searchInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') this.doSearch();
-        });
+        if (this.searchBtn) this.searchBtn.addEventListener('click', () => this.doSearch());
+        if (this.searchInput) {
+            this.searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') this.doSearch();
+            });
+            this.setupSearchSuggestions();
+        }
 
-        this.setupSearchSuggestions();
+        if (this.overlayBack) {
+            this.overlayBack.addEventListener('click', () => {
+                playClickSound();
+                this.closeOverlay();
+            });
+        }
 
-        this.overlayBack.addEventListener('click', () => {
-            playClickSound();
-            this.closeOverlay();
-        });
+        if (this.overlayClose) {
+            this.overlayClose.addEventListener('click', () => {
+                playClickSound();
+                this.closeOverlay();
+            });
+        }
 
-        this.overlayClose.addEventListener('click', () => {
-            playClickSound();
-            this.closeOverlay();
-        });
+        if (this.overlay) {
+            this.overlay.addEventListener('click', (e) => {
+                if (e.target === this.overlay || e.target.classList.contains('cinema-overlay-scroll')) this.closeOverlay();
+            });
+        }
 
-        this.overlay.addEventListener('click', (e) => {
-            if (e.target === this.overlay || e.target.classList.contains('cinema-overlay-scroll')) this.closeOverlay();
-        });
+        if (this.overlayPlay) this.overlayPlay.addEventListener('click', () => this.playCurrentMovie());
 
-        this.overlayPlay.addEventListener('click', () => this.playCurrentMovie());
+        if (this.heroPlay) {
+            this.heroPlay.addEventListener('click', () => {
+                if (this.currentHeroItem) this.showItemDetails(this.currentHeroItem);
+            });
+        }
 
-        this.heroPlay.addEventListener('click', () => {
-            if (this.currentHeroItem) this.showItemDetails(this.currentHeroItem);
-        });
-
-        this.heroInfo.addEventListener('click', () => {
-            if (this.currentHeroItem) this.showItemDetails(this.currentHeroItem);
-        });
+        if (this.heroInfo) {
+            this.heroInfo.addEventListener('click', () => {
+                if (this.currentHeroItem) this.showItemDetails(this.currentHeroItem);
+            });
+        }
 
         this.setupHeroSwipe();
     }
