@@ -166,7 +166,7 @@ class StreamEngine {
             title: item.title,
             channel: item.uploaderName || 'Unknown',
             description: item.shortDescription || item.description || '',
-            thumb: item.thumbnail || `https://img.youtube.com/vi/${item.url?.replace('/watch?v=', '')}/mqdefault.jpg`,
+            thumb: `https://i.ytimg.com/vi/${item.url?.replace('/watch?v=', '')}/mqdefault.jpg`,
             views: item.views ? `${(item.views / 1e6).toFixed(1)}M views` : '',
         })).filter(v => v.id);
     }
