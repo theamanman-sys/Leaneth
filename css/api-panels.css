@@ -1025,6 +1025,12 @@
    WEB3 CRYPTO BRIDGE
    ========================================== */
 
+.web3-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2rem;
+}
+
 .web3-grid .wallet-status-card {
     grid-column: span 5;
 }
@@ -1325,6 +1331,12 @@
 /* ==========================================
    DEVELOPER API SANDBOX
    ========================================== */
+
+.sandbox-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2rem;
+}
 
 .sandbox-grid .control-card {
     grid-column: span 5;
