@@ -836,6 +836,16 @@
     font-weight: 500;
 }
 
+.extra-link {
+    color: var(--accent-purple);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+.extra-link:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+}
+
 .cinema-cast-section {
     margin-top: 2rem;
     min-height: 220px;

@@ -1109,17 +1109,17 @@ class MovieEngine {
                 const status = data.status || '—';
                 const lang = data.original_language ? data.original_language.toUpperCase() : '—';
                 const releaseDate = isTv ? data.first_air_date : data.release_date;
-                const directors = data.credits?.crew?.filter(c => c.job === 'Director').map(c => c.name) || [];
-                const producers = data.credits?.crew?.filter(c => c.job && c.job.includes('Producer')).map(c => c.name) || [];
-                const companies = data.production_companies?.map(c => c.name) || [];
+                const directors = data.credits?.crew?.filter(c => c.job === 'Director') || [];
+                const producers = data.credits?.crew?.filter(c => c.job && c.job.includes('Producer')) || [];
+                const companies = data.production_companies || [];
                 let extra = `
                     <div class="cinema-extra-row"><span class="label">Released</span><span class="value">${MovieEngine.formatDate(releaseDate)}</span></div>
                     <div class="cinema-extra-row"><span class="label">Genres</span><span class="value">${genres}</span></div>
                     <div class="cinema-extra-row"><span class="label">Status</span><span class="value">${status}</span></div>
                     <div class="cinema-extra-row"><span class="label">Language</span><span class="value">${lang}</span></div>
-                    ${directors.length ? `<div class="cinema-extra-row"><span class="label">Director${directors.length > 1 ? 's' : ''}</span><span class="value">${directors.join(', ')}</span></div>` : ''}
-                    ${producers.length ? `<div class="cinema-extra-row"><span class="label">Producer${producers.length > 1 ? 's' : ''}</span><span class="value">${producers.join(', ')}</span></div>` : ''}
-                    ${companies.length ? `<div class="cinema-extra-row"><span class="label">Production</span><span class="value">${companies.join(', ')}</span></div>` : ''}
+                    ${directors.length ? `<div class="cinema-extra-row"><span class="label">Director${directors.length > 1 ? 's' : ''}</span><span class="value">${directors.map(d => `<a href="#" class="extra-link" data-person-id="${d.id}">${d.name}</a>`).join(', ')}</span></div>` : ''}
+                    ${producers.length ? `<div class="cinema-extra-row"><span class="label">Producer${producers.length > 1 ? 's' : ''}</span><span class="value">${producers.map(p => `<a href="#" class="extra-link" data-person-id="${p.id}">${p.name}</a>`).join(', ')}</span></div>` : ''}
+                    ${companies.length ? `<div class="cinema-extra-row"><span class="label">Production</span><span class="value">${companies.map(c => `<a href="#" class="extra-link" data-company-id="${c.id}">${c.name}</a>`).join(', ')}</span></div>` : ''}
                 `;
                 if (isTv) {
                     const seasons = data.number_of_seasons || '—';
@@ -1141,6 +1141,34 @@ class MovieEngine {
                     `;
                 }
                 this.overlayExtra.innerHTML = extra;
+
+                const allCrew = [...directors, ...producers];
+                this.overlayExtra.querySelectorAll('[data-person-id]').forEach(link => {
+                    const person = allCrew.find(p => p.id == link.dataset.personId);
+                    if (person) {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            this.showCelebrityDetails({
+                                id: person.id,
+                                name: person.name,
+                                profile_path: person.profile_path,
+                                known_for_department: person.known_for_department || 'Actor',
+                                popularity: person.popularity || 0,
+                            });
+                        });
+                    }
+                });
+
+                this.overlayExtra.querySelectorAll('[data-company-id]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.closeOverlay();
+                        this.activeCompany = link.dataset.companyId;
+                        this.activeWatch = '';
+                        document.querySelectorAll('.cinema-tab').forEach(t => t.classList.remove('active'));
+                        this.switchCompany();
+                    });
+                });
             }
 
             if (data.overview && this.overlayOverview) {
