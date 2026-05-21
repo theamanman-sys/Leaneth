@@ -497,6 +497,16 @@ class MovieEngine {
             return;
         }
 
+        if (companyId === '213' && this.activeType === 'movie') {
+            await this.loadCuratedNetflix(cacheKey);
+            return;
+        }
+
+        if (companyId === '19551' && this.activeType === 'movie') {
+            await this.loadCuratedHBO(cacheKey);
+            return;
+        }
+
         const label = COMPANY_NAMES[companyId] || 'content';
         this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">Loading ${label}...</div>`;
 
@@ -532,8 +542,7 @@ class MovieEngine {
         }
     }
 
-    async loadCuratedNetflix() {
-        const cacheKey = `movie_213`;
+    async loadCuratedNetflix(cacheKey) {
         if (this.companyMovies[cacheKey]) {
             this.renderMovies(this.companyMovies[cacheKey]);
             return;
@@ -561,35 +570,32 @@ class MovieEngine {
 
         const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-        for (let i = 0; i < CURATED_NETFLIX_IDS.length; i += 3) {
-            const batch = CURATED_NETFLIX_IDS.slice(i, i + 3);
+        for (let i = 0; i < CURATED_NETFLIX_IDS.length; i += 5) {
+            if (this.activeCompany !== '213' || this.activeWatch) return;
+            const batch = CURATED_NETFLIX_IDS.slice(i, i + 5);
             const results = await Promise.all(batch.map(id =>
                 fetch(`${TMDB_BASE}/movie/${id}?language=en-US`, { headers: TMDB_HEADERS })
                     .then(r => r.ok ? r.json() : null)
                     .catch(() => null)
             ));
-            let changed = false;
             results.forEach(m => {
                 if (m && m.success !== false && !seenIds.has(m.id)) {
                     seenIds.add(m.id);
                     mapped.push(toEntry(m));
-                    changed = true;
                 }
             });
-            if (changed) {
-                this.companyMovies[cacheKey] = [...mapped];
-                this.renderMovies(this.companyMovies[cacheKey]);
-            }
-            await sleep(700);
+            await sleep(500);
         }
 
-        if (mapped.length === 0) {
+        if (mapped.length) {
+            this.companyMovies[cacheKey] = mapped;
+            this.renderMovies(mapped);
+        } else {
             this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">No Netflix movies loaded.</div>`;
         }
     }
 
-    async loadCuratedHBO() {
-        const cacheKey = `movie_19551`;
+    async loadCuratedHBO(cacheKey) {
         if (this.companyMovies[cacheKey]) {
             this.renderMovies(this.companyMovies[cacheKey]);
             return;
@@ -617,29 +623,27 @@ class MovieEngine {
 
         const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-        for (let i = 0; i < CURATED_HBO_IDS.length; i += 3) {
-            const batch = CURATED_HBO_IDS.slice(i, i + 3);
+        for (let i = 0; i < CURATED_HBO_IDS.length; i += 5) {
+            if (this.activeCompany !== '19551' || this.activeWatch) return;
+            const batch = CURATED_HBO_IDS.slice(i, i + 5);
             const results = await Promise.all(batch.map(id =>
                 fetch(`${TMDB_BASE}/movie/${id}?language=en-US`, { headers: TMDB_HEADERS })
                     .then(r => r.ok ? r.json() : null)
                     .catch(() => null)
             ));
-            let changed = false;
             results.forEach(m => {
                 if (m && m.success !== false && !seenIds.has(m.id)) {
                     seenIds.add(m.id);
                     mapped.push(toEntry(m));
-                    changed = true;
                 }
             });
-            if (changed) {
-                this.companyMovies[cacheKey] = [...mapped];
-                this.renderMovies(this.companyMovies[cacheKey]);
-            }
-            await sleep(700);
+            await sleep(500);
         }
 
-        if (mapped.length === 0) {
+        if (mapped.length) {
+            this.companyMovies[cacheKey] = mapped;
+            this.renderMovies(mapped);
+        } else {
             this.cardsContainer.innerHTML = `<div class="terminal-line text-muted text-center" style="width:100%;padding:4rem;">No HBO movies loaded.</div>`;
         }
     }
