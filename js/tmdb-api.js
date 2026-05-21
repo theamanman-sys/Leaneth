@@ -492,16 +492,6 @@ class MovieEngine {
             return;
         }
 
-        if (companyId === '213' && this.activeType === 'movie') {
-            await this.loadCuratedNetflix();
-            return;
-        }
-
-        if (companyId === '19551' && this.activeType === 'movie') {
-            await this.loadCuratedHBO();
-            return;
-        }
-
         if (this.activeWatch) {
             await this.loadWatchProvider();
             return;
