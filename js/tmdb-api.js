@@ -1165,9 +1165,6 @@ class MovieEngine {
                             if (this.overlayPlayer) {
                                 this.overlayPlayer.classList.remove('hidden');
                             }
-                            if (this.overlayPlay) {
-                                this.overlayPlay.classList.add('hidden');
-                            }
                             try {
                                 if (this.overlayPlayer) {
                                     this.overlayPlayer.scrollIntoView({ behavior: 'smooth', block: 'center' });
