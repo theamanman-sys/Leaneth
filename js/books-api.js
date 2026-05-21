@@ -66,12 +66,12 @@ const FALLBACK_BOOKS = [
 ];
 
 const HERO_BOOKS = [
-    { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', cover_i: 8428193, desc: 'A story of wealth, love, and the American Dream in the Roaring Twenties.' },
-    { title: '1984', author: 'George Orwell', cover_i: 8215593, desc: 'A dystopian novel set in a totalitarian society ruled by Big Brother.' },
-    { title: 'Dune', author: 'Frank Herbert', cover_i: 8293981, desc: 'A epic science fiction saga set on the desert planet Arrakis.' },
+    { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', cover_i: 8428193, desc: 'A story of wealth, love, and the American Dream in the Roaring Twenties.', gutendex_id: 64317 },
+    { title: '1984', author: 'George Orwell', cover_i: 8215593, desc: 'A dystopian novel set in a totalitarian society ruled by Big Brother.', gutendex_id: 54728 },
+    { title: 'Dune', author: 'Frank Herbert', cover_i: 8293981, desc: 'A epic science fiction saga set on the desert planet Arrakis.', gutendex_id: 53784 },
+    { title: 'Moby Dick', author: 'Herman Melville', cover_i: 8362945, desc: 'The obsessive quest of Captain Ahab for the great white whale.', gutendex_id: 2701 },
+    { title: 'The Art of War', author: 'Sun Tzu', cover_i: 8437291, desc: 'An ancient Chinese military treatise on strategy and philosophy.', gutendex_id: 132 },
     { title: 'Sapiens', author: 'Yuval Noah Harari', cover_i: 8420583, desc: 'A brief history of humankind — from Stone Age to the present.' },
-    { title: 'Moby Dick', author: 'Herman Melville', cover_i: 8362945, desc: 'The obsessive quest of Captain Ahab for the great white whale.' },
-    { title: 'The Art of War', author: 'Sun Tzu', cover_i: 8437291, desc: 'An ancient Chinese military treatise on strategy and philosophy.' },
 ];
 
 class BooksEngine {
@@ -282,6 +282,12 @@ class BooksEngine {
     openHeroBookReader() {
         const item = this.currentHeroItem;
         if (!item) return;
+
+        if (item.gutendex_id) {
+            window.open(`https://www.gutenberg.org/ebooks/${item.gutendex_id}`, '_blank');
+            return;
+        }
+
         const book = {
             title: item.title,
             author_name: [item.author],
@@ -451,6 +457,10 @@ class BooksEngine {
         this.overlayGenre.textContent = genres;
         this.overlayOverview.textContent = book.description || 'No description available.';
 
+        const hasGutendex = Boolean(book.gutendex_id);
+        const hasIA = Boolean(book.ia);
+        const canRead = hasGutendex || hasIA;
+
         if (this.overlayExtra) {
             this.overlayExtra.innerHTML = `
                 <div class="books-extra-row"><span class="label">Author</span><span class="value">${author}</span></div>
@@ -458,12 +468,12 @@ class BooksEngine {
                 ${book.publisher ? `<div class="books-extra-row"><span class="label">Publisher</span><span class="value">${book.publisher}</span></div>` : ''}
                 ${book.number_of_pages_median ? `<div class="books-extra-row"><span class="label">Pages</span><span class="value">${book.number_of_pages_median}</span></div>` : ''}
                 ${book.isbn ? `<div class="books-extra-row"><span class="label">ISBN</span><span class="value">${book.isbn}</span></div>` : ''}
-                <div class="books-extra-row"><span class="label">Source</span><span class="value">Open Library ${book.gutendex_id ? '+ Gutenberg' : ''}</span></div>
+                <div class="books-extra-row"><span class="label">Source</span><span class="value">${hasGutendex ? 'Project Gutenberg' : hasIA ? 'Internet Archive' : 'Open Library'}</span></div>
             `;
         }
 
         this.overlayReadBtn.classList.remove('hidden');
-        this.overlayReadBtn.textContent = book.gutendex_id || book.ia ? 'Read Free' : 'View Details';
+        this.overlayReadBtn.textContent = canRead ? 'Read Free' : 'Find Free Copy';
 
         this.currentBook = book;
 
@@ -497,48 +507,46 @@ class BooksEngine {
         const book = this.currentBook;
         playClickSound();
 
-        let readerUrl = null;
-
-        if (book.gutendex_id) {
-            readerUrl = `https://www.gutenberg.org/ebooks/${book.gutendex_id}.html.noimages`;
-        } else if (book.ia) {
-            readerUrl = `https://archive.org/stream/${book.ia}?ui=embed`;
-        } else {
-            const searchQuery = encodeURIComponent(`${book.title} ${Array.isArray(book.author_name) ? book.author_name[0] : book.author_name}`);
-            this.tryGutendexSearch(book, searchQuery);
-            return;
-        }
-
-        if (readerUrl) {
-            this.overlayIframe.src = readerUrl;
+        if (book.ia) {
+            this.overlayIframe.src = `https://archive.org/stream/${book.ia}?ui=embed#`;
             this.overlayReader.classList.remove('hidden');
             try {
                 this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } catch (e) {}
+            return;
         }
+
+        if (book.gutendex_id) {
+            window.open(`https://www.gutenberg.org/ebooks/${book.gutendex_id}`, '_blank');
+            return;
+        }
+
+        const query = encodeURIComponent(`${book.title} ${Array.isArray(book.author_name) ? book.author_name[0] : book.author_name}`);
+        this.tryGutendexSearch(book, query);
     }
 
     async tryGutendexSearch(book, query) {
+        this.overlayReadBtn.textContent = 'Searching...';
+        this.overlayReadBtn.disabled = true;
         try {
-            const res = await fetch(`${GUTENDEX_BASE}?search=${encodeURIComponent(query)}`);
+            const res = await fetch(`${GUTENDEX_BASE}?search=${query}`);
             const data = await res.json();
             const results = data.results || [];
             if (results.length > 0) {
                 const gId = results[0].id;
                 book.gutendex_id = gId;
-                const readerUrl = `https://www.gutenberg.org/ebooks/${gId}.html.noimages`;
-                this.overlayIframe.src = readerUrl;
-                this.overlayReader.classList.remove('hidden');
-                try {
-                    this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } catch (e) {}
+                this.overlayReadBtn.textContent = 'Read Free';
+                this.overlayReadBtn.disabled = false;
+                window.open(`https://www.gutenberg.org/ebooks/${gId}`, '_blank');
             } else {
-                const fallbackUrl = `https://openlibrary.org/search?q=${encodeURIComponent(query)}`;
-                window.open(fallbackUrl, '_blank');
+                this.overlayReadBtn.textContent = 'Search Open Library';
+                this.overlayReadBtn.disabled = false;
+                window.open(`https://openlibrary.org/search?q=${query}`, '_blank');
             }
         } catch {
-            const fallbackUrl = `https://openlibrary.org/search?q=${encodeURIComponent(query)}`;
-            window.open(fallbackUrl, '_blank');
+            this.overlayReadBtn.textContent = 'Search Open Library';
+            this.overlayReadBtn.disabled = false;
+            window.open(`https://openlibrary.org/search?q=${query}`, '_blank');
         }
     }
 }
