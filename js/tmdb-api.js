@@ -841,7 +841,7 @@ class MovieEngine {
                             vote_average: m.vote_average || 0,
                             release_date: (m.release_date || '').split('-')[0] || '',
                             genre: mapGenres(m),
-                            embed_url: m.id ? `https://vaplayer.ru/embed/movie/${m.id}` : '',
+                            embed_url: m.id ? `${VIDAPI_BASE}/embed/movie/${m.id}` : '',
                         };
                         this.showItemDetails(movie);
                     });
@@ -1005,16 +1005,14 @@ class MovieEngine {
         }
 
         if (!item.embed_url) {
-            item.embed_url = `https://vaplayer.ru/embed/movie/${item.id}`;
+            item.embed_url = `${VIDAPI_BASE}/embed/movie/${item.id}`;
         }
         this.overlayIframe.src = item.embed_url;
         this.overlayPlayer.classList.remove('hidden');
         this.overlayPlay.classList.add('hidden');
         // Scroll player into view inside overlay
         try {
-            if (this.overlayScroll && this.overlayPlayer) {
-                this.overlayScroll.scrollTo({ top: this.overlayPlayer.offsetTop - 12, behavior: 'smooth' });
-            } else if (this.overlayPlayer) {
+            if (this.overlayPlayer) {
                 this.overlayPlayer.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         } catch (e) {}
@@ -1034,7 +1032,7 @@ class MovieEngine {
             if (seasons.length === 0) {
                 inner.innerHTML = '<button class="btn btn-primary btn-glow" id="ep-play-btn">▶ Play Series</button>';
                 document.getElementById('ep-play-btn').addEventListener('click', () => {
-                    this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
+                    this.overlayIframe.src = `${VIDAPI_BASE}/embed/tv/${item.id}/1/1`;
                     this.overlayPlayer.classList.remove('hidden');
                     this.overlayPlay.classList.add('hidden');
                 });
@@ -1070,7 +1068,7 @@ class MovieEngine {
             document.getElementById('ep-play-btn').addEventListener('click', () => {
                 const s = seasonSelect.value;
                 const e = episodeSelect.value;
-                this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/${s}/${e}`;
+                this.overlayIframe.src = `${VIDAPI_BASE}/embed/tv/${item.id}/${s}/${e}`;
                 this.overlayPlayer.classList.remove('hidden');
                 this.overlayPlay.classList.add('hidden');
             });
@@ -1079,7 +1077,7 @@ class MovieEngine {
             const btn = document.getElementById('ep-play-btn');
             if (btn) {
                 btn.addEventListener('click', () => {
-                    this.overlayIframe.src = `https://vaplayer.ru/embed/tv/${item.id}/1/1`;
+                    this.overlayIframe.src = `${VIDAPI_BASE}/embed/tv/${item.id}/1/1`;
                     this.overlayPlayer.classList.remove('hidden');
                     this.overlayPlay.classList.add('hidden');
                 });
@@ -1160,27 +1158,21 @@ class MovieEngine {
                             <div class="trailer-name">${v.name}${v.type === 'Teaser' ? ' (Teaser)' : ''}</div>
                         `;
                         el.addEventListener('click', () => {
-                            // Play the trailer inside the overlay player iframe instead of opening a new tab
+                            const embed = `https://www.youtube.com/embed/${v.key}?autoplay=1&rel=0&modestbranding=1`;
+                            if (this.overlayIframe) {
+                                this.overlayIframe.src = embed;
+                            }
+                            if (this.overlayPlayer) {
+                                this.overlayPlayer.classList.remove('hidden');
+                            }
+                            if (this.overlayPlay) {
+                                this.overlayPlay.classList.add('hidden');
+                            }
                             try {
-                                const embed = `https://www.youtube.com/embed/${v.key}?autoplay=1&rel=0&modestbranding=1`;
-                                if (this.overlayIframe) {
-                                    this.overlayIframe.src = embed;
-                                }
                                 if (this.overlayPlayer) {
-                                    this.overlayPlayer.classList.remove('hidden');
-                                }
-                                if (this.overlayPlay) {
-                                    this.overlayPlay.classList.add('hidden');
-                                }
-                                // Scroll the player into view inside the overlay scroll container
-                                if (this.overlayScroll && this.overlayPlayer) {
-                                    this.overlayScroll.scrollTo({ top: this.overlayPlayer.offsetTop - 12, behavior: 'smooth' });
-                                } else if (this.overlayPlayer) {
                                     this.overlayPlayer.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 }
-                            } catch (e) { /* fallback: open in new tab if anything fails */
-                                window.open(`https://www.youtube.com/watch?v=${v.key}`, '_blank');
-                            }
+                            } catch (e) {}
                         });
                         this.overlayTrailers.appendChild(el);
                     });
