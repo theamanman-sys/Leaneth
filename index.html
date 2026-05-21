@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/router.css">
     <link rel="stylesheet" href="css/dashboards.css">
     <link rel="stylesheet" href="css/api-panels.css">
+    <link rel="stylesheet" href="css/books.css">
 </head>
 <body>
     <audio id="sound-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav" preload="auto"></audio>
@@ -34,6 +35,7 @@
                 <a href="#identity" class="nav-link" data-link="identity">ID Bridge</a>
                 <a href="#cosmos" class="nav-link" data-link="cosmos">Cosmos Feed</a>
                 <a href="#weather" class="nav-link" data-link="weather">Weather Oracle</a>
+                <a href="#books" class="nav-link" data-link="books">Books Library</a>
                 <a href="#sandbox" class="nav-link" data-link="sandbox">Dev Console</a>
             </nav>
             <button class="hamburger" id="hamburger-btn" aria-label="Menu">
@@ -46,6 +48,7 @@
                 <a href="#identity" class="nav-link" data-link="identity">ID Bridge</a>
                 <a href="#cosmos" class="nav-link" data-link="cosmos">Cosmos Feed</a>
                 <a href="#weather" class="nav-link" data-link="weather">Weather Oracle</a>
+                <a href="#books" class="nav-link" data-link="books">Books Library</a>
                 <a href="#sandbox" class="nav-link" data-link="sandbox">Dev Console</a>
             </div>
             <div class="nav-controls">
@@ -89,6 +92,7 @@
                     <div class="feature-card" onclick="navigateTo('identity')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div><h3>ID Bridge</h3><p>Real EIP-1193 wallet connectivity, live market feeds, and on-chain transaction broadcasting.</p></div>
                     <div class="feature-card" onclick="navigateTo('cosmos')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div><h3>Cosmos Feed</h3><p>Live NASA APOD imagery, ISS telemetry, and space intelligence mission data streams.</p></div>
                     <div class="feature-card" onclick="navigateTo('weather')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg></div><h3>Weather Oracle</h3><p>Real-time weather intelligence via geolocation detection and atmospheric condition APIs.</p></div>
+                    <div class="feature-card" onclick="navigateTo('books')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div><h3>Books Library</h3><p>Free books, magazines & comics via Open Library and Project Gutenberg APIs with built-in reader.</p></div>
                     <div class="feature-card" onclick="navigateTo('sandbox')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div><h3>Dev Console</h3><p>Interactive API compiler with live HTTP responses, rate-limit testing, and terminal logs.</p></div>
                 </div>
             </div>
@@ -391,6 +395,87 @@
             </div>
         </section>
 
+        <!-- BOOKS LIBRARY -->
+        <section id="books" class="view-panel">
+            <div class="dashboard-wrapper" style="max-width:1400px;margin:0 auto;padding:3rem 2rem 6rem;">
+                <div class="dashboard-header">
+                    <div>
+                        <span class="badge badge-purple">Open Library + Project Gutenberg</span>
+                        <h1>Books Library</h1>
+                        <p>Discover free books, magazines, and comics. Read instantly in your browser.</p>
+                    </div>
+                    <div class="dashboard-actions">
+                        <input type="text" id="books-search-input" placeholder="Search books, authors..." class="search-input">
+                        <button id="books-search-btn" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+                <div class="books-wrapper">
+                    <div class="books-hero" id="books-hero">
+                        <div class="books-hero-backdrop" id="books-hero-backdrop"></div>
+                        <div class="books-hero-gradient"></div>
+                        <div class="books-hero-content">
+                            <span class="books-hero-badge" id="books-hero-badge">Featured Book</span>
+                            <h1 class="books-hero-title" id="books-hero-title">Loading...</h1>
+                            <div class="books-hero-author" id="books-hero-author"></div>
+                            <div class="books-hero-meta">
+                                <span class="books-hero-rating" id="books-hero-rating"></span>
+                            </div>
+                            <p class="books-hero-desc" id="books-hero-desc">Discover classic and popular books</p>
+                            <div class="books-hero-actions">
+                                <button class="btn btn-primary btn-glow" id="books-hero-read">&#128214; Read Now</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="books-hero-dots" id="books-hero-dots"></div>
+                    <div class="books-cat-tabs">
+                        <button class="books-cat-tab active" data-cat="trending">Trending</button>
+                        <button class="books-cat-tab" data-cat="fiction">Fiction</button>
+                        <button class="books-cat-tab" data-cat="non-fiction">Non-Fiction</button>
+                        <button class="books-cat-tab" data-cat="science">Science</button>
+                        <button class="books-cat-tab" data-cat="comics">Comics</button>
+                        <button class="books-cat-tab" data-cat="history">History</button>
+                        <button class="books-cat-tab" data-cat="philosophy">Philosophy</button>
+                        <button class="books-cat-tab" data-cat="classics">Classics</button>
+                    </div>
+                    <div class="books-carousel-container">
+                        <div class="books-carousel" id="books-cards-container"></div>
+                        <button class="books-carousel-nav books-nav-left" data-target="books-cards-container" data-dir="left"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+                        <button class="books-carousel-nav books-nav-right" data-target="books-cards-container" data-dir="right"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="books-overlay hidden" id="books-overlay">
+            <div class="books-overlay-back-wrap">
+                <button class="books-overlay-back" id="books-overlay-back">&#8592; Back</button>
+                <button class="books-overlay-close" id="books-overlay-close">&times;</button>
+            </div>
+            <div class="books-overlay-scroll">
+                <div class="books-overlay-backdrop" id="books-overlay-backdrop">
+                    <div class="books-overlay-gradient"></div>
+                </div>
+                <div class="books-overlay-body">
+                    <div class="books-overlay-poster-col">
+                        <img src="" id="books-overlay-poster" alt="Cover">
+                    </div>
+                    <div class="books-overlay-details">
+                        <h2 id="books-overlay-title">Title</h2>
+                        <div class="books-overlay-author" id="books-overlay-author"></div>
+                        <div class="books-overlay-meta">
+                            <span id="books-overlay-year">—</span>
+                            <span class="books-overlay-rating" id="books-overlay-rating"></span>
+                            <span id="books-overlay-genre">—</span>
+                        </div>
+                        <p class="books-overview" id="books-overlay-overview"></p>
+                        <button class="btn btn-primary btn-glow btn-read-overlay" id="books-overlay-read">&#128214; Read Free</button>
+                        <div class="books-reader-wrap hidden" id="books-overlay-reader"><iframe id="books-overlay-iframe" width="100%" height="100%" frameborder="0" allowfullscreen></iframe></div>
+                        <div class="books-extra" id="books-overlay-extra"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- DEVELOPER SANDBOX -->
         <section id="sandbox" class="view-panel">
             <div class="dashboard-wrapper">
@@ -433,6 +518,7 @@
     <script src="js/cosmos-api.js" type="module"></script>
     <script src="js/weather-api.js" type="module"></script>
     <script src="js/sandbox.js" type="module"></script>
+    <script src="js/books-api.js" type="module"></script>
     <script src="js/main.js" type="module"></script>
     <script>function navigateTo(s){var l=document.querySelector('[data-link="'+s+'"]');if(l)l.click();}</script>
 </body>

@@ -8,6 +8,7 @@ import { initWeb3 } from './crypto-api.js';
 import { initSandbox } from './sandbox.js';
 import { initCosmos } from './cosmos-api.js';
 import { initWeather } from './weather-api.js';
+import { initBooks } from './books-api.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize custom page router and transition engine
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSandbox();
     initCosmos();
     initWeather();
+    initBooks();
 
     // 4. Setup sound toggle control logic
     setupSoundControl();
