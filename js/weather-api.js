@@ -1,6 +1,6 @@
 /* WEATHER ORACLE - LEANETH VENTURES
    Open-Meteo API (free, no key needed)
-   ipapi.co geolocation (free, no key needed) */
+   Geolocation API (free, no key needed) */
 
 const WEATHER_CODES = {
     0: 'Clear Sky', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Overcast',
