@@ -104,7 +104,7 @@ class BooksEngine {
         this.cachedCategories = {};
         this.activeCategory = 'trending';
         this.currentBook = null;
-        this.heroItems = [];
+        this.heroItems = HERO_BOOKS;
         this.heroIndex = 0;
         this.heroTimer = null;
         this.searchResultsMode = false;
@@ -116,8 +116,8 @@ class BooksEngine {
     init() {
         if (!this.container) return;
 
-        this.resolveHeroCovers();
         this.startHeroRotation();
+        this.resolveHeroCovers();
         this.loadCategory('trending');
 
         document.querySelectorAll('.books-cat-tab').forEach(tab => {
@@ -206,7 +206,7 @@ class BooksEngine {
     }
 
     async resolveHeroCovers() {
-        for (const item of HERO_BOOKS) {
+        for (const item of this.heroItems) {
             try {
                 const query = encodeURIComponent(`${item.title} ${item.author}`);
                 const res = await fetch(`${OL_BASE}/search.json?q=${query}&limit=1`);
@@ -214,10 +214,10 @@ class BooksEngine {
                 const doc = data.docs && data.docs[0];
                 if (doc && doc.cover_i) {
                     item.cover_i = doc.cover_i;
+                    this.showHeroItem(this.heroIndex);
                 }
             } catch {}
         }
-        this.heroItems = HERO_BOOKS;
     }
 
     setupHeroSwipe() {
@@ -558,8 +558,6 @@ class BooksEngine {
         const book = this.currentBook;
         playClickSound();
 
-        this.overlayReadBtn.classList.add('hidden');
-
         if (book.ia) {
             this.readerTitle.textContent = book.title;
             this.overlayIframe.classList.remove('hidden');
@@ -658,7 +656,6 @@ class BooksEngine {
             if (results.length > 0) {
                 const gId = results[0].id;
                 book.gutendex_id = gId;
-                this.overlayReadBtn.classList.add('hidden');
                 this.readerTitle.textContent = book.title;
                 this.textReader.classList.add('hidden');
                 this.readerLoading.classList.remove('hidden');
