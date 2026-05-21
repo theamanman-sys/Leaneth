@@ -999,7 +999,6 @@ class MovieEngine {
         playClickSound();
 
         if (item.media_type === 'tv') {
-            this.overlayPlay.classList.add('hidden');
             this.showSeasonPicker(item);
             return;
         }
@@ -1009,7 +1008,6 @@ class MovieEngine {
         }
         this.overlayIframe.src = item.embed_url;
         this.overlayPlayer.classList.remove('hidden');
-        this.overlayPlay.classList.add('hidden');
         // Scroll player into view inside overlay
         try {
             if (this.overlayPlayer) {
@@ -1034,7 +1032,6 @@ class MovieEngine {
                 document.getElementById('ep-play-btn').addEventListener('click', () => {
                     this.overlayIframe.src = `${VIDAPI_BASE}/embed/tv/${item.id}/1/1`;
                     this.overlayPlayer.classList.remove('hidden');
-                    this.overlayPlay.classList.add('hidden');
                 });
                 return;
             }
@@ -1070,7 +1067,6 @@ class MovieEngine {
                 const e = episodeSelect.value;
                 this.overlayIframe.src = `${VIDAPI_BASE}/embed/tv/${item.id}/${s}/${e}`;
                 this.overlayPlayer.classList.remove('hidden');
-                this.overlayPlay.classList.add('hidden');
             });
         } catch {
             inner.innerHTML = '<button class="btn btn-primary btn-glow" id="ep-play-btn">▶ Play Series</button>';
@@ -1079,7 +1075,6 @@ class MovieEngine {
                 btn.addEventListener('click', () => {
                     this.overlayIframe.src = `${VIDAPI_BASE}/embed/tv/${item.id}/1/1`;
                     this.overlayPlayer.classList.remove('hidden');
-                    this.overlayPlay.classList.add('hidden');
                 });
             }
         }
@@ -1133,7 +1128,6 @@ class MovieEngine {
             if (this.overlayPlay && this.currentMovie) {
                 this.currentMovie.media_type = mediaType;
                 if (isTv) {
-                    this.overlayPlay.classList.add('hidden');
                     this.showSeasonPicker(this.currentMovie);
                 } else {
                     this.overlayPlay.classList.remove('hidden');
