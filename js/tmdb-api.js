@@ -1,6 +1,6 @@
 import { playClickSound } from './router.js';
 
-const VIDAPI_BASE = 'https://vidapi.ru';
+const VIDAPI_BASE = 'https://vidsrc.to';
 
 const TMDB_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMzQyZWNhZjBjNzNmYzU1NmI1NDk3NzQwYmJmZmE5MiIsIm5iZiI6MTc3NTIyMDE5OS42MDA5OTk4LCJzdWIiOiI2OWNmYjVlNzY4YjcwYWNmYjgyZjc2MmQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.jxycsZVC7uLmewooOKm20BvZUZ5s5H4qPsalI3FBmok';
 const TMDB_BASE = 'https://api.themoviedb.org/3';
