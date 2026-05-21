@@ -4,7 +4,10 @@ const OL_BASE = 'https://openlibrary.org';
 const COVERS_BASE = 'https://covers.openlibrary.org/b/id';
 const GUTENDEX_BASE = 'https://gutendex.com/books';
 
-const PROXY = 'https://api.allorigins.win/raw?url=';
+const PROXIES = [
+    (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+    (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+];
 
 const CATEGORY_QUERIES = {
     'trending': 'popular',
@@ -178,6 +181,7 @@ class BooksEngine {
     }
 
     closeReader() {
+        document.body.classList.remove('books-reading-mode');
         this.overlayReader.classList.add('hidden');
         this.overlayIframe.classList.add('hidden');
         this.textReader.classList.add('hidden');
@@ -557,27 +561,26 @@ class BooksEngine {
         if (!this.currentBook) return;
         const book = this.currentBook;
         playClickSound();
+        this.readerTitle.textContent = book.title;
+
+        document.body.classList.add('books-reading-mode');
+        this.textReader.classList.add('hidden');
+        this.overlayIframe.classList.add('hidden');
+        this.readerLoading.classList.remove('hidden');
+        this.overlayReader.classList.remove('hidden');
+
+        try {
+            this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (e) {}
 
         if (book.ia) {
-            this.readerTitle.textContent = book.title;
-            this.overlayIframe.classList.remove('hidden');
             this.overlayIframe.src = `https://archive.org/stream/${book.ia}?ui=embed#`;
+            this.overlayIframe.classList.remove('hidden');
             this.readerLoading.classList.add('hidden');
-            this.overlayReader.classList.remove('hidden');
-            try {
-                this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } catch (e) {}
             return;
         }
 
         if (book.gutendex_id) {
-            this.readerTitle.textContent = book.title;
-            this.textReader.classList.add('hidden');
-            this.readerLoading.classList.remove('hidden');
-            this.overlayReader.classList.remove('hidden');
-            try {
-                this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } catch (e) {}
             await this.loadTextReader(book.gutendex_id, book);
             return;
         }
@@ -588,56 +591,61 @@ class BooksEngine {
 
     async loadTextReader(gId, book) {
         const textUrl = `https://www.gutenberg.org/cache/epub/${gId}/pg${gId}.txt`;
-        try {
-            const proxyUrl = PROXY + encodeURIComponent(textUrl);
-            const res = await fetch(proxyUrl);
-            if (!res.ok) throw new Error('Fetch failed');
-            let text = await res.text();
-            const startMarkers = ['*** START OF THE PROJECT GUTENBERG', '*** START OF THIS PROJECT GUTENBERG',
-                '***START OF THE PROJECT GUTENBERG', '***START OF THIS PROJECT GUTENBERG'];
-            const endMarkers = ['*** END OF THE PROJECT GUTENBERG', '*** END OF THIS PROJECT GUTENBERG',
-                '***END OF THE PROJECT GUTENBERG', '***END OF THIS PROJECT GUTENBERG'];
 
-            let startIdx = 0;
-            for (const m of startMarkers) {
-                const idx = text.indexOf(m);
-                if (idx !== -1) {
-                    const endline = text.indexOf('\n', idx);
-                    startIdx = endline !== -1 ? endline + 1 : idx + m.length;
-                    break;
+        // Try styled text via CORS proxy
+        for (const buildProxyUrl of PROXIES) {
+            try {
+                const res = await fetch(buildProxyUrl(textUrl));
+                if (!res.ok) throw new Error('Fetch failed');
+                let text = await res.text();
+                const startMarkers = ['*** START OF THE PROJECT GUTENBERG', '*** START OF THIS PROJECT GUTENBERG',
+                    '***START OF THE PROJECT GUTENBERG', '***START OF THIS PROJECT GUTENBERG'];
+                const endMarkers = ['*** END OF THE PROJECT GUTENBERG', '*** END OF THIS PROJECT GUTENBERG',
+                    '***END OF THE PROJECT GUTENBERG', '***END OF THIS PROJECT GUTENBERG'];
+
+                let startIdx = 0;
+                for (const m of startMarkers) {
+                    const idx = text.indexOf(m);
+                    if (idx !== -1) {
+                        const endline = text.indexOf('\n', idx);
+                        startIdx = endline !== -1 ? endline + 1 : idx + m.length;
+                        break;
+                    }
                 }
-            }
 
-            let endIdx = text.length;
-            for (const m of endMarkers) {
-                const idx = text.indexOf(m);
-                if (idx !== -1) {
-                    endIdx = idx;
-                    break;
+                let endIdx = text.length;
+                for (const m of endMarkers) {
+                    const idx = text.indexOf(m);
+                    if (idx !== -1) {
+                        endIdx = idx;
+                        break;
+                    }
                 }
-            }
 
-            let content = text.slice(startIdx, endIdx).trim();
-            content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-            const lines = content.split('\n');
-            const formatted = lines.map(line => {
-                const trimmed = line.trim();
-                if (!trimmed) return '<br>';
-                if (trimmed === trimmed.toUpperCase() && trimmed.length > 3 && trimmed.length < 80) {
-                    return `<h3 style="text-align:center;font-family:'Georgia',serif;margin:1.5em 0 0.5em;font-size:1.2rem;font-weight:700;">${this.escapeHtml(trimmed)}</h3>`;
-                }
-                return `<p style="text-indent:1.5em;margin:0;">${this.escapeHtml(trimmed)}</p>`;
-            }).join('\n');
+                let content = text.slice(startIdx, endIdx).trim();
+                content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+                const lines = content.split('\n');
+                const formatted = lines.map(line => {
+                    const trimmed = line.trim();
+                    if (!trimmed) return '<br>';
+                    if (trimmed === trimmed.toUpperCase() && trimmed.length > 3 && trimmed.length < 80) {
+                        return `<h3 style="text-align:center;font-family:'Georgia',serif;margin:1.5em 0 0.5em;font-size:1.2rem;font-weight:700;">${this.escapeHtml(trimmed)}</h3>`;
+                    }
+                    return `<p style="text-indent:1.5em;margin:0;">${this.escapeHtml(trimmed)}</p>`;
+                }).join('\n');
 
-            this.readerLoading.classList.add('hidden');
-            this.textReader.innerHTML = formatted;
-            this.textReader.classList.remove('hidden');
-            this.textReader.scrollTop = 0;
-        } catch {
-            this.readerLoading.classList.add('hidden');
-            this.textReader.innerHTML = `<div class="books-reader-error"><span style="font-size:3rem;">&#128214;</span><p>Could not load the book text.</p><p style="font-size:0.85rem;color:#a09080;">Try again or choose another book.</p></div>`;
-            this.textReader.classList.remove('hidden');
+                this.readerLoading.classList.add('hidden');
+                this.textReader.innerHTML = formatted;
+                this.textReader.classList.remove('hidden');
+                this.textReader.scrollTop = 0;
+                return;
+            } catch {}
         }
+
+        // Fallback: load raw text in iframe (works cross-origin, no CORS needed)
+        this.readerLoading.classList.add('hidden');
+        this.overlayIframe.src = textUrl;
+        this.overlayIframe.classList.remove('hidden');
     }
 
     escapeHtml(str) {
@@ -657,7 +665,9 @@ class BooksEngine {
                 const gId = results[0].id;
                 book.gutendex_id = gId;
                 this.readerTitle.textContent = book.title;
+                document.body.classList.add('books-reading-mode');
                 this.textReader.classList.add('hidden');
+                this.overlayIframe.classList.add('hidden');
                 this.readerLoading.classList.remove('hidden');
                 this.overlayReader.classList.remove('hidden');
                 try {
