@@ -74,6 +74,13 @@ const CURATED_HBO_IDS = [
 ];
 
 class MovieEngine {
+    static formatDate(dateStr) {
+        if (!dateStr) return '—';
+        const d = new Date(dateStr + 'T00:00:00');
+        if (isNaN(d.getTime())) return dateStr;
+        return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
     constructor() {
         this.cardsContainer = document.getElementById('movie-cards-container');
         this.btnLeft = document.getElementById('carousel-left');
@@ -969,7 +976,7 @@ class MovieEngine {
         this.overlayBackdrop.style.backgroundImage = backdropUrl ? `url('${backdropUrl}')` : 'none';
         this.overlayPoster.src = posterUrl || '';
         this.overlayTitle.textContent = item.title;
-        this.overlayYear.textContent = item.release_date || '—';
+        this.overlayYear.textContent = MovieEngine.formatDate(item.release_date);
         this.overlayRating.textContent = `★ ${item.vote_average ? item.vote_average.toFixed(1) : '—'}`;
         this.overlayGenre.textContent = item.genre || '';
         this.overlayOverview.textContent = item.overview || '';
@@ -1101,10 +1108,18 @@ class MovieEngine {
                 const genres = data.genres ? data.genres.map(g => g.name).join(', ') : '—';
                 const status = data.status || '—';
                 const lang = data.original_language ? data.original_language.toUpperCase() : '—';
+                const releaseDate = isTv ? data.first_air_date : data.release_date;
+                const directors = data.credits?.crew?.filter(c => c.job === 'Director').map(c => c.name) || [];
+                const producers = data.credits?.crew?.filter(c => c.job && c.job.includes('Producer')).map(c => c.name) || [];
+                const companies = data.production_companies?.map(c => c.name) || [];
                 let extra = `
+                    <div class="cinema-extra-row"><span class="label">Released</span><span class="value">${MovieEngine.formatDate(releaseDate)}</span></div>
                     <div class="cinema-extra-row"><span class="label">Genres</span><span class="value">${genres}</span></div>
                     <div class="cinema-extra-row"><span class="label">Status</span><span class="value">${status}</span></div>
                     <div class="cinema-extra-row"><span class="label">Language</span><span class="value">${lang}</span></div>
+                    ${directors.length ? `<div class="cinema-extra-row"><span class="label">Director${directors.length > 1 ? 's' : ''}</span><span class="value">${directors.join(', ')}</span></div>` : ''}
+                    ${producers.length ? `<div class="cinema-extra-row"><span class="label">Producer${producers.length > 1 ? 's' : ''}</span><span class="value">${producers.join(', ')}</span></div>` : ''}
+                    ${companies.length ? `<div class="cinema-extra-row"><span class="label">Production</span><span class="value">${companies.join(', ')}</span></div>` : ''}
                 `;
                 if (isTv) {
                     const seasons = data.number_of_seasons || '—';
