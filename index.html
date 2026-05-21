@@ -92,7 +92,7 @@
                     <div class="feature-card" onclick="navigateTo('identity')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div><h3>ID Bridge</h3><p>Real EIP-1193 wallet connectivity, live market feeds, and on-chain transaction broadcasting.</p></div>
                     <div class="feature-card" onclick="navigateTo('cosmos')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div><h3>Cosmos Feed</h3><p>Live NASA APOD imagery, ISS telemetry, and space intelligence mission data streams.</p></div>
                     <div class="feature-card" onclick="navigateTo('weather')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg></div><h3>Weather Oracle</h3><p>Real-time weather intelligence via geolocation detection and atmospheric condition APIs.</p></div>
-                    <div class="feature-card" onclick="navigateTo('books')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div><h3>Books Library</h3><p>Free books, magazines & comics via Open Library and Project Gutenberg APIs with built-in reader.</p></div>
+                    <div class="feature-card" onclick="navigateTo('books')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div><h3>Books Library</h3><p>Free books, magazines & comics with a built-in reader — search and read instantly.</p></div>
                     <div class="feature-card" onclick="navigateTo('sandbox')"><div class="feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div><h3>Dev Console</h3><p>Interactive API compiler with live HTTP responses, rate-limit testing, and terminal logs.</p></div>
                 </div>
             </div>
@@ -400,9 +400,9 @@
             <div class="dashboard-wrapper" style="max-width:1400px;margin:0 auto;padding:3rem 2rem 6rem;">
                 <div class="dashboard-header">
                     <div>
-                        <span class="badge badge-purple">Open Library + Project Gutenberg</span>
+                        <span class="badge badge-purple">Free Books Library</span>
                         <h1>Books Library</h1>
-                        <p>Discover free books, magazines, and comics. Read instantly in your browser.</p>
+                        <p>Discover and read free books, classics, and comics directly in your browser.</p>
                     </div>
                     <div class="dashboard-actions">
                         <input type="text" id="books-search-input" placeholder="Search books, authors..." class="search-input">
@@ -469,7 +469,15 @@
                         </div>
                         <p class="books-overview" id="books-overlay-overview"></p>
                         <button class="btn btn-primary btn-glow btn-read-overlay" id="books-overlay-read">&#128214; Read Free</button>
-                        <div class="books-reader-wrap hidden" id="books-overlay-reader"><iframe id="books-overlay-iframe" width="100%" height="100%" frameborder="0" allowfullscreen></iframe></div>
+                        <div class="books-reader-wrap hidden" id="books-overlay-reader">
+                            <div class="books-reader-toolbar">
+                                <button class="books-reader-close" id="books-reader-close">&times; Close Reader</button>
+                                <span class="books-reader-title" id="books-reader-title"></span>
+                            </div>
+                            <iframe id="books-overlay-iframe" width="100%" height="100%" frameborder="0" allowfullscreen class="hidden"></iframe>
+                            <div id="books-text-reader" class="books-text-reader hidden"></div>
+                            <div id="books-reader-loading" class="books-reader-loading"><div class="cosmos-spinner"></div><p>Loading reader...</p></div>
+                        </div>
                         <div class="books-extra" id="books-overlay-extra"></div>
                     </div>
                 </div>

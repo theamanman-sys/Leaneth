@@ -4,6 +4,8 @@ const OL_BASE = 'https://openlibrary.org';
 const COVERS_BASE = 'https://covers.openlibrary.org/b/id';
 const GUTENDEX_BASE = 'https://gutendex.com/books';
 
+const PROXY = 'https://api.allorigins.win/raw?url=';
+
 const CATEGORY_QUERIES = {
     'trending': 'popular',
     'fiction': 'fiction',
@@ -27,51 +29,41 @@ const CATEGORY_LABELS = {
 };
 
 const FALLBACK_BOOKS = [
-    { id: 'OL7353617M', title: 'The Great Gatsby', author_name: ['F. Scott Fitzgerald'], first_publish_year: 1925, cover_i: 8428193, subject: ['fiction'], ia: 'greatgatsby00fitzgoog', gutendex_id: 64317 },
-    { id: 'OL21640713M', title: '1984', author_name: ['George Orwell'], first_publish_year: 1949, cover_i: 8215593, subject: ['fiction'], ia: '1984orwell', gutendex_id: 54728 },
-    { id: 'OL22318317M', title: 'To Kill a Mockingbird', author_name: ['Harper Lee'], first_publish_year: 1960, cover_i: 8215594, subject: ['fiction'], ia: 'tokillamockingbird00leerich', gutendex_id: 52375 },
-    { id: 'OL274482W', title: 'Moby Dick', author_name: ['Herman Melville'], first_publish_year: 1851, cover_i: 8362945, subject: ['classics'], ia: 'mobydickorwhale00melv', gutendex_id: 2701 },
-    { id: 'OL16002888W', title: 'Pride and Prejudice', author_name: ['Jane Austen'], first_publish_year: 1813, cover_i: 8465938, subject: ['classics'], ia: 'prideandprejudice00aust', gutendex_id: 1342 },
-    { id: 'OL24316234M', title: 'The Adventures of Sherlock Holmes', author_name: ['Arthur Conan Doyle'], first_publish_year: 1892, cover_i: 8472635, subject: ['fiction'], ia: 'adventuressherlock00doyl', gutendex_id: 1661 },
-    { id: 'OL362871M', title: 'The Catcher in the Rye', author_name: ['J.D. Salinger'], first_publish_year: 1951, cover_i: 8479836, subject: ['fiction'], ia: 'catcherintherye00salirich', gutendex_id: 5107 },
-    { id: 'OL892387M', title: 'Fahrenheit 451', author_name: ['Ray Bradbury'], first_publish_year: 1953, cover_i: 8274793, subject: ['fiction', 'science'], ia: 'fahrenheit45100brad', gutendex_id: 17429 },
-    { id: 'OL245199X', title: 'Brave New World', author_name: ['Aldous Huxley'], first_publish_year: 1932, cover_i: 8382917, subject: ['fiction', 'science'], ia: 'bravenewworld00huxl', gutendex_id: 4981 },
-    { id: 'OL16807594W', title: 'The Hobbit', author_name: ['J.R.R. Tolkien'], first_publish_year: 1937, cover_i: 8215608, subject: ['fiction'], ia: 'hobbit00tolk', gutendex_id: 5904 },
-    { id: 'OL16813427W', title: 'The Lord of the Rings', author_name: ['J.R.R. Tolkien'], first_publish_year: 1954, cover_i: 8456861, subject: ['fiction'], ia: 'lordofrings00tolk', gutendex_id: 5905 },
-    { id: 'OL21644313M', title: 'Dune', author_name: ['Frank Herbert'], first_publish_year: 1965, cover_i: 8293981, subject: ['science', 'fiction'], ia: 'dune00herb', gutendex_id: 53784 },
-    { id: 'OL25613034M', title: 'The Alchemist', author_name: ['Paulo Coelho'], first_publish_year: 1988, cover_i: 8476251, subject: ['fiction'], ia: 'alchemist00coel' },
-    { id: 'OL15842672M', title: 'The Da Vinci Code', author_name: ['Dan Brown'], first_publish_year: 2003, cover_i: 8274849, subject: ['fiction'], ia: 'davincicode00brow' },
-    { id: 'OL22752093M', title: 'Harry Potter and the Sorcerer\'s Stone', author_name: ['J.K. Rowling'], first_publish_year: 1997, cover_i: 8260528, subject: ['fiction'], ia: 'harrypottersorcer00rowl', gutendex_id: 52375 },
-    { id: 'OL506928W', title: 'The Art of War', author_name: ['Sun Tzu'], first_publish_year: -500, cover_i: 8437291, subject: ['philosophy', 'history'], ia: 'artofwar00sunt', gutendex_id: 132 },
-    { id: 'OL16002888W', title: 'Sense and Sensibility', author_name: ['Jane Austen'], first_publish_year: 1811, cover_i: 8465828, subject: ['classics'], ia: 'senseandsensibility00aust', gutendex_id: 161 },
-    { id: 'OL262102W', title: 'Dracula', author_name: ['Bram Stoker'], first_publish_year: 1897, cover_i: 8436289, subject: ['fiction', 'classics'], ia: 'dracula00stok', gutendex_id: 345 },
-    { id: 'OL21192W', title: 'Frankenstein', author_name: ['Mary Shelley'], first_publish_year: 1818, cover_i: 8429381, subject: ['fiction', 'science', 'classics'], ia: 'frankenstein00shel', gutendex_id: 84 },
-    { id: 'OL15209189W', title: 'The Time Machine', author_name: ['H.G. Wells'], first_publish_year: 1895, cover_i: 8260583, subject: ['science', 'fiction', 'classics'], ia: 'timemachine00well', gutendex_id: 2493 },
-    { id: 'OL21729093M', title: 'Watchmen', author_name: ['Alan Moore'], first_publish_year: 1987, cover_i: 8295201, subject: ['comics'], ia: 'watchmen00alan' },
-    { id: 'OL22507686M', title: 'Batman: The Killing Joke', author_name: ['Alan Moore'], first_publish_year: 1988, cover_i: 8347293, subject: ['comics'], ia: 'batmankillingjoke00alan' },
-    { id: 'OL21287655M', title: 'Sapiens', author_name: ['Yuval Noah Harari'], first_publish_year: 2011, cover_i: 8420583, subject: ['history', 'non-fiction'], ia: 'sapiensbriefhistory00hara' },
-    { id: 'OL259293W', title: 'A Brief History of Time', author_name: ['Stephen Hawking'], first_publish_year: 1988, cover_i: 8362917, subject: ['science', 'non-fiction'], ia: 'briefhistoryoftime00step' },
-    { id: 'OL72392W', title: 'Meditations', author_name: ['Marcus Aurelius'], first_publish_year: 180, cover_i: 8481729, subject: ['philosophy', 'classics'], ia: 'meditations00marc', gutendex_id: 2680 },
-    { id: 'OL280363W', title: 'The Republic', author_name: ['Plato'], first_publish_year: -375, cover_i: 8436281, subject: ['philosophy', 'classics'], ia: 'republic00plat', gutendex_id: 1497 },
-    { id: 'OL16002888W', title: 'Emma', author_name: ['Jane Austen'], first_publish_year: 1815, cover_i: 8465819, subject: ['classics', 'fiction'], ia: 'emma00aust', gutendex_id: 158 },
-    { id: 'OL24733870M', title: 'A Game of Thrones', author_name: ['George R.R. Martin'], first_publish_year: 1996, cover_i: 8215606, subject: ['fiction'], ia: 'gameofthrones00mart' },
-    { id: 'OL257150W', title: 'The Odyssey', author_name: ['Homer'], first_publish_year: -800, cover_i: 8457261, subject: ['classics', 'fiction'], ia: 'odyssey00home', gutendex_id: 1727 },
-    { id: 'OL280362W', title: 'The Iliad', author_name: ['Homer'], first_publish_year: -800, cover_i: 8457262, subject: ['classics', 'fiction'], ia: 'iliad00home', gutendex_id: 6130 },
-    { id: 'OL87079W', title: 'The Divine Comedy', author_name: ['Dante Alighieri'], first_publish_year: 1320, cover_i: 8452763, subject: ['classics', 'fiction'], ia: 'divinecomedy00dant', gutendex_id: 8800 },
-    { id: 'OL68144W', title: 'The Brothers Karamazov', author_name: ['Fyodor Dostoevsky'], first_publish_year: 1880, cover_i: 8473629, subject: ['classics', 'fiction'], ia: 'brotherskaramazov00dost', gutendex_id: 28054 },
-    { id: 'OL81947W', title: 'Crime and Punishment', author_name: ['Fyodor Dostoevsky'], first_publish_year: 1866, cover_i: 8473628, subject: ['classics', 'fiction'], ia: 'crimeandpunishment00dost', gutendex_id: 2554 },
-    { id: 'OL17213921W', title: 'The Picture of Dorian Gray', author_name: ['Oscar Wilde'], first_publish_year: 1890, cover_i: 8436284, subject: ['classics', 'fiction'], ia: 'pictureofdoriangray00wild', gutendex_id: 174 },
-    { id: 'OL17201094W', title: 'Alice\'s Adventures in Wonderland', author_name: ['Lewis Carroll'], first_publish_year: 1865, cover_i: 8465830, subject: ['classics', 'fiction'], ia: 'alicesadventures00carr', gutendex_id: 11 },
-    { id: 'OL173244W', title: 'The War of the Worlds', author_name: ['H.G. Wells'], first_publish_year: 1898, cover_i: 8456382, subject: ['science', 'fiction', 'classics'], ia: 'warofworlds00well', gutendex_id: 36 },
+    { id: 'OL7353617M', title: 'The Great Gatsby', author_name: ['F. Scott Fitzgerald'], first_publish_year: 1925, subject: ['fiction'], ia: 'greatgatsby00fitzgoog', gutendex_id: 64317 },
+    { id: 'OL21640713M', title: '1984', author_name: ['George Orwell'], first_publish_year: 1949, subject: ['fiction'], ia: '1984orwell', gutendex_id: 54728 },
+    { id: 'OL22318317M', title: 'To Kill a Mockingbird', author_name: ['Harper Lee'], first_publish_year: 1960, subject: ['fiction'], ia: 'tokillamockingbird00leerich', gutendex_id: 52375 },
+    { id: 'OL274482W', title: 'Moby Dick', author_name: ['Herman Melville'], first_publish_year: 1851, subject: ['classics'], gutendex_id: 2701 },
+    { id: 'OL16002888W', title: 'Pride and Prejudice', author_name: ['Jane Austen'], first_publish_year: 1813, subject: ['classics'], gutendex_id: 1342 },
+    { id: 'OL24316234M', title: 'The Adventures of Sherlock Holmes', author_name: ['Arthur Conan Doyle'], first_publish_year: 1892, subject: ['fiction'], gutendex_id: 1661 },
+    { id: 'OL362871M', title: 'The Catcher in the Rye', author_name: ['J.D. Salinger'], first_publish_year: 1951, subject: ['fiction'], gutendex_id: 5107 },
+    { id: 'OL245199X', title: 'Brave New World', author_name: ['Aldous Huxley'], first_publish_year: 1932, subject: ['fiction', 'science'], gutendex_id: 4981 },
+    { id: 'OL16807594W', title: 'The Hobbit', author_name: ['J.R.R. Tolkien'], first_publish_year: 1937, subject: ['fiction'], gutendex_id: 5904 },
+    { id: 'OL21644313M', title: 'Dune', author_name: ['Frank Herbert'], first_publish_year: 1965, subject: ['science', 'fiction'], gutendex_id: 53784 },
+    { id: 'OL506928W', title: 'The Art of War', author_name: ['Sun Tzu'], first_publish_year: -500, subject: ['philosophy', 'history'], gutendex_id: 132 },
+    { id: 'OL262102W', title: 'Dracula', author_name: ['Bram Stoker'], first_publish_year: 1897, subject: ['fiction', 'classics'], gutendex_id: 345 },
+    { id: 'OL21192W', title: 'Frankenstein', author_name: ['Mary Shelley'], first_publish_year: 1818, subject: ['fiction', 'science', 'classics'], gutendex_id: 84 },
+    { id: 'OL15209189W', title: 'The Time Machine', author_name: ['H.G. Wells'], first_publish_year: 1895, subject: ['science', 'fiction', 'classics'], gutendex_id: 2493 },
+    { id: 'OL16002888W', title: 'Sense and Sensibility', author_name: ['Jane Austen'], first_publish_year: 1811, subject: ['classics'], gutendex_id: 161 },
+    { id: 'OL72392W', title: 'Meditations', author_name: ['Marcus Aurelius'], first_publish_year: 180, subject: ['philosophy', 'classics'], gutendex_id: 2680 },
+    { id: 'OL280363W', title: 'The Republic', author_name: ['Plato'], first_publish_year: -375, subject: ['philosophy', 'classics'], gutendex_id: 1497 },
+    { id: 'OL16002888W', title: 'Emma', author_name: ['Jane Austen'], first_publish_year: 1815, subject: ['classics', 'fiction'], gutendex_id: 158 },
+    { id: 'OL257150W', title: 'The Odyssey', author_name: ['Homer'], first_publish_year: -800, subject: ['classics', 'fiction'], gutendex_id: 1727 },
+    { id: 'OL280362W', title: 'The Iliad', author_name: ['Homer'], first_publish_year: -800, subject: ['classics', 'fiction'], gutendex_id: 6130 },
+    { id: 'OL87079W', title: 'The Divine Comedy', author_name: ['Dante Alighieri'], first_publish_year: 1320, subject: ['classics', 'fiction'], gutendex_id: 8800 },
+    { id: 'OL68144W', title: 'The Brothers Karamazov', author_name: ['Fyodor Dostoevsky'], first_publish_year: 1880, subject: ['classics', 'fiction'], gutendex_id: 28054 },
+    { id: 'OL81947W', title: 'Crime and Punishment', author_name: ['Fyodor Dostoevsky'], first_publish_year: 1866, subject: ['classics', 'fiction'], gutendex_id: 2554 },
+    { id: 'OL17213921W', title: 'The Picture of Dorian Gray', author_name: ['Oscar Wilde'], first_publish_year: 1890, subject: ['classics', 'fiction'], gutendex_id: 174 },
+    { id: 'OL17201094W', title: 'Alice\'s Adventures in Wonderland', author_name: ['Lewis Carroll'], first_publish_year: 1865, subject: ['classics', 'fiction'], gutendex_id: 11 },
+    { id: 'OL173244W', title: 'The War of the Worlds', author_name: ['H.G. Wells'], first_publish_year: 1898, subject: ['science', 'fiction', 'classics'], gutendex_id: 36 },
 ];
 
 const HERO_BOOKS = [
-    { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', cover_i: 8428193, desc: 'A story of wealth, love, and the American Dream in the Roaring Twenties.', gutendex_id: 64317 },
-    { title: '1984', author: 'George Orwell', cover_i: 8215593, desc: 'A dystopian novel set in a totalitarian society ruled by Big Brother.', gutendex_id: 54728 },
-    { title: 'Dune', author: 'Frank Herbert', cover_i: 8293981, desc: 'A epic science fiction saga set on the desert planet Arrakis.', gutendex_id: 53784 },
-    { title: 'Moby Dick', author: 'Herman Melville', cover_i: 8362945, desc: 'The obsessive quest of Captain Ahab for the great white whale.', gutendex_id: 2701 },
-    { title: 'The Art of War', author: 'Sun Tzu', cover_i: 8437291, desc: 'An ancient Chinese military treatise on strategy and philosophy.', gutendex_id: 132 },
-    { title: 'Sapiens', author: 'Yuval Noah Harari', cover_i: 8420583, desc: 'A brief history of humankind — from Stone Age to the present.' },
+    { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', desc: 'A story of wealth, love, and the American Dream in the Roaring Twenties.', gutendex_id: 64317 },
+    { title: '1984', author: 'George Orwell', desc: 'A dystopian novel set in a totalitarian society ruled by Big Brother.', gutendex_id: 54728 },
+    { title: 'Dune', author: 'Frank Herbert', desc: 'An epic science fiction saga set on the desert planet Arrakis.', gutendex_id: 53784 },
+    { title: 'Moby Dick', author: 'Herman Melville', desc: 'The obsessive quest of Captain Ahab for the great white whale.', gutendex_id: 2701 },
+    { title: 'The Art of War', author: 'Sun Tzu', desc: 'An ancient Chinese military treatise on strategy and philosophy.', gutendex_id: 132 },
+    { title: 'Pride and Prejudice', author: 'Jane Austen', desc: 'A timeless romance and social satire of manners in 19th-century England.', gutendex_id: 1342 },
 ];
 
 class BooksEngine {
@@ -101,20 +93,22 @@ class BooksEngine {
         this.overlayReadBtn = document.getElementById('books-overlay-read');
         this.overlayReader = document.getElementById('books-overlay-reader');
         this.overlayIframe = document.getElementById('books-overlay-iframe');
+        this.textReader = document.getElementById('books-text-reader');
+        this.readerLoading = document.getElementById('books-reader-loading');
+        this.readerClose = document.getElementById('books-reader-close');
+        this.readerTitle = document.getElementById('books-reader-title');
         this.overlayExtra = document.getElementById('books-overlay-extra');
         this.searchInput = document.getElementById('books-search-input');
         this.searchBtn = document.getElementById('books-search-btn');
 
-        this.allBooks = [];
         this.cachedCategories = {};
         this.activeCategory = 'trending';
         this.currentBook = null;
-        this.heroItems = HERO_BOOKS;
+        this.heroItems = [];
         this.heroIndex = 0;
         this.heroTimer = null;
         this.searchResultsMode = false;
-
-        this.carouselContainers = {};
+        this.coverCache = {};
 
         this.init();
     }
@@ -122,6 +116,7 @@ class BooksEngine {
     init() {
         if (!this.container) return;
 
+        this.resolveHeroCovers();
         this.startHeroRotation();
         this.loadCategory('trending');
 
@@ -159,6 +154,7 @@ class BooksEngine {
         if (this.overlayClose) this.overlayClose.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); playClickSound(); this.closeOverlay(); });
         if (this.overlay) this.overlay.addEventListener('click', (e) => { if (e.target === this.overlay || e.target.classList.contains('books-overlay-scroll')) this.closeOverlay(); });
         if (this.overlayReadBtn) this.overlayReadBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.readCurrentBook(); });
+        if (this.readerClose) this.readerClose.addEventListener('click', () => this.closeReader());
 
         document.addEventListener('click', (e) => {
             try {
@@ -173,11 +169,55 @@ class BooksEngine {
 
         if (this.heroReadBtn) {
             this.heroReadBtn.addEventListener('click', () => {
+                playClickSound();
                 if (this.currentHeroItem) this.openHeroBookReader();
             });
         }
 
         this.setupHeroSwipe();
+    }
+
+    closeReader() {
+        this.overlayReader.classList.add('hidden');
+        this.overlayIframe.classList.add('hidden');
+        this.textReader.classList.add('hidden');
+        this.textReader.innerHTML = '';
+        this.overlayIframe.src = '';
+        this.overlayReadBtn.classList.remove('hidden');
+    }
+
+    async getCoverForBook(book) {
+        if (book.cover_i) return `${COVERS_BASE}/${book.cover_i}-L.jpg`;
+        const cacheKey = book.title + (Array.isArray(book.author_name) ? book.author_name[0] : book.author_name || '');
+        if (this.coverCache[cacheKey]) return this.coverCache[cacheKey];
+        try {
+            const query = encodeURIComponent(`${book.title} ${Array.isArray(book.author_name) ? book.author_name[0] : book.author_name || ''}`);
+            const res = await fetch(`${OL_BASE}/search.json?q=${query}&limit=1`);
+            const data = await res.json();
+            const doc = data.docs && data.docs[0];
+            if (doc && doc.cover_i) {
+                const url = `${COVERS_BASE}/${doc.cover_i}-L.jpg`;
+                this.coverCache[cacheKey] = url;
+                book.cover_i = doc.cover_i;
+                return url;
+            }
+        } catch {}
+        return '';
+    }
+
+    async resolveHeroCovers() {
+        for (const item of HERO_BOOKS) {
+            try {
+                const query = encodeURIComponent(`${item.title} ${item.author}`);
+                const res = await fetch(`${OL_BASE}/search.json?q=${query}&limit=1`);
+                const data = await res.json();
+                const doc = data.docs && data.docs[0];
+                if (doc && doc.cover_i) {
+                    item.cover_i = doc.cover_i;
+                }
+            } catch {}
+        }
+        this.heroItems = HERO_BOOKS;
     }
 
     setupHeroSwipe() {
@@ -226,6 +266,7 @@ class BooksEngine {
 
     resetHeroTimer() {
         if (this.heroTimer) { clearInterval(this.heroTimer); this.heroTimer = null; }
+        if (!this.heroItems.length) return;
         this.heroTimer = setInterval(() => {
             this.heroIndex = (this.heroIndex + 1) % this.heroItems.length;
             this.showHeroItem(this.heroIndex);
@@ -264,14 +305,13 @@ class BooksEngine {
 
         const coverUrl = item.cover_i ? `${COVERS_BASE}/${item.cover_i}-L.jpg` : '';
 
-        if (this.heroBackdrop && coverUrl) {
-            this.heroBackdrop.style.backgroundImage = `url('${coverUrl}')`;
+        if (this.heroBackdrop) {
+            this.heroBackdrop.style.backgroundImage = coverUrl ? `url('${coverUrl}')` : 'none';
             this.heroBackdrop.style.transition = 'background-image 0.8s ease';
         }
         if (this.heroBadge) this.heroBadge.textContent = 'Featured Book';
         if (this.heroTitle) this.heroTitle.textContent = item.title;
         if (this.heroAuthor) this.heroAuthor.textContent = `by ${item.author}`;
-        if (this.heroRating) this.heroRating.textContent = '';
         if (this.heroDesc) this.heroDesc.textContent = item.desc || '';
 
         document.querySelectorAll('.books-hero-dot').forEach((d, i) => {
@@ -283,19 +323,15 @@ class BooksEngine {
         const item = this.currentHeroItem;
         if (!item) return;
 
-        if (item.gutendex_id) {
-            window.open(`https://www.gutenberg.org/ebooks/${item.gutendex_id}`, '_blank');
-            return;
-        }
-
         const book = {
             title: item.title,
             author_name: [item.author],
-            cover_i: item.cover_i,
+            cover_i: item.cover_i || null,
             first_publish_year: null,
             subject: [],
             ia: null,
-            gutendex_id: null,
+            gutendex_id: item.gutendex_id || null,
+            description: item.desc || '',
         };
         this.showBookDetails(book);
     }
@@ -330,37 +366,56 @@ class BooksEngine {
                     number_of_pages_median: d.number_of_pages_median || null,
                     publisher: d.publisher ? d.publisher[0] : null,
                     description: null,
+                    gutendex_id: null,
                 }));
                 this.cachedCategories[cacheKey] = mapped;
                 this.renderBooks(mapped);
                 return;
             }
 
-            const fallback = FALLBACK_BOOKS.filter(b => {
-                if (category === 'trending') return true;
-                return b.subject && b.subject.some(s => s.includes(category) || category.includes(s));
-            }).slice(0, 40);
-
+            const fallback = this.prepareFallback(category);
             if (fallback.length > 0) {
+                await this.resolveFallbackCovers(fallback);
                 this.cachedCategories[cacheKey] = fallback;
                 this.renderBooks(fallback);
                 return;
             }
             throw new Error('No results');
         } catch {
-            const fallback = FALLBACK_BOOKS.filter(b => {
-                if (category === 'trending') return true;
-                return b.subject && b.subject.some(s => s.includes(category) || category.includes(s));
-            }).slice(0, 40);
-
+            const fallback = this.prepareFallback(category);
             if (fallback.length > 0) {
+                await this.resolveFallbackCovers(fallback);
                 this.cachedCategories[cacheKey] = fallback;
                 this.renderBooks(fallback);
             } else {
-                this.cachedCategories[cacheKey] = FALLBACK_BOOKS;
-                this.renderBooks(FALLBACK_BOOKS);
+                const all = this.prepareFallback('trending');
+                await this.resolveFallbackCovers(all);
+                this.cachedCategories[cacheKey] = all;
+                this.renderBooks(all);
             }
         }
+    }
+
+    prepareFallback(category) {
+        return FALLBACK_BOOKS.filter(b => {
+            if (category === 'trending') return true;
+            return b.subject && b.subject.some(s => s.includes(category) || category.includes(s));
+        }).slice(0, 40);
+    }
+
+    async resolveFallbackCovers(books) {
+        const batch = books.filter(b => !b.cover_i);
+        if (!batch.length) return;
+        const promises = batch.map(async (book) => {
+            try {
+                const query = encodeURIComponent(`${book.title} ${book.author_name[0] || ''}`);
+                const res = await fetch(`${OL_BASE}/search.json?q=${query}&limit=1`);
+                const data = await res.json();
+                const doc = data.docs && data.docs[0];
+                if (doc && doc.cover_i) book.cover_i = doc.cover_i;
+            } catch {}
+        });
+        await Promise.all(promises);
     }
 
     renderBooks(bookList) {
@@ -424,6 +479,7 @@ class BooksEngine {
                 number_of_pages_median: d.number_of_pages_median || null,
                 publisher: d.publisher ? d.publisher[0] : null,
                 description: null,
+                gutendex_id: null,
             }));
             this.renderBooks(mapped);
         } catch {
@@ -432,14 +488,12 @@ class BooksEngine {
     }
 
     closeOverlay() {
-        this.overlayReader.classList.add('hidden');
-        this.overlayIframe.src = '';
-        this.overlayReadBtn.classList.remove('hidden');
+        this.closeReader();
         this.overlay.classList.add('hidden');
         document.body.style.overflow = '';
     }
 
-    showBookDetails(book) {
+    async showBookDetails(book) {
         playClickSound();
         this.closeOverlay();
 
@@ -457,9 +511,7 @@ class BooksEngine {
         this.overlayGenre.textContent = genres;
         this.overlayOverview.textContent = book.description || 'No description available.';
 
-        const hasGutendex = Boolean(book.gutendex_id);
-        const hasIA = Boolean(book.ia);
-        const canRead = hasGutendex || hasIA;
+        const canRead = Boolean(book.gutendex_id) || Boolean(book.ia);
 
         if (this.overlayExtra) {
             this.overlayExtra.innerHTML = `
@@ -468,7 +520,6 @@ class BooksEngine {
                 ${book.publisher ? `<div class="books-extra-row"><span class="label">Publisher</span><span class="value">${book.publisher}</span></div>` : ''}
                 ${book.number_of_pages_median ? `<div class="books-extra-row"><span class="label">Pages</span><span class="value">${book.number_of_pages_median}</span></div>` : ''}
                 ${book.isbn ? `<div class="books-extra-row"><span class="label">ISBN</span><span class="value">${book.isbn}</span></div>` : ''}
-                <div class="books-extra-row"><span class="label">Source</span><span class="value">${hasGutendex ? 'Project Gutenberg' : hasIA ? 'Internet Archive' : 'Open Library'}</span></div>
             `;
         }
 
@@ -502,13 +553,18 @@ class BooksEngine {
         } catch {}
     }
 
-    readCurrentBook() {
+    async readCurrentBook() {
         if (!this.currentBook) return;
         const book = this.currentBook;
         playClickSound();
 
+        this.overlayReadBtn.classList.add('hidden');
+
         if (book.ia) {
+            this.readerTitle.textContent = book.title;
+            this.overlayIframe.classList.remove('hidden');
             this.overlayIframe.src = `https://archive.org/stream/${book.ia}?ui=embed#`;
+            this.readerLoading.classList.add('hidden');
             this.overlayReader.classList.remove('hidden');
             try {
                 this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -517,12 +573,79 @@ class BooksEngine {
         }
 
         if (book.gutendex_id) {
-            window.open(`https://www.gutenberg.org/ebooks/${book.gutendex_id}`, '_blank');
+            this.readerTitle.textContent = book.title;
+            this.textReader.classList.add('hidden');
+            this.readerLoading.classList.remove('hidden');
+            this.overlayReader.classList.remove('hidden');
+            try {
+                this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } catch (e) {}
+            await this.loadTextReader(book.gutendex_id, book);
             return;
         }
 
         const query = encodeURIComponent(`${book.title} ${Array.isArray(book.author_name) ? book.author_name[0] : book.author_name}`);
-        this.tryGutendexSearch(book, query);
+        await this.tryGutendexSearch(book, query);
+    }
+
+    async loadTextReader(gId, book) {
+        const textUrl = `https://www.gutenberg.org/cache/epub/${gId}/pg${gId}.txt`;
+        try {
+            const proxyUrl = PROXY + encodeURIComponent(textUrl);
+            const res = await fetch(proxyUrl);
+            if (!res.ok) throw new Error('Fetch failed');
+            let text = await res.text();
+            const startMarkers = ['*** START OF THE PROJECT GUTENBERG', '*** START OF THIS PROJECT GUTENBERG',
+                '***START OF THE PROJECT GUTENBERG', '***START OF THIS PROJECT GUTENBERG'];
+            const endMarkers = ['*** END OF THE PROJECT GUTENBERG', '*** END OF THIS PROJECT GUTENBERG',
+                '***END OF THE PROJECT GUTENBERG', '***END OF THIS PROJECT GUTENBERG'];
+
+            let startIdx = 0;
+            for (const m of startMarkers) {
+                const idx = text.indexOf(m);
+                if (idx !== -1) {
+                    const endline = text.indexOf('\n', idx);
+                    startIdx = endline !== -1 ? endline + 1 : idx + m.length;
+                    break;
+                }
+            }
+
+            let endIdx = text.length;
+            for (const m of endMarkers) {
+                const idx = text.indexOf(m);
+                if (idx !== -1) {
+                    endIdx = idx;
+                    break;
+                }
+            }
+
+            let content = text.slice(startIdx, endIdx).trim();
+            content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            const lines = content.split('\n');
+            const formatted = lines.map(line => {
+                const trimmed = line.trim();
+                if (!trimmed) return '<br>';
+                if (trimmed === trimmed.toUpperCase() && trimmed.length > 3 && trimmed.length < 80) {
+                    return `<h3 style="text-align:center;font-family:'Georgia',serif;margin:1.5em 0 0.5em;font-size:1.2rem;font-weight:700;">${this.escapeHtml(trimmed)}</h3>`;
+                }
+                return `<p style="text-indent:1.5em;margin:0;">${this.escapeHtml(trimmed)}</p>`;
+            }).join('\n');
+
+            this.readerLoading.classList.add('hidden');
+            this.textReader.innerHTML = formatted;
+            this.textReader.classList.remove('hidden');
+            this.textReader.scrollTop = 0;
+        } catch {
+            this.readerLoading.classList.add('hidden');
+            this.textReader.innerHTML = `<div class="books-reader-error"><span style="font-size:3rem;">&#128214;</span><p>Could not load the book text.</p><p style="font-size:0.85rem;color:#a09080;">Try again or choose another book.</p></div>`;
+            this.textReader.classList.remove('hidden');
+        }
+    }
+
+    escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
     }
 
     async tryGutendexSearch(book, query) {
@@ -535,18 +658,24 @@ class BooksEngine {
             if (results.length > 0) {
                 const gId = results[0].id;
                 book.gutendex_id = gId;
-                this.overlayReadBtn.textContent = 'Read Free';
-                this.overlayReadBtn.disabled = false;
-                window.open(`https://www.gutenberg.org/ebooks/${gId}`, '_blank');
+                this.overlayReadBtn.classList.add('hidden');
+                this.readerTitle.textContent = book.title;
+                this.textReader.classList.add('hidden');
+                this.readerLoading.classList.remove('hidden');
+                this.overlayReader.classList.remove('hidden');
+                try {
+                    this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } catch (e) {}
+                await this.loadTextReader(gId, book);
             } else {
-                this.overlayReadBtn.textContent = 'Search Open Library';
+                this.overlayReadBtn.textContent = 'Not Available';
                 this.overlayReadBtn.disabled = false;
-                window.open(`https://openlibrary.org/search?q=${query}`, '_blank');
+                this.overlayReadBtn.classList.remove('hidden');
             }
         } catch {
-            this.overlayReadBtn.textContent = 'Search Open Library';
+            this.overlayReadBtn.textContent = 'Not Available';
             this.overlayReadBtn.disabled = false;
-            window.open(`https://openlibrary.org/search?q=${query}`, '_blank');
+            this.overlayReadBtn.classList.remove('hidden');
         }
     }
 }

@@ -548,15 +548,103 @@
     overflow: hidden;
     margin: 1rem 0;
     box-shadow: 0 4px 30px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
 }
 
 .books-reader-wrap iframe {
     position: absolute;
-    top: 0;
+    top: 40px;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 40px);
     border: 0;
+}
+
+.books-reader-toolbar {
+    height: 40px;
+    min-height: 40px;
+    background: #2c2416;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
+}
+
+.books-reader-close {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #ccc;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-family: var(--font-body);
+}
+
+.books-reader-close:hover {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+}
+
+.books-reader-title {
+    font-size: 0.85rem;
+    color: #aaa;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 1rem;
+    font-family: var(--font-heading);
+}
+
+.books-text-reader {
+    padding: 2rem 3rem;
+    overflow-y: auto;
+    height: 100%;
+    color: #2c2416;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 40px);
+    background: #f5f0e8;
+}
+
+.books-reader-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: #8a7e6a;
+    font-family: var(--font-body);
+    background: #f5f0e8;
+}
+
+.books-reader-error {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #8a7e6a;
+    font-family: var(--font-body);
+    background: #f5f0e8;
+    padding: 2rem;
+    text-align: center;
 }
 
 .btn-read-overlay {
