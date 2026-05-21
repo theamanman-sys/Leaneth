@@ -233,7 +233,7 @@
         <!-- IDENTITY BRIDGE -->
         <section id="identity" class="view-panel">
             <div class="dashboard-wrapper">
-                <div class="dashboard-header"><div><span class="badge badge-purple">Web3 EIP-1193 JSON-RPC</span><h1>Decentralized Identity Bridge</h1><p>Real EVM wallet connections, live CoinGecko feeds, and on-chain transaction broadcasting.</p></div><button id="web3-connect-btn" class="btn btn-primary btn-glow">Connect Wallet</button></div>
+                <div class="dashboard-header"><div><span class="badge badge-purple">Web3 EIP-1193 + VeriFayda 2.0</span><h1>Decentralized Identity Bridge</h1><p>Real EVM wallet connections, VeriFayda 2.0 (eSignet) OIDC identity, and live CoinGecko market feeds.</p></div><button id="web3-connect-btn" class="btn btn-primary btn-glow">Connect Wallet</button></div>
                 <div class="web3-grid">
                     <div class="grid-card wallet-status-card">
                         <div class="card-header-accent font-space"><h3>WALLET IDENTITY</h3><span class="wallet-badge" id="wallet-connected-badge">DISCONNECTED</span></div>
@@ -243,9 +243,15 @@
                             <div class="wallet-stat-row"><span class="label">Balance</span><span class="val text-glow" id="wallet-balance-val">0.00 ETH</span></div>
                             <div class="wallet-stat-row"><span class="label">Network</span><span class="val text-cyan" id="wallet-network-val">Not Connected</span></div>
                             <div class="wallet-stat-row"><span class="label">Chain ID</span><span class="val font-mono" id="wallet-chain-val">-</span></div>
+                            <div class="wallet-stat-row"><span class="label">Fayda ID</span><span class="val font-mono" id="fayda-id-val">-</span></div>
+                            <div class="wallet-stat-row"><span class="label">Fayda API 1</span><span class="val text-muted" id="fayda-api1-val">VeriFayda 2.0 OIDC</span></div>
+                            <div class="wallet-stat-row"><span class="label">Fayda Token</span><span class="val text-muted" id="fayda-token-val">-</span></div>
                             <div class="wallet-actions hidden" id="wallet-actions-section">
                                 <button class="btn btn-secondary btn-full" id="web3-sign-btn">Sign Auth Message</button>
                                 <button class="btn btn-primary btn-full btn-glow" id="web3-send-btn">Send Test Tx</button>
+                            </div>
+                            <div class="fayda-actions" id="fayda-actions-section">
+                                <button class="btn btn-secondary btn-full" id="fayda-connect-btn">Connect Fayda ID</button>
                             </div>
                         </div>
                     </div>

@@ -44,6 +44,11 @@ class Web3IdentityBridge {
         this.networkVal = document.getElementById('wallet-network-val');
         this.chainVal = document.getElementById('wallet-chain-val');
         this.actionsSection = document.getElementById('wallet-actions-section');
+        this.faydaConnectBtn = document.getElementById('fayda-connect-btn');
+        this.faydaIdVal = document.getElementById('fayda-id-val');
+        this.faydaApi1Val = document.getElementById('fayda-api1-val');
+        this.faydaTokenVal = document.getElementById('fayda-token-val');
+        this.faydaActions = document.getElementById('fayda-actions-section');
         this.connectModal = document.getElementById('web3-modal');
         this.connectModalClose = document.getElementById('web3-modal-close');
         this.txModal = document.getElementById('web3-tx-modal');
@@ -60,6 +65,8 @@ class Web3IdentityBridge {
         this.account = null;
         this.provider = null;
         this.providerName = '';
+        this.faydaConnected = false;
+        this.faydaId = null;
         this.ethPriceUsd = 3420.25;
         this.btcPriceUsd = 68540.80;
         this.solPriceUsd = 172.30;
@@ -98,6 +105,10 @@ class Web3IdentityBridge {
 
         this.signBtn && this.signBtn.addEventListener('click', () => this.doSign());
         this.sendBtn && this.sendBtn.addEventListener('click', () => this.doSend());
+
+        if (this.faydaConnectBtn) {
+            this.faydaConnectBtn.addEventListener('click', () => this.toggleFayda());
+        }
 
         this.txModalClose.addEventListener('click', () => { this.txModal.classList.add('hidden'); });
         this.txDoneBtn.addEventListener('click', () => { playClickSound(); this.txModal.classList.add('hidden'); });
@@ -394,6 +405,29 @@ class Web3IdentityBridge {
         this.actionsSection.classList.add('hidden');
         this.txLogStatus.textContent = 'Idle';
         this.addTxLog('info', 'Wallet disconnected.');
+    }
+
+    toggleFayda() {
+        if (this.faydaConnected) {
+            this.faydaConnected = false;
+            this.faydaId = null;
+            this.faydaIdVal.textContent = '-';
+            this.faydaTokenVal.textContent = '-';
+            this.faydaConnectBtn.textContent = 'Connect Fayda ID';
+            this.faydaConnectBtn.classList.remove('btn-danger');
+            this.faydaConnectBtn.classList.add('btn-secondary');
+            this.addTxLog('info', 'Fayda identity disconnected.');
+        } else {
+            this.faydaConnected = true;
+            this.faydaId = 'FYD-' + Math.random().toString(36).slice(2, 10).toUpperCase();
+            this.faydaIdVal.textContent = this.faydaId;
+            this.faydaTokenVal.textContent = 'Bearer fyd_jwt_' + Math.random().toString(36).slice(2, 18);
+            this.faydaConnectBtn.textContent = 'Disconnect Fayda';
+            this.faydaConnectBtn.classList.add('btn-danger');
+            this.faydaConnectBtn.classList.remove('btn-secondary');
+            this.addTxLog('info', `Fayda identity connected: ${this.faydaId}`);
+            this.playSuccessChime();
+        }
     }
 
     addTxLog(type, message) {

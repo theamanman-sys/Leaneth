@@ -1102,6 +1102,26 @@
     animation: cardEntrance 0.5s ease both;
 }
 
+.fayda-actions {
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 1rem;
+}
+
+.fayda-actions .btn {
+    font-size: 0.8rem;
+}
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover {
+    background: rgba(239, 68, 68, 0.25);
+}
+
 /* Price tickers */
 .market-prices {
     display: flex;
