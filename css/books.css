@@ -596,14 +596,34 @@
 }
 
 .books-reader-title {
+    flex: 1;
+    text-align: center;
     font-size: 0.85rem;
     color: #aaa;
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-left: 1rem;
     font-family: var(--font-heading);
+    padding: 0 0.5rem;
+}
+
+.books-reader-fullscreen {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #ccc;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-family: var(--font-body);
+    white-space: nowrap;
+}
+
+.books-reader-fullscreen:hover {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
 }
 
 .books-text-reader {
@@ -720,4 +740,52 @@
         max-width: 90%;
         min-height: 250px;
     }
+}
+
+/* Fullscreen reading mode — reader fills viewport */
+.books-reading-mode .books-overlay-backdrop {
+    display: none;
+}
+.books-reading-mode .books-overlay-body {
+    height: 100%;
+    padding: 0;
+    max-width: 100%;
+    width: 100%;
+}
+.books-reading-mode .books-overlay-back-wrap {
+    display: none;
+}
+.books-reading-mode .books-overlay-poster-col {
+    display: none;
+}
+.books-reading-mode .books-overlay-details {
+    max-width: 100%;
+    width: 100%;
+    padding: 0;
+    align-items: stretch;
+}
+.books-reading-mode .books-overlay-details > h2,
+.books-reading-mode .books-overlay-details > .books-overlay-author,
+.books-reading-mode .books-overlay-details > .books-overlay-meta,
+.books-reading-mode .books-overlay-details > .books-overview,
+.books-reading-mode .books-overlay-details > .btn-read-overlay,
+.books-reading-mode .books-overlay-details > .books-extra {
+    display: none;
+}
+.books-reading-mode .books-reader-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30000;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    max-width: 100%;
+    min-height: 0;
+    border-radius: 0;
+}
+.books-reading-mode .books-reader-wrap iframe {
+    height: calc(100% - 40px);
 }

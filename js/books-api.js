@@ -100,6 +100,7 @@ class BooksEngine {
         this.readerLoading = document.getElementById('books-reader-loading');
         this.readerClose = document.getElementById('books-reader-close');
         this.readerTitle = document.getElementById('books-reader-title');
+        this.readerFullscreen = document.getElementById('books-reader-fullscreen');
         this.overlayExtra = document.getElementById('books-overlay-extra');
         this.searchInput = document.getElementById('books-search-input');
         this.searchBtn = document.getElementById('books-search-btn');
@@ -112,6 +113,7 @@ class BooksEngine {
         this.heroTimer = null;
         this.searchResultsMode = false;
         this.coverCache = {};
+        this.isFullscreen = false;
 
         this.init();
     }
@@ -158,6 +160,7 @@ class BooksEngine {
         if (this.overlay) this.overlay.addEventListener('click', (e) => { if (e.target === this.overlay || e.target.classList.contains('books-overlay-scroll')) this.closeOverlay(); });
         if (this.overlayReadBtn) this.overlayReadBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.readCurrentBook(); });
         if (this.readerClose) this.readerClose.addEventListener('click', () => this.closeReader());
+        if (this.readerFullscreen) this.readerFullscreen.addEventListener('click', () => this.toggleFullscreen());
 
         document.addEventListener('click', (e) => {
             try {
@@ -181,6 +184,7 @@ class BooksEngine {
     }
 
     closeReader() {
+        this.exitFullscreen();
         this.overlayReader.classList.add('hidden');
         this.overlayReader.style.backgroundImage = '';
         this.overlayIframe.classList.add('hidden');
@@ -188,6 +192,28 @@ class BooksEngine {
         this.textReader.innerHTML = '';
         this.overlayIframe.src = '';
         this.overlayReadBtn.classList.remove('hidden');
+    }
+
+    toggleFullscreen() {
+        if (this.isFullscreen) {
+            this.exitFullscreen();
+        } else {
+            this.enterFullscreen();
+        }
+    }
+
+    enterFullscreen() {
+        if (this.isFullscreen) return;
+        this.isFullscreen = true;
+        document.body.classList.add('books-reading-mode');
+        if (this.readerFullscreen) this.readerFullscreen.innerHTML = '&#x2715; Exit';
+    }
+
+    exitFullscreen() {
+        if (!this.isFullscreen) return;
+        this.isFullscreen = false;
+        document.body.classList.remove('books-reading-mode');
+        if (this.readerFullscreen) this.readerFullscreen.innerHTML = '&#x26F6; Fullscreen';
     }
 
     async getCoverForBook(book) {
