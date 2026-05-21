@@ -379,19 +379,16 @@
 
 /* Hero Dots */
 .cinema-hero-dots {
-    position: absolute;
-    bottom: 5rem;
-    right: 2rem;
     display: flex;
+    justify-content: center;
     gap: 0.4rem;
     z-index: 3;
-    max-width: 40%;
+    padding: 0.75rem 0 1.5rem;
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x;
-    padding: 0.3rem 0;
 }
 
 .cinema-hero-dots::-webkit-scrollbar {
@@ -958,9 +955,7 @@
         -webkit-line-clamp: 2;
     }
     .cinema-hero-dots {
-        bottom: 2rem;
-        right: 1.5rem;
-        max-width: 60%;
+        padding: 0.5rem 0 1rem;
     }
     .cinema-overlay-body {
         flex-direction: column;
