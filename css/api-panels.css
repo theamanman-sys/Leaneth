@@ -909,6 +909,16 @@
     text-overflow: ellipsis;
 }
 
+.cast-dept {
+    font-size: 0.65rem;
+    color: var(--accent-purple);
+    opacity: 0.7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 0.15rem;
+}
+
 /* Player */
 .movie-player-wrap {
     position: relative;
@@ -1811,6 +1821,7 @@
     .cast-img { width: 64px; height: 64px; }
     .cast-name { font-size: 0.7rem; }
     .cast-role { font-size: 0.6rem; }
+    .cast-dept { font-size: 0.55rem; }
 }
 
 @media (max-width: 480px) {
@@ -1829,6 +1840,7 @@
     .cast-img { width: 54px; height: 54px; }
     .cast-name { font-size: 0.65rem; }
     .cast-role { font-size: 0.55rem; }
+    .cast-dept { font-size: 0.5rem; }
     .trailer-item { width: 160px; }
     .poster-item { width: 90px; }
     .cinema-search { flex-direction: column; gap: 0.4rem; }

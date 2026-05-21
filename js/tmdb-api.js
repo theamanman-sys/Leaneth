@@ -814,8 +814,25 @@ class MovieEngine {
         document.body.style.overflow = 'hidden';
 
         try {
-            const data = await fetch(`${TMDB_BASE}/person/${person.id}/movie_credits?language=en-US`, { headers: TMDB_HEADERS }).then(r => r.json());
-            const cast = (data.cast || []).sort((a, b) => parseFloat(b.popularity || 0) - parseFloat(a.popularity || 0)).slice(0, 12);
+            const [personData, creditsData] = await Promise.all([
+                fetch(`${TMDB_BASE}/person/${person.id}?language=en-US`, { headers: TMDB_HEADERS }).then(r => r.json()),
+                fetch(`${TMDB_BASE}/person/${person.id}/movie_credits?language=en-US`, { headers: TMDB_HEADERS }).then(r => r.json())
+            ]);
+
+            if (personData.biography) {
+                this.overlayOverview.textContent = personData.biography.length > 500
+                    ? personData.biography.slice(0, 500) + '…'
+                    : personData.biography;
+            }
+
+            this.overlayExtra.innerHTML = `
+                <div class="cinema-extra-row"><span class="label">Known For</span><span class="value">${person.known_for_department || personData.known_for_department || 'Actor'}</span></div>
+                ${personData.birthday ? `<div class="cinema-extra-row"><span class="label">Born</span><span class="value">${personData.birthday}${personData.place_of_birth ? ` · ${personData.place_of_birth}` : ''}</span></div>` : ''}
+                ${personData.deathday ? `<div class="cinema-extra-row"><span class="label">Died</span><span class="value">${personData.deathday}</span></div>` : ''}
+                ${personData.popularity ? `<div class="cinema-extra-row"><span class="label">Popularity</span><span class="value">${personData.popularity.toFixed(1)}</span></div>` : ''}
+            `;
+
+            const cast = (creditsData.cast || []).sort((a, b) => parseFloat(b.popularity || 0) - parseFloat(a.popularity || 0)).slice(0, 12);
             if (this.overlayCast) {
                 this.overlayCast.innerHTML = '';
                 cast.forEach(m => {
@@ -1193,7 +1210,7 @@ class MovieEngine {
                         : `<div class="cast-img cast-placeholder">${person.name.charAt(0)}</div>`;
                     const el = document.createElement('div');
                     el.className = 'cast-item';
-                    el.innerHTML = `${img}<div class="cast-name">${person.name}</div><div class="cast-role">${person.character || ''}</div>`;
+                    el.innerHTML = `${img}<div class="cast-name">${person.name}</div><div class="cast-role">${person.character || ''}</div><div class="cast-dept">${person.known_for_department || 'Actor'}</div>`;
                     el.addEventListener('click', () => {
                         this.showCelebrityDetails({
                             id: person.id,
