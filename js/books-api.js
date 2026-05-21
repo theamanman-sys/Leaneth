@@ -492,9 +492,9 @@ class BooksEngine {
             if (q.length < 2) { container.innerHTML = ''; container.classList.remove('active'); return; }
             debounceTimer = setTimeout(async () => {
                 try {
-                    const res = await fetch(`${OL_BASE}/search.json?q=${encodeURIComponent(q)}&limit=6&fields=key,title,author_name,cover_i`);
+                    const res = await fetch(`${OL_BASE}/search.json?q=${encodeURIComponent(q)}&limit=5&fields=key,title,author_name,cover_i`);
                     const data = await res.json();
-                    const docs = (data.docs || []).filter(d => d.cover_i).slice(0, 6);
+                    const docs = (data.docs || []).filter(d => d.cover_i).slice(0, 5);
                     if (!docs.length) { container.innerHTML = ''; container.classList.remove('active'); return; }
                     container.innerHTML = docs.map(d => {
                         const title = (d.title || '').replace(/"/g, '&quot;');
@@ -506,9 +506,11 @@ class BooksEngine {
                                 <span class="suggestion-channel">${d.author_name ? d.author_name[0] : ''}</span>
                             </div>
                         </div>`;
-                    }).join('');
+                    }).join('') + `<div class="suggestion-item suggestion-see-all" id="books-suggestion-see-all">
+                        <span style="color:var(--accent-cyan);font-weight:600;font-size:0.85rem;">See all results for "${q}" &rarr;</span>
+                    </div>`;
                     container.classList.add('active');
-                    container.querySelectorAll('.suggestion-item').forEach(el => {
+                    container.querySelectorAll('.suggestion-item:not(.suggestion-see-all)').forEach(el => {
                         el.addEventListener('click', () => {
                             container.innerHTML = '';
                             container.classList.remove('active');
@@ -516,6 +518,15 @@ class BooksEngine {
                             this.doSearch();
                         });
                     });
+                    const seeAll = container.querySelector('.suggestion-see-all');
+                    if (seeAll) {
+                        seeAll.addEventListener('click', () => {
+                            container.innerHTML = '';
+                            container.classList.remove('active');
+                            this.searchInput.value = q;
+                            this.doSearch();
+                        });
+                    }
                 } catch { container.innerHTML = ''; container.classList.remove('active'); }
             }, 350);
         });
