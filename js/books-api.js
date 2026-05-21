@@ -181,7 +181,6 @@ class BooksEngine {
     }
 
     closeReader() {
-        document.body.classList.remove('books-reading-mode');
         this.overlayReader.classList.add('hidden');
         this.overlayIframe.classList.add('hidden');
         this.textReader.classList.add('hidden');
@@ -563,7 +562,6 @@ class BooksEngine {
         playClickSound();
         this.readerTitle.textContent = book.title;
 
-        document.body.classList.add('books-reading-mode');
         this.textReader.classList.add('hidden');
         this.overlayIframe.classList.add('hidden');
         this.readerLoading.classList.remove('hidden');
@@ -665,7 +663,6 @@ class BooksEngine {
                 const gId = results[0].id;
                 book.gutendex_id = gId;
                 this.readerTitle.textContent = book.title;
-                document.body.classList.add('books-reading-mode');
                 this.textReader.classList.add('hidden');
                 this.overlayIframe.classList.add('hidden');
                 this.readerLoading.classList.remove('hidden');

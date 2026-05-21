@@ -715,38 +715,3 @@
         height: 50vh;
     }
 }
-
-/* Reading mode — full-screen immersive reader */
-.books-reading-mode .books-overlay-backdrop {
-    display: none;
-}
-.books-reading-mode .books-overlay-body {
-    height: 100%;
-    padding: 0;
-    max-width: 100%;
-    width: 100%;
-}
-.books-reading-mode .books-overlay-back-wrap {
-    display: none;
-}
-.books-reading-mode .books-overlay-poster-col {
-    display: none;
-}
-.books-reading-mode .books-overlay-details {
-    max-width: 100%;
-    width: 100%;
-    padding: 0;
-}
-.books-reading-mode .books-overlay-details > h2,
-.books-reading-mode .books-overlay-details > .books-overlay-author,
-.books-reading-mode .books-overlay-details > .books-overlay-meta,
-.books-reading-mode .books-overlay-details > .books-overview,
-.books-reading-mode .books-overlay-details > .btn-read-overlay,
-.books-reading-mode .books-overlay-details > .books-extra {
-    display: none;
-}
-.books-reading-mode .books-reader-wrap {
-    height: 100%;
-    margin: 0;
-    border-radius: 0;
-}
