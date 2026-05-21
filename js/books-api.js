@@ -492,15 +492,15 @@ class BooksEngine {
             if (q.length < 2) { container.innerHTML = ''; container.classList.remove('active'); return; }
             debounceTimer = setTimeout(async () => {
                 try {
-                    const res = await fetch(`${OL_BASE}/search.json?q=${encodeURIComponent(q)}&limit=5&fields=key,title,author_name,cover_i`);
+                    const res = await fetch(`${OL_BASE}/search.json?q=${encodeURIComponent(q)}&limit=5&fields=key,title,author_name,cover_i,first_publish_year,subject,ia,isbn,ratings_average,number_of_pages_median,publisher`);
                     const data = await res.json();
                     const docs = (data.docs || []).filter(d => d.cover_i).slice(0, 5);
                     if (!docs.length) { container.innerHTML = ''; container.classList.remove('active'); return; }
                     container.innerHTML = docs.map(d => {
                         const title = (d.title || '').replace(/"/g, '&quot;');
                         const author = (d.author_name ? d.author_name[0] : '').replace(/"/g, '&quot;');
-                        return `<div class="suggestion-item" data-title="${title}" data-author="${author}">
-                            <div class="suggestion-poster">${d.cover_i ? `<img src="${COVERS_BASE}/${d.cover_i}-S.jpg" alt="">` : '<span class="suggestion-poster-fallback">&#128214;</span>'}</div>
+                        return `<div class="suggestion-item" data-key="${d.key || ''}" data-title="${title}" data-author="${author}" data-cover="${d.cover_i || ''}" data-year="${d.first_publish_year || ''}" data-ia="${d.ia ? d.ia[0] : ''}" data-isbn="${d.isbn ? d.isbn[0] : ''}" data-rating="${d.ratings_average || ''}" data-pages="${d.number_of_pages_median || ''}" data-publisher="${d.publisher ? d.publisher[0] : ''}">
+                            <div class="suggestion-poster"><img src="${COVERS_BASE}/${d.cover_i}-S.jpg" alt=""></div>
                             <div class="suggestion-text">
                                 <span class="suggestion-title">${d.title || ''}</span>
                                 <span class="suggestion-channel">${d.author_name ? d.author_name[0] : ''}</span>
@@ -514,8 +514,23 @@ class BooksEngine {
                         el.addEventListener('click', () => {
                             container.innerHTML = '';
                             container.classList.remove('active');
-                            this.searchInput.value = el.dataset.title;
-                            this.doSearch();
+                            this.searchInput.blur();
+                            const book = {
+                                id: el.dataset.key || '',
+                                title: el.dataset.title || 'Untitled',
+                                author_name: [el.dataset.author || 'Unknown'],
+                                first_publish_year: el.dataset.year ? parseInt(el.dataset.year) : null,
+                                cover_i: el.dataset.cover ? parseInt(el.dataset.cover) : null,
+                                subject: [],
+                                ia: el.dataset.ia || null,
+                                isbn: el.dataset.isbn || null,
+                                ratings_average: el.dataset.rating ? parseFloat(el.dataset.rating) : null,
+                                number_of_pages_median: el.dataset.pages ? parseInt(el.dataset.pages) : null,
+                                publisher: el.dataset.publisher || null,
+                                description: null,
+                                gutendex_id: null,
+                            };
+                            this.showBookDetails(book);
                         });
                     });
                     const seeAll = container.querySelector('.suggestion-see-all');
