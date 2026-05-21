@@ -154,6 +154,7 @@ class BooksEngine {
                 if (e.key === 'Enter') this.doSearch();
             });
         }
+        this.setupSearchSuggestions();
 
         if (this.overlayBack) this.overlayBack.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); playClickSound(); this.closeOverlay(); });
         if (this.overlayClose) this.overlayClose.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); playClickSound(); this.closeOverlay(); });
@@ -475,6 +476,55 @@ class BooksEngine {
             `;
             card.addEventListener('click', () => this.showBookDetails(book));
             this.container.appendChild(card);
+        });
+    }
+
+    setupSearchSuggestions() {
+        if (!this.searchInput) return;
+        const container = document.createElement('div');
+        container.className = 'search-suggestions';
+        this.searchInput.parentElement.appendChild(container);
+
+        let debounceTimer;
+        this.searchInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            const q = this.searchInput.value.trim();
+            if (q.length < 2) { container.innerHTML = ''; container.classList.remove('active'); return; }
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const res = await fetch(`${OL_BASE}/search.json?q=${encodeURIComponent(q)}&limit=6&fields=key,title,author_name,cover_i`);
+                    const data = await res.json();
+                    const docs = (data.docs || []).filter(d => d.cover_i).slice(0, 6);
+                    if (!docs.length) { container.innerHTML = ''; container.classList.remove('active'); return; }
+                    container.innerHTML = docs.map(d => {
+                        const title = (d.title || '').replace(/"/g, '&quot;');
+                        const author = (d.author_name ? d.author_name[0] : '').replace(/"/g, '&quot;');
+                        return `<div class="suggestion-item" data-title="${title}" data-author="${author}">
+                            <div class="suggestion-poster">${d.cover_i ? `<img src="${COVERS_BASE}/${d.cover_i}-S.jpg" alt="">` : '<span class="suggestion-poster-fallback">&#128214;</span>'}</div>
+                            <div class="suggestion-text">
+                                <span class="suggestion-title">${d.title || ''}</span>
+                                <span class="suggestion-channel">${d.author_name ? d.author_name[0] : ''}</span>
+                            </div>
+                        </div>`;
+                    }).join('');
+                    container.classList.add('active');
+                    container.querySelectorAll('.suggestion-item').forEach(el => {
+                        el.addEventListener('click', () => {
+                            container.innerHTML = '';
+                            container.classList.remove('active');
+                            this.searchInput.value = el.dataset.title;
+                            this.doSearch();
+                        });
+                    });
+                } catch { container.innerHTML = ''; container.classList.remove('active'); }
+            }, 350);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dashboard-actions')) {
+                container.innerHTML = '';
+                container.classList.remove('active');
+            }
         });
     }
 
