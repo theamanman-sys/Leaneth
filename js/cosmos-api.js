@@ -167,7 +167,7 @@ class CosmosEngine {
 
     async fetchPeopleInSpace() {
         try {
-            const res = await fetch('http://api.open-notify.org/astros.json');
+            const res = await fetch('https://api.open-notify.org/astros.json');
             if (!res.ok) throw new Error();
             const data = await res.json();
             if (this.issCrew && data.people) {
