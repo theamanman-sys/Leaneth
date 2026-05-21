@@ -182,6 +182,7 @@ class BooksEngine {
 
     closeReader() {
         this.overlayReader.classList.add('hidden');
+        this.overlayReader.style.backgroundImage = '';
         this.overlayIframe.classList.add('hidden');
         this.textReader.classList.add('hidden');
         this.textReader.innerHTML = '';
@@ -430,7 +431,8 @@ class BooksEngine {
         bookList.forEach(book => {
             const card = document.createElement('div');
             card.className = 'book-card';
-            const coverUrl = book.cover_i ? `${COVERS_BASE}/${book.cover_i}-L.jpg` : '';
+        const coverUrl = book.cover_i ? `${COVERS_BASE}/${book.cover_i}-L.jpg` : '';
+        book._coverUrl = coverUrl;
             const author = book.author_name ? (Array.isArray(book.author_name) ? book.author_name[0] : book.author_name) : 'Unknown';
             const year = book.first_publish_year || '';
             card.innerHTML = `
@@ -564,14 +566,14 @@ class BooksEngine {
 
         this.textReader.classList.add('hidden');
         this.overlayIframe.classList.add('hidden');
+        this.overlayReader.style.backgroundImage = book._coverUrl ? `url('${book._coverUrl}')` : '';
         this.readerLoading.classList.remove('hidden');
         this.overlayReader.classList.remove('hidden');
 
-        try {
-            this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } catch (e) {}
+        this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
         if (book.ia) {
+            this.overlayReader.style.backgroundImage = '';
             this.overlayIframe.src = `https://archive.org/stream/${book.ia}?ui=embed#`;
             this.overlayIframe.classList.remove('hidden');
             this.readerLoading.classList.add('hidden');
@@ -632,6 +634,7 @@ class BooksEngine {
                     return `<p style="text-indent:1.5em;margin:0;">${this.escapeHtml(trimmed)}</p>`;
                 }).join('\n');
 
+                this.overlayReader.style.backgroundImage = '';
                 this.readerLoading.classList.add('hidden');
                 this.textReader.innerHTML = formatted;
                 this.textReader.classList.remove('hidden');
@@ -641,6 +644,7 @@ class BooksEngine {
         }
 
         // Fallback: load raw text in iframe (works cross-origin, no CORS needed)
+        this.overlayReader.style.backgroundImage = '';
         this.readerLoading.classList.add('hidden');
         this.overlayIframe.src = textUrl;
         this.overlayIframe.classList.remove('hidden');
@@ -665,11 +669,10 @@ class BooksEngine {
                 this.readerTitle.textContent = book.title;
                 this.textReader.classList.add('hidden');
                 this.overlayIframe.classList.add('hidden');
+                this.overlayReader.style.backgroundImage = book._coverUrl ? `url('${book._coverUrl}')` : '';
                 this.readerLoading.classList.remove('hidden');
                 this.overlayReader.classList.remove('hidden');
-                try {
-                    this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } catch (e) {}
+                this.overlayReader.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 await this.loadTextReader(gId, book);
             } else {
                 this.overlayReadBtn.textContent = 'Not Available';
